@@ -1,0 +1,78 @@
+<?php
+
+namespace wusong8899\Client1;
+
+use Flarum\Extend;
+use Flarum\Api\Event\Serializing;
+
+return [
+    (new Extend\Frontend('forum'))
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/less/forum.less'),
+    (new Extend\Frontend('admin'))
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/less/admin.less'),
+    new Extend\Locales(__DIR__ . '/locale'),
+
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink1', 'wusong8899-client1-header-adv.Link1'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage1', 'wusong8899-client1-header-adv.Image1'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink2', 'wusong8899-client1-header-adv.Link2'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage2', 'wusong8899-client1-header-adv.Image2'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink3', 'wusong8899-client1-header-adv.Link3'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage3', 'wusong8899-client1-header-adv.Image3'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink4', 'wusong8899-client1-header-adv.Link4'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage4', 'wusong8899-client1-header-adv.Image4'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink5', 'wusong8899-client1-header-adv.Link5'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage5', 'wusong8899-client1-header-adv.Image5'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink6', 'wusong8899-client1-header-adv.Link6'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage6', 'wusong8899-client1-header-adv.Image6'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink7', 'wusong8899-client1-header-adv.Link7'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage7', 'wusong8899-client1-header-adv.Image7'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink8', 'wusong8899-client1-header-adv.Link8'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage8', 'wusong8899-client1-header-adv.Image8'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink9', 'wusong8899-client1-header-adv.Link9'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage9', 'wusong8899-client1-header-adv.Image9'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink10', 'wusong8899-client1-header-adv.Link10'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage10', 'wusong8899-client1-header-adv.Image10'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink11', 'wusong8899-client1-header-adv.Link11'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage11', 'wusong8899-client1-header-adv.Image11'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink12', 'wusong8899-client1-header-adv.Link12'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage12', 'wusong8899-client1-header-adv.Image12'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink13', 'wusong8899-client1-header-adv.Link13'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage13', 'wusong8899-client1-header-adv.Image13'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink14', 'wusong8899-client1-header-adv.Link14'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage14', 'wusong8899-client1-header-adv.Image14'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink15', 'wusong8899-client1-header-adv.Link15'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage15', 'wusong8899-client1-header-adv.Image15'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink16', 'wusong8899-client1-header-adv.Link16'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage16', 'wusong8899-client1-header-adv.Image16'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink17', 'wusong8899-client1-header-adv.Link17'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage17', 'wusong8899-client1-header-adv.Image17'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink18', 'wusong8899-client1-header-adv.Link18'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage18', 'wusong8899-client1-header-adv.Image18'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink19', 'wusong8899-client1-header-adv.Link19'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage19', 'wusong8899-client1-header-adv.Image19'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink20', 'wusong8899-client1-header-adv.Link20'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage20', 'wusong8899-client1-header-adv.Image20'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink21', 'wusong8899-client1-header-adv.Link21'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage21', 'wusong8899-client1-header-adv.Image21'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink22', 'wusong8899-client1-header-adv.Link22'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage22', 'wusong8899-client1-header-adv.Image22'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink23', 'wusong8899-client1-header-adv.Link123'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage23', 'wusong8899-client1-header-adv.Image23'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink24', 'wusong8899-client1-header-adv.Link24'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage24', 'wusong8899-client1-header-adv.Image24'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink25', 'wusong8899-client1-header-adv.Link25'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage25', 'wusong8899-client1-header-adv.Image25'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink26', 'wusong8899-client1-header-adv.Link26'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage26', 'wusong8899-client1-header-adv.Image26'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink27', 'wusong8899-client1-header-adv.Link27'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage27', 'wusong8899-client1-header-adv.Image27'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink28', 'wusong8899-client1-header-adv.Link28'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage28', 'wusong8899-client1-header-adv.Image28'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink29', 'wusong8899-client1-header-adv.Link29'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage29', 'wusong8899-client1-header-adv.Image29'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvLink30', 'wusong8899-client1-header-adv.Link30'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvImage30', 'wusong8899-client1-header-adv.Image30'),
+    (new Extend\Settings)->serializeToForum('Client1HeaderAdvTransitionTime', 'wusong8899-client1-header-adv.TransitionTime'),
+];

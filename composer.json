@@ -1,0 +1,34 @@
+{
+  "name": "wusong8899/client1-header-adv",
+  "description": "Add advertise to header",
+  "keywords": [
+    "slideshow"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "require": {
+    "flarum/core": "^1.0"
+  },
+  "authors": [
+    {
+      "name": "wusong8899",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "wusong8899\\Client1HeaderAdv\\": "src/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "wusong8899 Header Advertise",
+      "category": "",
+      "icon": {
+        "name": "fas fa-ad",
+        "backgroundColor": "#68238c",
+        "color": "white"
+      }
+    }
+  }
+}
