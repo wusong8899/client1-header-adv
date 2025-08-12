@@ -1,8 +1,12 @@
 wusong8899-client1:
   forum:
     under-construction: Under Construction
+    loading: Loading...
+    error: An error occurred
+    no-data: No data available
   admin:
     TransitionTime: Speed of transitions between slides (default is 5 seconds)
+    # Slide 1-10
     Link1: Button Link - Slide 1
     Image1: Slide Image 1
     Link2: Button Link - Slide 2
@@ -23,13 +27,45 @@ wusong8899-client1:
     Image9: Slide Image 9
     Link10: Button Link - Slide 10
     Image10: Slide Image 10
-    Link11: Button Link - Slide 10
-    Image11: Slide Image 10
-    Link12: Button Link - Slide 10
-    Image12: Slide Image 10
-    Link13: Button Link - Slide 10
-    Image13: Slide Image 10
-    Link14: Button Link - Slide 10
-    Image14: Slide Image 10
+    # Slide 11-20
+    Link11: Button Link - Slide 11
+    Image11: Slide Image 11
+    Link12: Button Link - Slide 12
+    Image12: Slide Image 12
+    Link13: Button Link - Slide 13
+    Image13: Slide Image 13
+    Link14: Button Link - Slide 14
+    Image14: Slide Image 14
     Link15: Button Link - Slide 15
     Image15: Slide Image 15
+    Link16: Button Link - Slide 16
+    Image16: Slide Image 16
+    Link17: Button Link - Slide 17
+    Image17: Slide Image 17
+    Link18: Button Link - Slide 18
+    Image18: Slide Image 18
+    Link19: Button Link - Slide 19
+    Image19: Slide Image 19
+    Link20: Button Link - Slide 20
+    Image20: Slide Image 20
+    # Slide 21-30
+    Link21: Button Link - Slide 21
+    Image21: Slide Image 21
+    Link22: Button Link - Slide 22
+    Image22: Slide Image 22
+    Link23: Button Link - Slide 23
+    Image23: Slide Image 23
+    Link24: Button Link - Slide 24
+    Image24: Slide Image 24
+    Link25: Button Link - Slide 25
+    Image25: Slide Image 25
+    Link26: Button Link - Slide 26
+    Image26: Slide Image 26
+    Link27: Button Link - Slide 27
+    Image27: Slide Image 27
+    Link28: Button Link - Slide 28
+    Image28: Slide Image 28
+    Link29: Button Link - Slide 29
+    Image29: Slide Image 29
+    Link30: Button Link - Slide 30
+    Image30: Slide Image 30

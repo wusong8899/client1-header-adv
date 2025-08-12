@@ -1,22 +1,38 @@
 {
-  "name": "@justoverclock/header-slideshow",
-  "version": "0.0.0",
+  "name": "@wusong8899/client1-header-adv",
+  "version": "1.0.0",
   "private": true,
+  "description": "Modular header advertisement slideshow extension for Flarum",
+  "keywords": [
+    "flarum",
+    "extension",
+    "slideshow",
+    "advertisement",
+    "header"
+  ],
   "dependencies": {
     "flarum": "^1.0.0",
     "flarum-webpack-config": "^2.0.0",
-    "hero-carousel": "^1.1.2",
-    "swiper": "11.2.10"
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
-    "prettier": "3.6.2",
-    "webpack": "5.101.0",
-    "webpack-cli": "6.0.1"
+    "prettier": "^3.6.2",
+    "typescript": "^5.0.0",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1",
+    "@types/node": "^20.0.0"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "clean": "rm -rf dist dist-typings",
     "format": "prettier --single-quote --trailing-comma es5 --print-width 150 --tab-width 4 --write src",
-    "format-check": "prettier --single-quote --trailing-comma es5 --print-width 150 --tab-width 4 --check src"
+    "format-check": "prettier --single-quote --trailing-comma es5 --print-width 150 --tab-width 4 --check src",
+    "lint": "tsc --noEmit",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

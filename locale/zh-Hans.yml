@@ -1,6 +1,9 @@
 wusong8899-client1:
   forum:
     under-construction: 暂未开放
+    loading: 加载中...
+    error: 发生错误
+    no-data: 暂无数据
   admin:
     TransitionTime: 广告轮换时间 (默认5000毫秒)
     Link1: 广告1跳转地址
