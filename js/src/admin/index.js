@@ -1,4 +1,4 @@
-import app from 'flarum/app';
+import app from 'flarum/admin/app';
 
 app.initializers.add('wusong8899/client1-header-adv', () => {
     app.extensionData

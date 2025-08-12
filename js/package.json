@@ -3,15 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flarum": "^0.1.0-beta.16",
-    "flarum-webpack-config": "^0.1.0-beta.10",
+    "flarum": "^1.0.0",
+    "flarum-webpack-config": "^2.0.0",
     "hero-carousel": "^1.1.2",
-    "swiper": "^8.4.5",
-    "webpack": "^4.26.0",
-    "webpack-cli": "^3.0.7"
+    "swiper": "11.2.10"
   },
   "devDependencies": {
-    "prettier": "2.0.2"
+    "prettier": "3.6.2",
+    "webpack": "5.101.0",
+    "webpack-cli": "6.0.1"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
