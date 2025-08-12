@@ -53,12 +53,26 @@ export class ConfigManager {
         this.config.set(key, value);
     }
 
+
+    /**
+     * Safely read a forum attribute if available
+     */
+    private getForumAttribute(key: string): any {
+        try {
+            const forum = (app as any)?.forum;
+            const attrFn = forum?.attribute;
+            return typeof attrFn === 'function' ? attrFn.call(forum, key) : undefined;
+        } catch {
+            return undefined;
+        }
+    }
+
     /**
      * Get transition time from forum settings
      * @returns {number} Transition time in milliseconds
      */
     getTransitionTime(): number {
-        const transitionTime = app.forum.attribute('Client1HeaderAdvTransitionTime');
+        const transitionTime = this.getForumAttribute('Client1HeaderAdvTransitionTime');
         return transitionTime ? parseInt(String(transitionTime)) : this.get('defaultTransitionTime');
     }
 
@@ -68,7 +82,7 @@ export class ConfigManager {
      * @returns {string | null} Image URL or null if not set
      */
     getSlideImage(slideNumber: number): string | null {
-        return app.forum.attribute(`Client1HeaderAdvImage${slideNumber}`) || null;
+        return this.getForumAttribute(`Client1HeaderAdvImage${slideNumber}`) || null;
     }
 
     /**
@@ -77,7 +91,7 @@ export class ConfigManager {
      * @returns {string | null} Link URL or null if not set
      */
     getSlideLink(slideNumber: number): string | null {
-        return app.forum.attribute(`Client1HeaderAdvLink${slideNumber}`) || null;
+        return this.getForumAttribute(`Client1HeaderAdvLink${slideNumber}`) || null;
     }
 
     /**
@@ -122,9 +136,13 @@ export class ConfigManager {
      */
     translate(key: string, parameters: Record<string, unknown> = {}): string {
         const fullKey = this.getTranslationKey(key);
-        const result = app.translator.trans(fullKey, parameters);
-        // app.translator.trans returns a NestedStringArray; convert to plain text
-        return extractText(result as any);
+        const translator = (app as any)?.translator;
+        if (translator?.trans) {
+            const result = translator.trans(fullKey, parameters);
+            // app.translator.trans returns a NestedStringArray; convert to plain text
+            return extractText(result as any);
+        }
+        return fullKey;
     }
 
     /**
@@ -132,7 +150,7 @@ export class ConfigManager {
      * @returns {boolean} True if user is logged in
      */
     isUserLoggedIn(): boolean {
-        return !!app.session.user;
+        return !!(app as any)?.session?.user;
     }
 
     /**
@@ -140,7 +158,7 @@ export class ConfigManager {
      * @returns {string | null} Current route name
      */
     getCurrentRoute(): string | null {
-        return app.current.get('routeName') || null;
+        return ((app as any)?.current?.get?.('routeName')) || null;
     }
 
     /**
@@ -173,7 +191,7 @@ export class ConfigManager {
      */
     isSlideValid(slideNumber: number): boolean {
         const image = this.getSlideImage(slideNumber);
-        return !!image && image.trim().length > 0;
+        return typeof image === 'string' && image.trim().length > 0;
     }
 
     /**

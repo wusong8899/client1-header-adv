@@ -13,6 +13,20 @@ export class SlideshowManager {
     private readonly maxSlides = 30;
     private readonly checkTime = 10;
 
+
+    /**
+     * Safely read a forum attribute if available
+     */
+    private getForumAttribute(key: string): any {
+        try {
+            const forum = (app as any)?.forum;
+            const attrFn = forum?.attribute;
+            return typeof attrFn === 'function' ? attrFn.call(forum, key) : undefined;
+        } catch {
+            return undefined;
+        }
+    }
+
     /**
      * Initialize and attach slideshow to the DOM
      * @param {any} vdom - Virtual DOM node
@@ -98,7 +112,7 @@ export class SlideshowManager {
      * @returns {number} Transition time in milliseconds
      */
     private getTransitionTime(): number {
-        const transitionTime = app.forum.attribute('Client1HeaderAdvTransitionTime');
+        const transitionTime = this.getForumAttribute('Client1HeaderAdvTransitionTime');
         return transitionTime ? parseInt(String(transitionTime)) : 5000;
     }
 
@@ -157,8 +171,8 @@ export class SlideshowManager {
      */
     private populateSlides(wrapper: HTMLElement): void {
         for (let i = 1; i <= this.maxSlides; i++) {
-            const imageSrc = app.forum.attribute(`Client1HeaderAdvImage${i}`);
-            const imageLink = app.forum.attribute(`Client1HeaderAdvLink${i}`);
+            const imageSrc = this.getForumAttribute(`Client1HeaderAdvImage${i}`);
+            const imageLink = this.getForumAttribute(`Client1HeaderAdvLink${i}`);
 
             if (imageSrc) {
                 const slide = this.createSlide(String(imageSrc), String(imageLink || ''));
