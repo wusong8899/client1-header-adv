@@ -8,11 +8,12 @@ import { DataLoader } from './services/DataLoader';
 import { MobileDetection } from './utils/MobileDetection';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
+import { defaultConfig } from '../common/config';
 
 /**
  * Main extension initializer
  */
-app.initializers.add('wusong8899-client1-header-adv', () => {
+app.initializers.add(defaultConfig.app.extensionId, () => {
     const errorHandler = ErrorHandler.getInstance();
     const configManager = ConfigManager.getInstance();
 
@@ -82,21 +83,21 @@ async function setupUIComponents(uiManager: UIManager): Promise<void> {
                 // Additional UI setup would go here
             }
         }
-    }, 100);
+    }, defaultConfig.slider.dataCheckInterval);
 }
 
 /**
  * Add header icon for branding
  */
 function addHeaderIcon(): void {
-    let headerIconContainer = document.getElementById("wusong8899Client1HeaderIcon");
+    let headerIconContainer = document.getElementById(defaultConfig.ui.headerIconId);
 
     if (headerIconContainer === null) {
         headerIconContainer = document.createElement("div");
-        headerIconContainer.id = "wusong8899Client1HeaderIcon";
+        headerIconContainer.id = defaultConfig.ui.headerIconId;
         headerIconContainer.style.display = 'inline-block';
         headerIconContainer.style.marginTop = '8px';
-        headerIconContainer.innerHTML = '<img src="https://lg666.cc/assets/files/2023-01-18/1674049401-881154-test-16.png" style="height: 24px;" />';
+        headerIconContainer.innerHTML = `<img src="${defaultConfig.ui.headerIconUrl}" style="height: 24px;" />`;
 
         const backControl = document.querySelector("#app-navigation .App-backControl");
         if (backControl) {

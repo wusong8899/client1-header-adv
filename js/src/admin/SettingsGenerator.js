@@ -58,6 +58,8 @@ export class SettingsGenerator {
 /**
  * Configuration constants
  */
+// Centralized config is in js/src/common/config.
+// Kept for backward compatibility; prefer importing from '../../common/config'.
 export const EXTENSION_CONFIG = {
     EXTENSION_ID: 'wusong8899-client1-header-adv',
     MAX_SLIDES: 30,

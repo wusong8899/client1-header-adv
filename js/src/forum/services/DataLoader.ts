@@ -1,23 +1,24 @@
 import app from 'flarum/forum/app';
+import { defaultConfig } from '../../common/config';
 
 /**
  * Data loading service for external data sources
  */
 export class DataLoader {
     private static instance: DataLoader;
-    
+
     // Loading states
     private tronscanListLoading = false;
     private linksQueueListLoading = false;
     private buttonsCustomizationListLoading = false;
-    
+
     // Data storage
     private tronscanList: any[] | null = null;
     private linksQueueList: any[] | null = null;
     private buttonsCustomizationList: any[] | null = null;
     private linksQueuePointer = 0;
 
-    private constructor() {}
+    private constructor() { }
 
     /**
      * Get singleton instance
@@ -43,9 +44,9 @@ export class DataLoader {
         }
 
         this.tronscanListLoading = true;
-        
+
         try {
-            const results = await app.store.find("syncTronscanList").catch(() => []);
+            const results = await app.store.find(defaultConfig.data.apiResources.tronscanList).catch(() => []);
             this.tronscanList = [];
             if (Array.isArray(results)) {
                 this.tronscanList.push(...results);
@@ -74,9 +75,9 @@ export class DataLoader {
         }
 
         this.buttonsCustomizationListLoading = true;
-        
+
         try {
-            const results = await app.store.find("buttonsCustomizationList").catch(() => []);
+            const results = await app.store.find(defaultConfig.data.apiResources.buttonsCustomizationList).catch(() => []);
             this.buttonsCustomizationList = [];
             if (Array.isArray(results)) {
                 this.buttonsCustomizationList.push(...results);
@@ -105,9 +106,9 @@ export class DataLoader {
         }
 
         this.linksQueueListLoading = true;
-        
+
         try {
-            const results = await app.store.find("linksQueueList").catch(() => []);
+            const results = await app.store.find(defaultConfig.data.apiResources.linksQueueList).catch(() => []);
             this.linksQueueList = [];
             if (Array.isArray(results)) {
                 this.linksQueueList.push(...results);
@@ -126,7 +127,7 @@ export class DataLoader {
      * Load all data sources
      * @returns {Promise<{tronscan: any[], buttons: any[], links: any[]}>} Promise resolving to all data
      */
-    async loadAllData(): Promise<{tronscan: any[], buttons: any[], links: any[]}> {
+    async loadAllData(): Promise<{ tronscan: any[], buttons: any[], links: any[] }> {
         const [tronscan, buttons, links] = await Promise.all([
             this.loadTronscanList(),
             this.loadButtonsCustomizationList(),

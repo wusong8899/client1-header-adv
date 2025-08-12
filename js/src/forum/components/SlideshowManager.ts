@@ -3,6 +3,7 @@ import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/module
 import app from 'flarum/forum/app';
 import { DOMUtils } from '../utils/DOMUtils';
 import { MobileDetection } from '../utils/MobileDetection';
+import { defaultConfig } from '../../common/config';
 
 /**
  * Slideshow manager for header advertisements
@@ -10,8 +11,8 @@ import { MobileDetection } from '../utils/MobileDetection';
 export class SlideshowManager {
     private swiper: Swiper | null = null;
     private container: HTMLElement | null = null;
-    private readonly maxSlides = 30;
-    private readonly checkTime = 10;
+    private readonly maxSlides = defaultConfig.slider.maxSlides;
+    private readonly checkTime = defaultConfig.slider.checkTime;
 
 
     /**
@@ -92,7 +93,7 @@ export class SlideshowManager {
      * Create the main slideshow
      */
     private createSlideshow(): void {
-        if (DOMUtils.getElementById("swiperAdContainer")) {
+        if (DOMUtils.getElementById(defaultConfig.slider.dom.containerId)) {
             return; // Already exists
         }
 
@@ -113,7 +114,7 @@ export class SlideshowManager {
      */
     private getTransitionTime(): number {
         const transitionTime = this.getForumAttribute('Client1HeaderAdvTransitionTime');
-        return transitionTime ? parseInt(String(transitionTime)) : 5000;
+        return transitionTime ? parseInt(String(transitionTime)) : defaultConfig.slider.defaultTransitionTime;
     }
 
     /**
@@ -123,7 +124,7 @@ export class SlideshowManager {
     private createSlideshowContainer(): HTMLElement {
         const container = DOMUtils.createElement('div', {
             className: 'swiperAdContainer',
-            id: 'swiperAdContainer'
+            id: defaultConfig.slider.dom.containerId
         });
 
         if (MobileDetection.isMobileDevice()) {
@@ -146,7 +147,7 @@ export class SlideshowManager {
      */
     private createSwiperElement(container: HTMLElement): HTMLElement {
         const swiper = DOMUtils.createElement('div', {
-            className: 'swiper adSwiper'
+            className: `swiper ${defaultConfig.slider.dom.swiperClass}`
         });
         DOMUtils.appendChild(container, swiper);
         return swiper;
@@ -235,29 +236,29 @@ export class SlideshowManager {
      */
     private initializeSwiper(transitionTime: number): void {
         try {
-            this.swiper = new Swiper(".adSwiper", {
+            this.swiper = new Swiper(`.${defaultConfig.slider.dom.swiperClass}`, {
                 autoplay: {
                     delay: transitionTime,
                 },
                 loop: true,
-                spaceBetween: 30,
-                effect: "coverflow",
-                centeredSlides: true,
-                slidesPerView: 2,
+                spaceBetween: defaultConfig.slider.swiper.spaceBetween,
+                effect: defaultConfig.slider.swiper.effect,
+                centeredSlides: defaultConfig.slider.swiper.centeredSlides,
+                slidesPerView: defaultConfig.slider.swiper.slidesPerView,
                 coverflowEffect: {
-                    rotate: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: true,
-                    stretch: 0
+                    rotate: defaultConfig.slider.swiper.coverflowEffect.rotate,
+                    depth: defaultConfig.slider.swiper.coverflowEffect.depth,
+                    modifier: defaultConfig.slider.swiper.coverflowEffect.modifier,
+                    slideShadows: defaultConfig.slider.swiper.coverflowEffect.slideShadows,
+                    stretch: defaultConfig.slider.swiper.coverflowEffect.stretch,
                 },
                 pagination: {
-                    el: '.swiper-pagination',
-                    type: 'bullets',
+                    el: defaultConfig.slider.swiper.pagination.el,
+                    type: defaultConfig.slider.swiper.pagination.type as any,
                 },
                 navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    nextEl: defaultConfig.slider.swiper.navigation.nextEl,
+                    prevEl: defaultConfig.slider.swiper.navigation.prevEl,
                 },
                 modules: [EffectCoverflow, Navigation, Pagination, Autoplay]
             });

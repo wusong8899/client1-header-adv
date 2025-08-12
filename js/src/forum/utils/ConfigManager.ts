@@ -1,5 +1,6 @@
 import app from 'flarum/forum/app';
 import extractText from 'flarum/common/utils/extractText';
+import { defaultConfig, RootConfig } from '../../common/config';
 
 /**
  * Configuration management utility
@@ -7,6 +8,7 @@ import extractText from 'flarum/common/utils/extractText';
 export class ConfigManager {
     private static instance: ConfigManager;
     private config: Map<string, any> = new Map();
+    private typedConfig: RootConfig = defaultConfig;
 
     private constructor() {
         this.loadDefaultConfig();
@@ -26,12 +28,13 @@ export class ConfigManager {
      * Load default configuration values
      */
     private loadDefaultConfig(): void {
-        this.config.set('maxSlides', 30);
-        this.config.set('defaultTransitionTime', 5000);
-        this.config.set('checkTime', 10);
-        this.config.set('dataCheckInterval', 100);
-        this.config.set('extensionId', 'wusong8899-client1-header-adv');
-        this.config.set('translationPrefix', 'wusong8899-client1');
+        // Seed from centralized defaults (kept as flat keys for backward compatibility)
+        this.config.set('maxSlides', this.typedConfig.slider.maxSlides);
+        this.config.set('defaultTransitionTime', this.typedConfig.slider.defaultTransitionTime);
+        this.config.set('checkTime', this.typedConfig.slider.checkTime);
+        this.config.set('dataCheckInterval', this.typedConfig.slider.dataCheckInterval);
+        this.config.set('extensionId', this.typedConfig.app.extensionId);
+        this.config.set('translationPrefix', this.typedConfig.app.translationPrefix);
     }
 
     /**
