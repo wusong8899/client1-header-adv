@@ -54,7 +54,6 @@ export interface UIConfig {
 
 export interface DataConfig {
   apiResources: {
-    tronscanList: string;
     buttonsCustomizationList: string;
     linksQueueList: string;
   };

@@ -5,7 +5,6 @@ import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
 import { DataLoader } from './services/DataLoader';
-import { MobileDetection } from './utils/MobileDetection';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
 import { defaultConfig } from '../common/config';
@@ -71,11 +70,10 @@ async function initializeExtension(
 async function setupUIComponents(uiManager: UIManager): Promise<void> {
     const checkDataTask = setInterval(async () => {
         const dataLoader = DataLoader.getInstance();
-        const tronscanList = dataLoader.getTronscanList();
         const linksQueueList = dataLoader.getLinksQueueList();
         const buttonsCustomizationList = dataLoader.getButtonsCustomizationList();
 
-        if (tronscanList !== null && linksQueueList !== null && buttonsCustomizationList !== null) {
+        if (linksQueueList !== null && buttonsCustomizationList !== null) {
             clearInterval(checkDataTask);
 
             if (!document.getElementById("swiperTagContainer")) {
