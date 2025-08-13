@@ -1,5 +1,4 @@
 import app from 'flarum/admin/app';
-import HeaderIconSettingComponent from './components/HeaderIconSettingComponent';
 
 /**
  * Settings generator utility for admin interface
@@ -26,12 +25,11 @@ export class SettingsGenerator {
      * Register header icon URL setting
      */
     registerHeaderIconUrlSetting() {
-        this.extensionData.registerSetting(() => {
-            return m(HeaderIconSettingComponent, {
-                setting: `${this.extensionId}.HeaderIconUrl`,
-                label: app.translator.trans('wusong8899-client1.admin.HeaderIconUrl'),
-                help: app.translator.trans('wusong8899-client1.admin.HeaderIconUrlHelp'),
-            });
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.HeaderIconUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.HeaderIconUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.HeaderIconUrlHelp'),
         });
         return this;
     }
