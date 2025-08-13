@@ -1,0 +1,38 @@
+{
+  // Oxlint configuration for the js/ workspace
+  // See .augment/rules/oxlint.md for policy
+  "ignorePatterns": [
+    "dist/**",
+    "node_modules/**",
+    "dist-typings/**"
+  ],
+  "categories": {
+    // Be strict about correctness; warn for suspicious patterns in legacy code
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    // Common safety rules
+    "no-debugger": "error",
+    "no-unsafe-finally": "error",
+    // Keep console usage as a warning for now to avoid blocking builds
+    "no-console": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.*", "**/__tests__/**"],
+      "plugins": ["jest"],
+      "rules": {
+        "jest/no-focused-tests": "error",
+        "jest/no-disabled-tests": "warn"
+      }
+    },
+    {
+      // TypeScript specific tweaks if needed later
+      "files": ["**/*.ts", "**/*.tsx"],
+      "plugins": ["typescript"],
+      "rules": {}
+    }
+  ]
+}
+

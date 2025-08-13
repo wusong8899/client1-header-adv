@@ -43,7 +43,7 @@ export default defineConfig({
         globals: (id: string) => {
           if (id === '@flarum/core/admin' || id === '@flarum/core/forum') return 'flarum.core';
           if (id === 'jquery') return 'jQuery';
-          if (id === 'mithril') return 'flarum.core.compat[\'mithril\']';
+          if (id === 'mithril') return 'm';
           const compat = id.match(/^flarum\/(.+)$/);
           if (compat) return `flarum.core.compat['${compat[1]}']`;
           return id;
