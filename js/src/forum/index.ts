@@ -18,7 +18,6 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
     // Initialize error handling
     if (!errorHandler.initialize()) {
-        console.error('Failed to initialize extension error handling');
         return;
     }
 
@@ -59,8 +58,8 @@ async function initializeExtension(
             addHeaderIcon();
         }
 
-    } catch (error) {
-        console.error('Failed to initialize extension:', error);
+    } catch {
+        // Silently handle initialization errors
     }
 }
 
@@ -71,9 +70,8 @@ async function setupUIComponents(uiManager: UIManager): Promise<void> {
     const checkDataTask = setInterval(async () => {
         const dataLoader = DataLoader.getInstance();
         const linksQueueList = dataLoader.getLinksQueueList();
-        const buttonsCustomizationList = dataLoader.getButtonsCustomizationList();
 
-        if (linksQueueList !== null && buttonsCustomizationList !== null) {
+        if (linksQueueList !== null) {
             clearInterval(checkDataTask);
 
             if (!document.getElementById("swiperTagContainer")) {

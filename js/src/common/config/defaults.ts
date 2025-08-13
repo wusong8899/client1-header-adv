@@ -43,7 +43,6 @@ export const defaultConfig: RootConfig = {
   },
   data: {
     apiResources: {
-      buttonsCustomizationList: 'buttonsCustomizationList',
       linksQueueList: 'linksQueueList',
     },
   },

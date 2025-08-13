@@ -9,11 +9,9 @@ export class DataLoader {
 
     // Loading states
     private linksQueueListLoading = false;
-    private buttonsCustomizationListLoading = false;
 
     // Data storage
     private linksQueueList: any[] | null = null;
-    private buttonsCustomizationList: any[] | null = null;
     private linksQueuePointer = 0;
 
     private constructor() { }
@@ -30,36 +28,7 @@ export class DataLoader {
 
 
 
-    /**
-     * Load buttons customization data
-     * @returns {Promise<any[]>} Promise resolving to buttons customization data
-     */
-    async loadButtonsCustomizationList(): Promise<any[]> {
-        if (this.buttonsCustomizationListLoading) {
-            return this.waitForButtonsCustomizationList();
-        }
 
-        if (this.buttonsCustomizationList !== null) {
-            return this.buttonsCustomizationList;
-        }
-
-        this.buttonsCustomizationListLoading = true;
-
-        try {
-            const results = await app.store.find(defaultConfig.data.apiResources.buttonsCustomizationList).catch(() => []);
-            this.buttonsCustomizationList = [];
-            if (Array.isArray(results)) {
-                this.buttonsCustomizationList.push(...results);
-            }
-            return this.buttonsCustomizationList;
-        } catch (error) {
-            console.error('Failed to load buttons customization list:', error);
-            this.buttonsCustomizationList = [];
-            return this.buttonsCustomizationList;
-        } finally {
-            this.buttonsCustomizationListLoading = false;
-        }
-    }
 
     /**
      * Load links queue data
@@ -83,8 +52,7 @@ export class DataLoader {
                 this.linksQueueList.push(...results);
             }
             return this.linksQueueList;
-        } catch (error) {
-            console.error('Failed to load links queue list:', error);
+        } catch {
             this.linksQueueList = [];
             return this.linksQueueList;
         } finally {
@@ -94,19 +62,11 @@ export class DataLoader {
 
     /**
      * Load all data sources
-     * @returns {Promise<{buttons: any[], links: any[]}>} Promise resolving to all data
+     * @returns {Promise<{links: any[]}>} Promise resolving to all data
      */
-    async loadAllData(): Promise<{ buttons: any[], links: any[] }> {
-        const [buttons, links] = await Promise.all([
-            this.loadButtonsCustomizationList(),
-            this.loadLinksQueueList()
-        ]);
-
-        return { buttons, links };
-    }
-
-    getButtonsCustomizationList(): any[] | null {
-        return this.buttonsCustomizationList;
+    async loadAllData(): Promise<{ links: any[] }> {
+        const links = await this.loadLinksQueueList();
+        return { links };
     }
 
     getLinksQueueList(): any[] | null {
@@ -122,17 +82,6 @@ export class DataLoader {
     }
 
     // Helper methods for waiting
-
-    private async waitForButtonsCustomizationList(): Promise<any[]> {
-        return new Promise((resolve) => {
-            const checkInterval = setInterval(() => {
-                if (!this.buttonsCustomizationListLoading && this.buttonsCustomizationList !== null) {
-                    clearInterval(checkInterval);
-                    resolve(this.buttonsCustomizationList);
-                }
-            }, 100);
-        });
-    }
 
     private async waitForLinksQueueList(): Promise<any[]> {
         return new Promise((resolve) => {
