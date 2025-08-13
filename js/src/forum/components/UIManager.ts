@@ -189,17 +189,35 @@ export class UIManager {
         const innerClass = isMobile ? 'swiper-slide-tag-inner-mobile' : 'swiper-slide-tag-inner';
         const backgroundStyle = `background:${tagData.background};background-size: cover;background-position: center;background-repeat: no-repeat;`;
 
+        // Check if there's a background image (from flarum-tag-background plugin)
+        const hasBackgroundImage = this.hasBackgroundImage(tagData.background);
+
+        // If there's a background image, hide the text; otherwise show it
+        const textContent = hasBackgroundImage ? '' : `
+            <div style='font-weight:bold;font-size:14px;color:${tagData.nameColor}'>
+                ${tagData.name}
+            </div>
+        `;
+
         slide.innerHTML = `
             <a href='${tagData.url}'>
                 <div class='${innerClass}' style='${backgroundStyle}'>
-                    <div style='font-weight:bold;font-size:14px;color:${tagData.nameColor}'>
-                        ${tagData.name}
-                    </div>
+                    ${textContent}
                 </div>
             </a>
         `;
 
         return slide;
+    }
+
+    /**
+     * Check if background contains an image URL
+     */
+    private hasBackgroundImage(background: string): boolean {
+        if (!background) return false;
+
+        // Check if background contains url() function
+        return background.includes('url(') && !background.includes('url()');
     }
 
     /**
