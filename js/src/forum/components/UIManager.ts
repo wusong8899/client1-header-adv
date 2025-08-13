@@ -1,5 +1,6 @@
 import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
+import app from 'flarum/forum/app';
 import { DOMUtils } from '../utils/DOMUtils';
 import { MobileDetection } from '../utils/MobileDetection';
 import { DataLoader } from '../services/DataLoader';
@@ -113,14 +114,68 @@ export class UIManager {
             return null;
         }
 
+        // Get background from flarum-tag-background plugin or fallback to computed style
+        const backgroundImage = this.getTagBackgroundImage(linkElement.href, tag);
+        const computedStyle = window.getComputedStyle(tag);
+        const background = backgroundImage || computedStyle.background;
+
         return {
             url: linkElement.href,
-            background: window.getComputedStyle(tag).background,
+            background: background,
             name: nameElement.textContent || '',
             nameColor: window.getComputedStyle(nameElement).color,
             description: descElement ? descElement.textContent || '' : '',
             descColor: descElement ? window.getComputedStyle(descElement).color : ''
         };
+    }
+
+    /**
+     * Get tag background image from flarum-tag-background plugin
+     */
+    private getTagBackgroundImage(tagUrl: string, tagElement: HTMLElement): string | null {
+        try {
+            // Extract tag slug from URL
+            const url = new URL(tagUrl, window.location.origin);
+            const parts = url.pathname.split('/').filter(Boolean);
+            const tIndex = parts.indexOf('t');
+            const tagsIndex = parts.indexOf('tags');
+
+            let slug: string | null = null;
+            if (tIndex !== -1 && parts[tIndex + 1]) {
+                slug = parts[tIndex + 1];
+            } else if (tagsIndex !== -1 && parts[tagsIndex + 1]) {
+                slug = parts[tagsIndex + 1];
+            } else if (parts.length > 0) {
+                slug = parts[parts.length - 1];
+            }
+
+            if (!slug) return null;
+
+            // Get tag from Flarum store
+            const tags = app.store.all('tags') as any[];
+            const tagModel = tags.find((t: any) => {
+                const tagSlug = typeof t.slug === 'function' ? t.slug() : t.attribute && t.attribute('slug');
+                return tagSlug === slug;
+            });
+
+            if (!tagModel) return null;
+
+            // Get background URL from tag model
+            const bgUrl = tagModel.attribute ? tagModel.attribute('wusong8899BackgroundURL') : null;
+
+            if (bgUrl) {
+                return `url(${bgUrl})`;
+            }
+
+            return null;
+        } catch {
+            // Fallback to checking inline styles set by flarum-tag-background
+            const inlineBackground = tagElement.style.background;
+            if (inlineBackground && inlineBackground.includes('url(')) {
+                return inlineBackground;
+            }
+            return null;
+        }
     }
 
     /**
