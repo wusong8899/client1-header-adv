@@ -89,11 +89,14 @@ function addHeaderIcon(): void {
     let headerIconContainer = document.getElementById(defaultConfig.ui.headerIconId);
 
     if (headerIconContainer === null) {
+        // Get header icon URL from settings, fallback to default config
+        const headerIconUrl = app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || defaultConfig.ui.headerIconUrl;
+
         headerIconContainer = document.createElement("div");
         headerIconContainer.id = defaultConfig.ui.headerIconId;
         headerIconContainer.style.display = 'inline-block';
         headerIconContainer.style.marginTop = '8px';
-        headerIconContainer.innerHTML = `<img src="${defaultConfig.ui.headerIconUrl}" style="height: 24px;" />`;
+        headerIconContainer.innerHTML = `<img src="${headerIconUrl}" style="height: 24px;" />`;
 
         const backControl = document.querySelector("#app-navigation .App-backControl");
         if (backControl) {

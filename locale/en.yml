@@ -6,6 +6,14 @@ wusong8899-client1:
     no-data: No data available
   admin:
     TransitionTime: Speed of transitions between slides (default is 5 seconds)
+    HeaderIconUrl: Header Icon URL
+    HeaderIconUrlHelp: Enter a URL for the header icon image, or upload a file below
+    HeaderIconPreview: Preview
+    HeaderIconPreviewError: Failed to load image
+    HeaderIconUploadLabel: Or upload an image file
+    HeaderIconUploadButton: Choose File
+    HeaderIconUploadHelp: Supported formats: PNG, JPG, GIF (max 2MB)
+    HeaderIconUploadComingSoon: File upload feature coming soon!
     # Slide 1-10
     Link1: Button Link - Slide 1
     Image1: Slide Image 1

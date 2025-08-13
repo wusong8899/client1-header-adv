@@ -8,38 +8,44 @@ class SettingsHelper
 {
     /**
      * Generate settings configuration for advertisement slides
-     * 
+     *
      * @param int $maxSlides Maximum number of slides to configure
      * @return array Array of Extend\Settings configurations
      */
     public static function generateSlideSettings(int $maxSlides = 30): array
     {
         $settings = [];
-        
+
         // Add transition time setting
         $settings[] = (new Extend\Settings)->serializeToForum(
-            'Client1HeaderAdvTransitionTime', 
+            'Client1HeaderAdvTransitionTime',
             'wusong8899-client1-header-adv.TransitionTime'
         );
-        
+
+        // Add header icon URL setting
+        $settings[] = (new Extend\Settings)->serializeToForum(
+            'Client1HeaderAdvHeaderIconUrl',
+            'wusong8899-client1-header-adv.HeaderIconUrl'
+        );
+
         // Generate settings for each slide
         for ($i = 1; $i <= $maxSlides; $i++) {
             // Link setting
             $settings[] = (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvLink{$i}", 
+                "Client1HeaderAdvLink{$i}",
                 "wusong8899-client1-header-adv.Link{$i}"
             );
-            
+
             // Image setting
             $settings[] = (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvImage{$i}", 
+                "Client1HeaderAdvImage{$i}",
                 "wusong8899-client1-header-adv.Image{$i}"
             );
         }
-        
+
         return $settings;
     }
-    
+
     /**
      * Get frontend configuration
      * 
@@ -57,7 +63,7 @@ class SettingsHelper
             new Extend\Locales(__DIR__ . '/../locale'),
         ];
     }
-    
+
     /**
      * Get complete extension configuration
      * 

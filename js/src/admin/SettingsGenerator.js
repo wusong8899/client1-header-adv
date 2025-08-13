@@ -1,4 +1,5 @@
 import app from 'flarum/admin/app';
+import HeaderIconSettingComponent from './components/HeaderIconSettingComponent';
 
 /**
  * Settings generator utility for admin interface
@@ -17,6 +18,20 @@ export class SettingsGenerator {
             setting: `${this.extensionId}.TransitionTime`,
             type: 'number',
             label: app.translator.trans('wusong8899-client1.admin.TransitionTime'),
+        });
+        return this;
+    }
+
+    /**
+     * Register header icon URL setting
+     */
+    registerHeaderIconUrlSetting() {
+        this.extensionData.registerSetting(() => {
+            return m(HeaderIconSettingComponent, {
+                setting: `${this.extensionId}.HeaderIconUrl`,
+                label: app.translator.trans('wusong8899-client1.admin.HeaderIconUrl'),
+                help: app.translator.trans('wusong8899-client1.admin.HeaderIconUrlHelp'),
+            });
         });
         return this;
     }
@@ -51,6 +66,7 @@ export class SettingsGenerator {
     registerAllSettings(maxSlides = 30) {
         return this
             .registerTransitionTimeSetting()
+            .registerHeaderIconUrlSetting()
             .registerSlideSettings(maxSlides);
     }
 }
