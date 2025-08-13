@@ -8,12 +8,10 @@ export class DataLoader {
     private static instance: DataLoader;
 
     // Loading states
-    private tronscanListLoading = false;
     private linksQueueListLoading = false;
     private buttonsCustomizationListLoading = false;
 
     // Data storage
-    private tronscanList: any[] | null = null;
     private linksQueueList: any[] | null = null;
     private buttonsCustomizationList: any[] | null = null;
     private linksQueuePointer = 0;
@@ -30,36 +28,7 @@ export class DataLoader {
         return DataLoader.instance;
     }
 
-    /**
-     * Load Tronscan data
-     * @returns {Promise<any[]>} Promise resolving to tronscan data
-     */
-    async loadTronscanList(): Promise<any[]> {
-        if (this.tronscanListLoading) {
-            return this.waitForTronscanList();
-        }
 
-        if (this.tronscanList !== null) {
-            return this.tronscanList;
-        }
-
-        this.tronscanListLoading = true;
-
-        try {
-            const results = await app.store.find(defaultConfig.data.apiResources.tronscanList).catch(() => []);
-            this.tronscanList = [];
-            if (Array.isArray(results)) {
-                this.tronscanList.push(...results);
-            }
-            return this.tronscanList;
-        } catch (error) {
-            console.error('Failed to load tronscan list:', error);
-            this.tronscanList = [];
-            return this.tronscanList;
-        } finally {
-            this.tronscanListLoading = false;
-        }
-    }
 
     /**
      * Load buttons customization data
@@ -125,21 +94,15 @@ export class DataLoader {
 
     /**
      * Load all data sources
-     * @returns {Promise<{tronscan: any[], buttons: any[], links: any[]}>} Promise resolving to all data
+     * @returns {Promise<{buttons: any[], links: any[]}>} Promise resolving to all data
      */
-    async loadAllData(): Promise<{ tronscan: any[], buttons: any[], links: any[] }> {
-        const [tronscan, buttons, links] = await Promise.all([
-            this.loadTronscanList(),
+    async loadAllData(): Promise<{ buttons: any[], links: any[] }> {
+        const [buttons, links] = await Promise.all([
             this.loadButtonsCustomizationList(),
             this.loadLinksQueueList()
         ]);
 
-        return { tronscan, buttons, links };
-    }
-
-    // Getters for data
-    getTronscanList(): any[] | null {
-        return this.tronscanList;
+        return { buttons, links };
     }
 
     getButtonsCustomizationList(): any[] | null {
@@ -159,16 +122,6 @@ export class DataLoader {
     }
 
     // Helper methods for waiting
-    private async waitForTronscanList(): Promise<any[]> {
-        return new Promise((resolve) => {
-            const checkInterval = setInterval(() => {
-                if (!this.tronscanListLoading && this.tronscanList !== null) {
-                    clearInterval(checkInterval);
-                    resolve(this.tronscanList);
-                }
-            }, 100);
-        });
-    }
 
     private async waitForButtonsCustomizationList(): Promise<any[]> {
         return new Promise((resolve) => {

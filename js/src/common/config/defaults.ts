@@ -43,7 +43,6 @@ export const defaultConfig: RootConfig = {
   },
   data: {
     apiResources: {
-      tronscanList: 'syncTronscanList',
       buttonsCustomizationList: 'buttonsCustomizationList',
       linksQueueList: 'linksQueueList',
     },
