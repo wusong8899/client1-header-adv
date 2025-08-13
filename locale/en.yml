@@ -12,8 +12,8 @@ wusong8899-client1:
     HeaderIconPreviewError: Failed to load image
     HeaderIconUploadLabel: Or upload an image file
     HeaderIconUploadButton: Choose File
-    HeaderIconUploadHelp: Supported formats: PNG, JPG, GIF (max 2MB)
-    HeaderIconUploadComingSoon: File upload feature coming soon!
+    HeaderIconUploadHelp: "Supported formats: PNG, JPG, GIF (max 2MB)"
+    HeaderIconUploadComingSoon: "File upload feature coming soon!"
     # Slide 1-10
     Link1: Button Link - Slide 1
     Image1: Slide Image 1

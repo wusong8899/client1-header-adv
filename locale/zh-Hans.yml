@@ -12,8 +12,8 @@ wusong8899-client1:
     HeaderIconPreviewError: 图片加载失败
     HeaderIconUploadLabel: 或上传图片文件
     HeaderIconUploadButton: 选择文件
-    HeaderIconUploadHelp: 支持格式：PNG、JPG、GIF（最大2MB）
-    HeaderIconUploadComingSoon: 文件上传功能即将推出！
+    HeaderIconUploadHelp: "支持格式：PNG、JPG、GIF（最大2MB）"
+    HeaderIconUploadComingSoon: "文件上传功能即将推出！"
     Link1: 广告1跳转地址
     Image1: 广告1图片地址
     Link2: 广告2跳转地址
