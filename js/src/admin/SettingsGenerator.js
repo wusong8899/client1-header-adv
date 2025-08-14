@@ -1,4 +1,5 @@
 import app from 'flarum/admin/app';
+import DynamicSlideSettingsComponent from './components/DynamicSlideSettingsComponent';
 
 /**
  * Settings generator utility for admin interface
@@ -35,25 +36,16 @@ export class SettingsGenerator {
     }
 
     /**
-     * Register settings for advertisement slides
+     * Register dynamic slide settings component
      * @param {number} maxSlides - Maximum number of slides to configure
      */
     registerSlideSettings(maxSlides = 30) {
-        for (let i = 1; i <= maxSlides; i++) {
-            // Register link setting
-            this.extensionData.registerSetting({
-                setting: `${this.extensionId}.Link${i}`,
-                type: 'URL',
-                label: app.translator.trans(`wusong8899-client1.admin.Link${i}`),
+        this.extensionData.registerSetting(() => {
+            return m(DynamicSlideSettingsComponent, {
+                extensionId: this.extensionId,
+                maxSlides: maxSlides
             });
-
-            // Register image setting
-            this.extensionData.registerSetting({
-                setting: `${this.extensionId}.Image${i}`,
-                type: 'URL',
-                label: app.translator.trans(`wusong8899-client1.admin.Image${i}`),
-            });
-        }
+        });
         return this;
     }
 

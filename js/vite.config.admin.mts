@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
+import oxlintPlugin from 'vite-plugin-oxlint';
 
 // Custom plugin to handle Flarum's module.exports assignment pattern
 function flarumModuleExports() {
@@ -20,14 +21,25 @@ function flarumModuleExports() {
 export default defineConfig({
   root: path.resolve(__dirname),
   publicDir: false,
-  plugins: [flarumModuleExports()],
+  plugins: [
+    // Oxlint integration with moderate strictness (matching your .oxlintrc.json approach)
+    oxlintPlugin({
+      configFile: '.oxlintrc.json',
+      // Using moderate approach - warnings won't break builds
+      params: '--quiet',
+      // Only lint source files, not build outputs
+      path: 'src',
+    }),
+    // Your existing Flarum plugin
+    flarumModuleExports(),
+  ],
   build: {
     outDir: 'dist',
-    emptyOutDir: false,
+    emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
       input: {
-        forum: path.resolve(__dirname, 'forum.js'),
+        admin: path.resolve(__dirname, 'admin.js'),
       },
       external: (id: string) => {
         if (id === '@flarum/core/admin' || id === '@flarum/core/forum') return true;
@@ -61,4 +73,3 @@ export default defineConfig({
     },
   },
 });
-

@@ -62,3 +62,49 @@
     }
   }
 }
+
+// Dynamic Slide Settings Component Styles
+.DynamicSlideSettings {
+  &-slide {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+  }
+
+  &-slideHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+
+    h4 {
+      margin: 0;
+      color: #555;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  &-slideFields {
+    .Form-group {
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .FormControl {
+      width: 100%;
+    }
+  }
+
+  &-addButton {
+    text-align: center;
+    padding: 20px 0;
+  }
+}
