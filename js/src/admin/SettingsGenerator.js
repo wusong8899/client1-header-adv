@@ -36,6 +36,88 @@ export class SettingsGenerator {
     }
 
     /**
+     * Register social media settings
+     */
+    registerSocialMediaSettings() {
+        // Kick settings
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialKickUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialKickUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialKickUrlHelp'),
+        });
+
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialKickIcon`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialKickIcon'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialIconHelp'),
+        });
+
+        // Facebook settings
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialFacebookUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialFacebookUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialFacebookUrlHelp'),
+        });
+
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialFacebookIcon`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialFacebookIcon'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialIconHelp'),
+        });
+
+        // Twitter settings
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialTwitterUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialTwitterUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialTwitterUrlHelp'),
+        });
+
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialTwitterIcon`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialTwitterIcon'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialIconHelp'),
+        });
+
+        // YouTube settings
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialYouTubeUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialYouTubeUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialYouTubeUrlHelp'),
+        });
+
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialYouTubeIcon`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialYouTubeIcon'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialIconHelp'),
+        });
+
+        // Instagram settings
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialInstagramUrl`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialInstagramUrl'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialInstagramUrlHelp'),
+        });
+
+        this.extensionData.registerSetting({
+            setting: `${this.extensionId}.SocialInstagramIcon`,
+            type: 'url',
+            label: app.translator.trans('wusong8899-client1.admin.SocialInstagramIcon'),
+            help: app.translator.trans('wusong8899-client1.admin.SocialIconHelp'),
+        });
+
+        return this;
+    }
+
+    /**
      * Register dynamic slide settings component
      * @param {number} maxSlides - Maximum number of slides to configure
      */
@@ -57,6 +139,7 @@ export class SettingsGenerator {
         return this
             .registerTransitionTimeSetting()
             .registerHeaderIconUrlSetting()
+            .registerSocialMediaSettings()
             .registerSlideSettings(maxSlides);
     }
 }

@@ -245,15 +245,64 @@ export class UIManager {
      * Create social buttons HTML
      */
     private createSocialButtonsHTML(): string {
+        const extensionId = 'wusong8899-client1-header-adv';
+
+        // Define social media platforms with their settings keys and default icons
+        const socialPlatforms = [
+            {
+                urlKey: `${extensionId}.SocialKickUrl`,
+                iconKey: `${extensionId}.SocialKickIcon`,
+                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcgSG.png'
+            },
+            {
+                urlKey: `${extensionId}.SocialFacebookUrl`,
+                iconKey: `${extensionId}.SocialFacebookIcon`,
+                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcF6i.png'
+            },
+            {
+                urlKey: `${extensionId}.SocialTwitterUrl`,
+                iconKey: `${extensionId}.SocialTwitterIcon`,
+                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcDas.png'
+            },
+            {
+                urlKey: `${extensionId}.SocialYouTubeUrl`,
+                iconKey: `${extensionId}.SocialYouTubeIcon`,
+                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcQjd.png'
+            },
+            {
+                urlKey: `${extensionId}.SocialInstagramUrl`,
+                iconKey: `${extensionId}.SocialInstagramIcon`,
+                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcBAL.png'
+            }
+        ];
+
+        // Generate social buttons HTML
+        const socialButtons = socialPlatforms
+            .map((platform, index) => {
+                const url = app.forum.attribute(platform.urlKey) || '';
+                const iconUrl = app.forum.attribute(platform.iconKey) || platform.defaultIcon;
+
+                // Only render button if URL is provided
+                if (!url.trim()) {
+                    return '';
+                }
+
+                const marginStyle = index > 0 ? 'margin-left: 20px;' : '';
+                return `<img onClick="window.open('${url}', '_blank')" style="width: 32px;${marginStyle}" src="${iconUrl}">`;
+            })
+            .filter(button => button !== '') // Remove empty buttons
+            .join('');
+
+        // Only render the container if there are social buttons
+        if (!socialButtons) {
+            return '';
+        }
+
         return `
             <div style="text-align:center;padding-top: 10px;">
                 <button class="Button Button--primary" type="button" style="font-weight: normal !important; color:#ffa000; background: #1a1d2e !important;border-radius: 2rem !important;">
                     <div style="margin-top: 5px;" class="Button-label">
-                        <img onClick="window.open('https://kick.com/wangming886', '_blank')" style="width: 32px;" src="https://mutluresim.com/images/2023/04/10/KcgSG.png">
-                        <img onClick="window.open('https://m.facebook.com', '_blank')" style="width: 32px;margin-left: 20px;" src="https://mutluresim.com/images/2023/04/10/KcF6i.png">
-                        <img onClick="window.open('https://twitter.com/youngron131_', '_blank')" style="width: 32px;margin-left: 20px;" src="https://mutluresim.com/images/2023/04/10/KcDas.png">
-                        <img onClick="window.open('https://m.youtube.com/@ag8888','_blank')" style="width: 32px;margin-left: 20px;" src="https://mutluresim.com/images/2023/04/10/KcQjd.png">
-                        <img onClick="window.open('https://www.instagram.com/p/CqLvh94Sk8F/?igshid=YmMyMTA2M2Y=', '_blank')" style="width: 32px;margin-left: 20px;" src="https://mutluresim.com/images/2023/04/10/KcBAL.png">
+                        ${socialButtons}
                     </div>
                 </button>
             </div>

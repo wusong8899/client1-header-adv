@@ -22,6 +22,23 @@ wusong8899-client1:
     SlideNumber: "Slide {number}"
     SlideLink: Link URL
     SlideImage: Image URL
+    # Social Media Settings
+    SocialKickUrl: Kick URL
+    SocialKickUrlHelp: Enter the URL for your Kick channel (leave empty to hide this button)
+    SocialKickIcon: Kick Icon URL
+    SocialFacebookUrl: Facebook URL
+    SocialFacebookUrlHelp: Enter the URL for your Facebook page (leave empty to hide this button)
+    SocialFacebookIcon: Facebook Icon URL
+    SocialTwitterUrl: Twitter URL
+    SocialTwitterUrlHelp: Enter the URL for your Twitter profile (leave empty to hide this button)
+    SocialTwitterIcon: Twitter Icon URL
+    SocialYouTubeUrl: YouTube URL
+    SocialYouTubeUrlHelp: Enter the URL for your YouTube channel (leave empty to hide this button)
+    SocialYouTubeIcon: YouTube Icon URL
+    SocialInstagramUrl: Instagram URL
+    SocialInstagramUrlHelp: Enter the URL for your Instagram profile (leave empty to hide this button)
+    SocialInstagramIcon: Instagram Icon URL
+    SocialIconHelp: Enter the URL for the icon image (leave empty to use default icon)
     # Slide 1-10
     Link1: Button Link - Slide 1
     Image1: Slide Image 1
