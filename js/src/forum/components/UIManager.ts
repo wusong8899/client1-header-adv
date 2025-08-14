@@ -3,17 +3,11 @@ import { Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
 import { DOMUtils } from '../utils/DOMUtils';
 import { MobileDetection } from '../utils/MobileDetection';
-import { DataLoader } from '../services/DataLoader';
 
 /**
  * UI Manager for handling various UI components
  */
 export class UIManager {
-    private dataLoader: DataLoader;
-
-    constructor() {
-        this.dataLoader = DataLoader.getInstance();
-    }
 
     /**
      * Change category layout to swiper-based layout

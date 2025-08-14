@@ -52,12 +52,6 @@ export interface UIConfig {
   headerIconUrl: string;
 }
 
-export interface DataConfig {
-  apiResources: {
-    linksQueueList: string;
-  };
-}
-
 export interface RootConfig {
   env: Environment;
   app: AppConfig;

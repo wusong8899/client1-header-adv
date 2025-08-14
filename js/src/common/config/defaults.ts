@@ -43,7 +43,7 @@ export const defaultConfig: RootConfig = {
   },
   data: {
     apiResources: {
-      linksQueueList: 'linksQueueList',
+      // Links queue functionality moved to client1-links-queue extension
     },
   },
 };
