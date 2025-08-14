@@ -28,6 +28,22 @@ class SettingsHelper
             'wusong8899-client1-header-adv.HeaderIconUrl'
         );
 
+        // Add social media settings
+        $socialPlatforms = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'];
+        foreach ($socialPlatforms as $platform) {
+            // URL setting
+            $settings[] = (new Extend\Settings)->serializeToForum(
+                "wusong8899-client1-header-adv.Social{$platform}Url",
+                "wusong8899-client1-header-adv.Social{$platform}Url"
+            );
+
+            // Icon setting
+            $settings[] = (new Extend\Settings)->serializeToForum(
+                "wusong8899-client1-header-adv.Social{$platform}Icon",
+                "wusong8899-client1-header-adv.Social{$platform}Icon"
+            );
+        }
+
         // Generate settings for each slide
         for ($i = 1; $i <= $maxSlides; $i++) {
             // Link setting

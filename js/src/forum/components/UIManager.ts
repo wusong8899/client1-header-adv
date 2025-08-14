@@ -252,27 +252,27 @@ export class UIManager {
             {
                 urlKey: `${extensionId}.SocialKickUrl`,
                 iconKey: `${extensionId}.SocialKickIcon`,
-                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcgSG.png'
+                defaultIcon: ''
             },
             {
                 urlKey: `${extensionId}.SocialFacebookUrl`,
                 iconKey: `${extensionId}.SocialFacebookIcon`,
-                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcF6i.png'
+                defaultIcon: ''
             },
             {
                 urlKey: `${extensionId}.SocialTwitterUrl`,
                 iconKey: `${extensionId}.SocialTwitterIcon`,
-                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcDas.png'
+                defaultIcon: ''
             },
             {
                 urlKey: `${extensionId}.SocialYouTubeUrl`,
                 iconKey: `${extensionId}.SocialYouTubeIcon`,
-                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcQjd.png'
+                defaultIcon: ''
             },
             {
                 urlKey: `${extensionId}.SocialInstagramUrl`,
                 iconKey: `${extensionId}.SocialInstagramIcon`,
-                defaultIcon: 'https://mutluresim.com/images/2023/04/10/KcBAL.png'
+                defaultIcon: ''
             }
         ];
 
@@ -282,8 +282,8 @@ export class UIManager {
                 const url = app.forum.attribute(platform.urlKey) || '';
                 const iconUrl = app.forum.attribute(platform.iconKey) || platform.defaultIcon;
 
-                // Only render button if URL is provided
-                if (!url.trim()) {
+                // Only render button if both URL and icon are provided
+                if (!url.trim() || !iconUrl.trim()) {
                     return '';
                 }
 
