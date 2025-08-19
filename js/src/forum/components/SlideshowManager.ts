@@ -45,14 +45,17 @@ export class SlideshowManager {
      * Setup mobile-specific UI modifications
      */
     private setupMobileUI(): void {
-        const newDiscussionButton = DOMUtils.querySelector(".item-newDiscussion .Button-label");
-        if (newDiscussionButton) {
-            (newDiscussionButton as HTMLElement).innerHTML = "<div class='buttonRegister'>登录</div>";
-            DOMUtils.setStyles(newDiscussionButton as HTMLElement, {
-                'display': 'block',
-                'font-size': '14px',
-                'word-spacing': '-1px'
-            });
+        // Only modify UI for non-logged users
+        if (!app.session.user) {
+            const newDiscussionButton = DOMUtils.querySelector(".item-newDiscussion .Button-label");
+            if (newDiscussionButton) {
+                (newDiscussionButton as HTMLElement).innerHTML = "<div class='buttonRegister'>登录</div>";
+                DOMUtils.setStyles(newDiscussionButton as HTMLElement, {
+                    'display': 'block',
+                    'font-size': '14px',
+                    'word-spacing': '-1px'
+                });
+            }
         }
     }
 

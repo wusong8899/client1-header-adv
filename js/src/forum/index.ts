@@ -25,6 +25,10 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
     extend(HeaderPrimary.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
+            // Add header icon for all users, on all pages
+            addHeaderIcon();
+            
+            // Only initialize full extension on tags page
             if (configManager.isTagsPage()) {
                 initializeExtension(vnode, slideshowManager, uiManager);
             }
@@ -46,11 +50,6 @@ async function initializeExtension(
 
         // Setup UI components
         await setupUIComponents(uiManager);
-
-        // Add header icon for non-logged users
-        if (!app.session.user) {
-            addHeaderIcon();
-        }
 
     } catch {
         // Silently handle initialization errors
