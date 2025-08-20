@@ -1,7 +1,7 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
-import SessionDropdown from 'flarum/forum/components/SessionDropdown';
+import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
@@ -209,6 +209,21 @@ function addUserAvatar(): void {
         if (originalDropdown) {
             const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
             avatarClone.id = "avatarClone";
+            
+            // Add click handler to the dropdown toggle button to trigger new discussion
+            const dropdownToggle = avatarClone.querySelector('.Dropdown-toggle');
+            if (dropdownToggle) {
+                dropdownToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Open the new discussion composer
+                    app.composer.load(DiscussionComposer, {
+                        user: app.session.user
+                    });
+                    app.composer.show();
+                });
+            }
             
             // Add transfer money button click handler
             const transferButton = avatarClone.querySelector('.item-transferMoney button');
