@@ -26,20 +26,22 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
     extend(HeaderPrimary.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
-            if (app.session.user) {
-                // Logged in users: show money display and user avatar (hide header icon)
-                hideHeaderIcon();
-                addMoneyDisplay();
-                addUserAvatar();
-            } else {
-                // Not logged in: show header icon only
-                addHeaderIcon();
-            }
-            
-            // Only initialize full extension on tags page
+            // Only show these elements on the tags page (main page)
             if (configManager.isTagsPage()) {
+                if (app.session.user) {
+                    // Logged in users on tags page: show money display and user avatar
+                    hideHeaderIcon();
+                    addMoneyDisplay();
+                    addUserAvatar();
+                } else {
+                    // Not logged in on tags page: show header icon only
+                    addHeaderIcon();
+                }
+                
+                // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
             }
+            // On other pages: don't show any custom header elements
         }, 'HeaderPrimary view extension');
     });
 });
