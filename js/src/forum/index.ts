@@ -26,13 +26,14 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
     extend(HeaderPrimary.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
-            // Add header icon for all users, on all pages
-            addHeaderIcon();
-            
-            // Add money display and user avatar for logged-in users
             if (app.session.user) {
+                // Logged in users: show money display and user avatar (hide header icon)
+                hideHeaderIcon();
                 addMoneyDisplay();
                 addUserAvatar();
+            } else {
+                // Not logged in: show header icon only
+                addHeaderIcon();
             }
             
             // Only initialize full extension on tags page
@@ -78,9 +79,14 @@ async function setupUIComponents(uiManager: UIManager): Promise<void> {
 }
 
 /**
- * Add header icon for branding
+ * Add header icon for branding (only for non-logged users)
  */
 function addHeaderIcon(): void {
+    // Only show header icon if user is not logged in
+    if (app.session.user) {
+        return;
+    }
+
     let headerIconContainer = document.getElementById(defaultConfig.ui.headerIconId);
 
     if (headerIconContainer === null) {
@@ -97,11 +103,24 @@ function addHeaderIcon(): void {
         if (backControl) {
             backControl.insertBefore(headerIconContainer, backControl.firstChild);
         }
+    } else {
+        // Make sure it's visible for non-logged users
+        headerIconContainer.style.display = 'inline-block';
     }
 }
 
 /**
- * Add money display component after header icon
+ * Hide header icon when user is logged in
+ */
+function hideHeaderIcon(): void {
+    const headerIconContainer = document.getElementById(defaultConfig.ui.headerIconId);
+    if (headerIconContainer) {
+        headerIconContainer.style.display = 'none';
+    }
+}
+
+/**
+ * Add money display component (replaces header icon position when logged in)
  */
 function addMoneyDisplay(): void {
     let moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
@@ -129,6 +148,9 @@ function addMoneyDisplay(): void {
         if (appNavigation) {
             appNavigation.appendChild(moneyDisplayContainer);
         }
+    } else if (moneyDisplayContainer) {
+        // Make sure it's visible for logged-in users
+        moneyDisplayContainer.style.display = 'flex';
     }
 }
 
