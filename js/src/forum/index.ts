@@ -144,7 +144,7 @@ function addMoneyDisplay(): void {
 
         // Add withdrawal button next to wallet icon
         const withdrawalButton = document.createElement("div");
-        withdrawalButton.innerHTML = '<i class="fas fa-money-bill-transfer"></i>';
+        withdrawalButton.innerHTML = '<i class="fas fa-money-bill-transfer"></i><span style="margin-left: 4px; font-size: 12px;">提款</span>';
         withdrawalButton.className = "clientCustomizeWithdrawalButton";
         withdrawalButton.style.cursor = "pointer";
         withdrawalButton.title = "提款";
