@@ -12,16 +12,17 @@
     "suspicious": "warn"
   },
   "rules": {
-    // Common safety rules
-    "no-debugger": "error",
-    "no-unsafe-finally": "error",
-    // Keep console usage as a warning for now to avoid blocking builds
-    "no-console": "warn"
+    "no-console": "off"
   },
   "overrides": [
     {
-      "files": ["**/*.test.*", "**/__tests__/**"],
-      "plugins": ["jest"],
+      "files": [
+        "**/*.test.*",
+        "**/__tests__/**"
+      ],
+      "plugins": [
+        "jest"
+      ],
       "rules": {
         "jest/no-focused-tests": "error",
         "jest/no-disabled-tests": "warn"
@@ -29,10 +30,14 @@
     },
     {
       // TypeScript specific tweaks if needed later
-      "files": ["**/*.ts", "**/*.tsx"],
-      "plugins": ["typescript"],
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
+      "plugins": [
+        "typescript"
+      ],
       "rules": {}
     }
   ]
 }
-

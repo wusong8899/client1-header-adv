@@ -1,6 +1,7 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
+import SessionDropdown from 'flarum/forum/components/SessionDropdown';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
@@ -27,6 +28,12 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
         errorHandler.handleSync(() => {
             // Add header icon for all users, on all pages
             addHeaderIcon();
+            
+            // Add money display and user avatar for logged-in users
+            if (app.session.user) {
+                addMoneyDisplay();
+                addUserAvatar();
+            }
             
             // Only initialize full extension on tags page
             if (configManager.isTagsPage()) {
@@ -89,6 +96,103 @@ function addHeaderIcon(): void {
         const backControl = document.querySelector("#app-navigation .App-backControl");
         if (backControl) {
             backControl.insertBefore(headerIconContainer, backControl.firstChild);
+        }
+    }
+}
+
+/**
+ * Add money display component after header icon
+ */
+function addMoneyDisplay(): void {
+    let moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
+
+    if (moneyDisplayContainer === null && app.session.user) {
+        const appNavigation = document.getElementById("app-navigation");
+        const moneyName = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
+        const userMoneyText = moneyName.replace('[money]', app.session.user.attribute("money"));
+
+        moneyDisplayContainer = document.createElement("div");
+        moneyDisplayContainer.id = "moneyDisplayContainer";
+        moneyDisplayContainer.className = "clientCustomizeWithdrawalHeaderTotalMoney";
+
+        const moneyText = document.createElement("div");
+        moneyText.innerHTML = '<span style="font-size:16px;"><i class="fab fa-bitcoin" style="padding-right: 8px;color: gold;"></i></span>' + userMoneyText;
+        moneyText.className = "clientCustomizeWithdrawalHeaderText";
+
+        const moneyIcon = document.createElement("div");
+        moneyIcon.innerHTML = '<i class="fas fa-wallet"></i>';
+        moneyIcon.className = "clientCustomizeWithdrawalHeaderIcon";
+
+        moneyDisplayContainer.appendChild(moneyText);
+        moneyDisplayContainer.appendChild(moneyIcon);
+
+        if (appNavigation) {
+            appNavigation.appendChild(moneyDisplayContainer);
+        }
+    }
+}
+
+/**
+ * Add user avatar dropdown to the right side of navigation
+ */
+function addUserAvatar(): void {
+    let userAvatarContainer = document.getElementById("userAvatarContainer");
+
+    if (userAvatarContainer === null && app.session.user) {
+        const appNavigation = document.getElementById("app-navigation");
+
+        userAvatarContainer = document.createElement("div");
+        userAvatarContainer.id = "userAvatarContainer";
+        userAvatarContainer.style.position = "absolute";
+        userAvatarContainer.style.right = "10px";
+        userAvatarContainer.style.top = "50%";
+        userAvatarContainer.style.transform = "translateY(-50%)";
+
+        // Clone the existing SessionDropdown
+        const originalDropdown = document.querySelector("#header-secondary .item-session .SessionDropdown");
+        if (originalDropdown) {
+            const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
+            avatarClone.id = "avatarClone";
+            
+            // Add transfer money button click handler
+            const transferButton = avatarClone.querySelector('.item-transferMoney button');
+            if (transferButton) {
+                transferButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Try to access TransferMoneyModal through the extension registry
+                    try {
+                        const extensions = (window as any).flarum?.reg?.data || {};
+                        const moneyTransferExtension = extensions['wusong8899-transfer-money'];
+                        
+                        if (moneyTransferExtension && moneyTransferExtension.TransferMoneyModal) {
+                            app.modal.show(moneyTransferExtension.TransferMoneyModal);
+                        } else {
+                            // Fallback: try to trigger the original button if it exists
+                            const originalTransferButton = document.querySelector('#header-secondary .item-transferMoney button');
+                            if (originalTransferButton) {
+                                (originalTransferButton as HTMLElement).click();
+                            } else {
+                                console.warn('TransferMoneyModal not available');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error accessing TransferMoneyModal:', error);
+                        // Fallback to original button
+                        const originalTransferButton = document.querySelector('#header-secondary .item-transferMoney button');
+                        if (originalTransferButton) {
+                            (originalTransferButton as HTMLElement).click();
+                        }
+                    }
+                });
+            }
+
+            userAvatarContainer.appendChild(avatarClone);
+        }
+
+        if (appNavigation) {
+            appNavigation.appendChild(userAvatarContainer);
         }
     }
 }
