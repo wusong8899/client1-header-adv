@@ -158,11 +158,15 @@ function addMoneyDisplay(): void {
  * Add user avatar dropdown to the right side of navigation
  */
 function addUserAvatar(): void {
+    if (!app.session.user) {
+        return;
+    }
+
     let userAvatarContainer = document.getElementById("userAvatarContainer");
+    const appNavigation = document.getElementById("app-navigation");
 
-    if (userAvatarContainer === null && app.session.user) {
-        const appNavigation = document.getElementById("app-navigation");
-
+    // Create container if it doesn't exist
+    if (userAvatarContainer === null) {
         userAvatarContainer = document.createElement("div");
         userAvatarContainer.id = "userAvatarContainer";
         userAvatarContainer.style.position = "absolute";
@@ -170,8 +174,22 @@ function addUserAvatar(): void {
         userAvatarContainer.style.top = "50%";
         userAvatarContainer.style.transform = "translateY(-50%)";
 
-        // Clone the existing SessionDropdown
-        const originalDropdown = document.querySelector("#header-secondary .item-session .SessionDropdown");
+        if (appNavigation) {
+            appNavigation.appendChild(userAvatarContainer);
+        }
+    }
+
+    // Always try to add avatar if container exists but is empty
+    if (userAvatarContainer && userAvatarContainer.children.length === 0) {
+        // Try multiple selectors to find the original dropdown
+        let originalDropdown = document.querySelector("#header-secondary .item-session .SessionDropdown");
+        if (!originalDropdown) {
+            originalDropdown = document.querySelector(".SessionDropdown");
+        }
+        if (!originalDropdown) {
+            originalDropdown = document.querySelector(".item-session");
+        }
+
         if (originalDropdown) {
             const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
             avatarClone.id = "avatarClone";
@@ -211,10 +229,9 @@ function addUserAvatar(): void {
             }
 
             userAvatarContainer.appendChild(avatarClone);
-        }
-
-        if (appNavigation) {
-            appNavigation.appendChild(userAvatarContainer);
+            console.log('Avatar clone added successfully');
+        } else {
+            console.warn('Original dropdown not found for cloning');
         }
     }
 }
