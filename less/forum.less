@@ -992,3 +992,32 @@ a:active {
   width: 34px;
   text-align: center;
 }
+
+.clientCustomizeWithdrawalButton {
+  display: inline-block;
+  background: #28a745;
+  color: white;
+  padding: 4px;
+  border-radius: 14px;
+  width: 34px;
+  text-align: center;
+  margin-left: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.clientCustomizeWithdrawalButton:hover {
+  background: #218838;
+}
+
+// 在移动端隐藏drawer中的提款和用户头像
+@media @phone {
+  // 隐藏drawer中的提款按钮
+  .App-drawer .item-withdrawal {
+    display: none !important;
+  }
+  
+  // 隐藏drawer中的用户头像下拉菜单
+  .App-drawer .item-session {
+    display: none !important;
+  }
+}

@@ -120,7 +120,7 @@ function hideHeaderIcon(): void {
 }
 
 /**
- * Add money display component (replaces header icon position when logged in)
+ * Add money display component with withdrawal button (replaces header icon position when logged in)
  */
 function addMoneyDisplay(): void {
     let moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
@@ -142,8 +142,24 @@ function addMoneyDisplay(): void {
         moneyIcon.innerHTML = '<i class="fas fa-wallet"></i>';
         moneyIcon.className = "clientCustomizeWithdrawalHeaderIcon";
 
+        // Add withdrawal button next to wallet icon
+        const withdrawalButton = document.createElement("div");
+        withdrawalButton.innerHTML = '<i class="fas fa-money-bill-transfer"></i>';
+        withdrawalButton.className = "clientCustomizeWithdrawalButton";
+        withdrawalButton.style.cursor = "pointer";
+        withdrawalButton.title = "提款";
+        
+        // Add click handler for withdrawal button
+        withdrawalButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Navigate to withdrawal page
+            window.location.href = '/withdrawal';
+        });
+
         moneyDisplayContainer.appendChild(moneyText);
         moneyDisplayContainer.appendChild(moneyIcon);
+        moneyDisplayContainer.appendChild(withdrawalButton);
 
         if (appNavigation) {
             appNavigation.appendChild(moneyDisplayContainer);
