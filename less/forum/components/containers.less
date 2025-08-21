@@ -86,14 +86,38 @@
 // =============================================================================
 
 @media @phone {
-  // Hide drawer items on mobile
+  // Hide withdrawal items in drawer on mobile (but keep session items)
   .App-drawer {
     .item-withdrawal {
       display: none !important;
     }
+  }
+  
+  // Mobile optimizations for custom header components
+  #userAvatarContainer {
+    // Let Flarum's built-in dropdown mobile system handle positioning
+    // The dropdown will automatically become a bottom sheet on mobile
+  }
+  
+  .clientCustomizeWithdrawalHeaderTotalMoney {
+    // Ensure money display is properly sized for mobile
+    font-size: 14px;
     
-    .item-session {
-      display: none !important;
+    .clientCustomizeWithdrawalHeaderText {
+      font-size: 14px;
+      
+      span {
+        font-size: 14px;
+      }
+    }
+    
+    .clientCustomizeWithdrawalButton {
+      font-size: 11px;
+      padding: 3px 5px;
+      
+      span {
+        font-size: 10px;
+      }
     }
   }
 }

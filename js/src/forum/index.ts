@@ -144,7 +144,7 @@ function addMoneyDisplay(): void {
         moneyDisplayContainer.className = "clientCustomizeWithdrawalHeaderTotalMoney";
 
         const moneyText = document.createElement("div");
-        moneyText.innerHTML = '<span style="font-size:16px;"><i class="fab fa-bitcoin" style="padding-right: 8px;color: gold;"></i></span>' + userMoneyText;
+        moneyText.innerHTML = '<span><i class="fab fa-bitcoin" style="padding-right: 8px;color: gold;"></i></span>' + userMoneyText;
         moneyText.className = "clientCustomizeWithdrawalHeaderText";
 
         const moneyIcon = document.createElement("div");
@@ -238,6 +238,11 @@ function addUserAvatar(): void {
         if (originalDropdown) {
             const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
             avatarClone.id = "avatarClone";
+            
+            // Ensure the clone maintains proper Bootstrap dropdown classes for mobile UI
+            if (!avatarClone.classList.contains('Dropdown')) {
+                avatarClone.classList.add('Dropdown');
+            }
 
 
             // Add transfer money button click handler
