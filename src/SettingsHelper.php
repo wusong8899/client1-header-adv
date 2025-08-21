@@ -1,96 +1,116 @@
 <?php
 
+declare(strict_types=1);
+
 namespace wusong8899\Client1HeaderAdv;
 
 use Flarum\Extend;
+use wusong8899\Client1HeaderAdv\Services\{SlideSettingsService, SocialMediaSettingsService};
+use wusong8899\Client1HeaderAdv\Enums\{ExtensionConstants, AssetPaths};
 
-class SettingsHelper
+/**
+ * Modern settings helper using PHP 8 features and dependency injection
+ * @deprecated Use individual services instead. This class will be removed in v2.0
+ */
+final class SettingsHelper
 {
     /**
      * Generate settings configuration for advertisement slides
      *
-     * @param int $maxSlides Maximum number of slides to configure
-     * @return array Array of Extend\Settings configurations
+     * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Array of Extend configurations
      */
-    public static function generateSlideSettings(int $maxSlides = 30): array
+    public static function generateSlideSettings(int $maxSlides = null): array
     {
-        $settings = [];
+        $maxSlides ??= ExtensionConstants::DEFAULT_MAX_SLIDES->asInt();
 
-        // Add transition time setting
-        $settings[] = (new Extend\Settings)->serializeToForum(
-            'Client1HeaderAdvTransitionTime',
-            'wusong8899-client1-header-adv.TransitionTime'
-        );
+        $slideService = new SlideSettingsService($maxSlides);
+        $socialService = new SocialMediaSettingsService();
 
-        // Add header icon URL setting
-        $settings[] = (new Extend\Settings)->serializeToForum(
-            'Client1HeaderAdvHeaderIconUrl',
-            'wusong8899-client1-header-adv.HeaderIconUrl'
-        );
-
-        // Add social media settings
-        $socialPlatforms = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'];
-        foreach ($socialPlatforms as $platform) {
-            // URL setting
-            $settings[] = (new Extend\Settings)->serializeToForum(
-                "wusong8899-client1-header-adv.Social{$platform}Url",
-                "wusong8899-client1-header-adv.Social{$platform}Url"
-            );
-
-            // Icon setting
-            $settings[] = (new Extend\Settings)->serializeToForum(
-                "wusong8899-client1-header-adv.Social{$platform}Icon",
-                "wusong8899-client1-header-adv.Social{$platform}Icon"
-            );
-        }
-
-        // Generate settings for each slide
-        for ($i = 1; $i <= $maxSlides; $i++) {
-            // Link setting
-            $settings[] = (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvLink{$i}",
-                "wusong8899-client1-header-adv.Link{$i}"
-            );
-
-            // Image setting
-            $settings[] = (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvImage{$i}",
-                "wusong8899-client1-header-adv.Image{$i}"
-            );
-        }
-
-        return $settings;
+        return [
+            // Core settings
+            ...self::generateCoreSettings(),
+            // Social media settings
+            ...$socialService->generateSocialMediaSettings(),
+            // Slide settings
+            ...$slideService->generateSlideSettings(),
+        ];
     }
 
     /**
-     * Get frontend configuration
+     * Generate core extension settings (transition time, header icon)
+     *
+     * @return array<Extend\Settings>
+     */
+    private static function generateCoreSettings(): array
+    {
+        return [
+            // Transition time setting
+            (new Extend\Settings)->serializeToForum(
+                'Client1HeaderAdvTransitionTime',
+                ExtensionConstants::getSettingKey('TransitionTime')
+            ),
+            // Header icon URL setting  
+            (new Extend\Settings)->serializeToForum(
+                'Client1HeaderAdvHeaderIconUrl',
+                ExtensionConstants::getSettingKey('HeaderIconUrl')
+            ),
+        ];
+    }
+
+    /**
+     * Get frontend configuration using modern enum-based paths
      * 
-     * @return array Array of frontend configurations
+     * @return array<Extend\Frontend|Extend\Locales> Array of frontend configurations
      */
     public static function getFrontendConfig(): array
     {
+        $srcDir = __DIR__;
+
         return [
             (new Extend\Frontend('forum'))
-                ->js(__DIR__ . '/../js/dist/forum.js')
-                ->css(__DIR__ . '/../less/forum.less'),
+                ->js(AssetPaths::FORUM_JS->getFullPath($srcDir))
+                ->css(AssetPaths::FORUM_CSS->getFullPath($srcDir)),
             (new Extend\Frontend('admin'))
-                ->js(__DIR__ . '/../js/dist/admin.js')
-                ->css(__DIR__ . '/../less/admin.less'),
-            new Extend\Locales(__DIR__ . '/../locale'),
+                ->js(AssetPaths::ADMIN_JS->getFullPath($srcDir))
+                ->css(AssetPaths::ADMIN_CSS->getFullPath($srcDir)),
+            new Extend\Locales(AssetPaths::LOCALES->getFullPath($srcDir)),
         ];
     }
 
     /**
      * Get complete extension configuration
      * 
-     * @param int $maxSlides Maximum number of slides
-     * @return array Complete configuration array
+     * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Complete configuration array
      */
-    public static function getExtensionConfig(int $maxSlides = 30): array
+    public static function getExtensionConfig(int $maxSlides = null): array
     {
-        return array_merge(
-            self::getFrontendConfig(),
-            self::generateSlideSettings($maxSlides)
-        );
+        $maxSlides ??= ExtensionConstants::DEFAULT_MAX_SLIDES->asInt();
+
+        return [
+            ...self::getFrontendConfig(),
+            ...self::generateSlideSettings($maxSlides)
+        ];
+    }
+
+    /**
+     * Validate extension configuration
+     */
+    public static function validateConfig(int $maxSlides, int $transitionTime): array
+    {
+        $errors = [];
+
+        if ($maxSlides < 1 || $maxSlides > 100) {
+            $errors[] = 'Maximum slides must be between 1 and 100';
+        }
+
+        if (!ExtensionConstants::isValidTransitionTime($transitionTime)) {
+            $errors[] = sprintf(
+                'Transition time must be between %d and %d milliseconds',
+                ExtensionConstants::MIN_TRANSITION_TIME->asInt(),
+                ExtensionConstants::MAX_TRANSITION_TIME->asInt()
+            );
+        }
+
+        return $errors;
     }
 }

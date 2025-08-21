@@ -39,7 +39,12 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
-        admin: path.resolve(__dirname, 'admin.js'),
+        admin: path.resolve(__dirname, 'src/admin/index.tsx'),
+      },
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
       },
       external: (id: string) => {
         if (id === '@flarum/core/admin' || id === '@flarum/core/forum') return true;

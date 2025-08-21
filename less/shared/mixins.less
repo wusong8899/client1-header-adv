@@ -1,0 +1,205 @@
+// =============================================================================
+// SHARED MIXINS
+// =============================================================================
+// Reusable patterns and utility mixins used across the extension
+
+// =============================================================================
+// FLEXBOX UTILITIES
+// =============================================================================
+
+.flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-column() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-space-between() {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// =============================================================================
+// SCROLLBAR HIDING
+// =============================================================================
+
+.hide-scrollbar() {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+}
+
+// =============================================================================
+// TEXT UTILITIES
+// =============================================================================
+
+.text-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-no-decoration() {
+  text-decoration: none;
+  
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+// =============================================================================
+// POSITIONING UTILITIES
+// =============================================================================
+
+.absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-center-y() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+// =============================================================================
+// BUTTON MIXINS
+// =============================================================================
+
+.button-base() {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color @transition-fast @transition-easing;
+}
+
+.button-rounded(@bg-color: @button-primary-bg, @text-color: @text-primary, @radius: @border-radius-medium) {
+  .button-base();
+  background: @bg-color;
+  color: @text-color;
+  border-radius: @radius;
+  padding: @spacing-xs @spacing-xl;
+  font-size: @font-size-xs;
+}
+
+// =============================================================================
+// ANIMATION UTILITIES
+// =============================================================================
+
+.transition(@property: all, @duration: @transition-fast, @easing: @transition-easing) {
+  transition: @property @duration @easing;
+}
+
+.transform-hover-lift(@distance: -6px) {
+  .transition(transform, 0.23s, linear);
+  
+  @media @desktop-hd {
+    &:hover {
+      transform: translateY(@distance);
+    }
+  }
+}
+
+// =============================================================================
+// SHADOW EFFECTS
+// =============================================================================
+
+.slide-shadow(@side: right) when (@side = right) {
+  background-image: @shadow-gradient-right;
+}
+
+.slide-shadow(@side: left) when (@side = left) {
+  background-image: @shadow-gradient-left;
+}
+
+.glow-effect(@color: @accent-color, @intensity: 0.65) {
+  box-shadow: 0 0 2px rgba(@color, @intensity), inset 0 0 2px rgba(@color, @intensity);
+}
+
+// =============================================================================
+// RESPONSIVE UTILITIES
+// =============================================================================
+
+.mobile-only(@rules) {
+  @media @phone {
+    @rules();
+  }
+}
+
+.desktop-only(@rules) {
+  @media @desktop-hd {
+    @rules();
+  }
+}
+
+// =============================================================================
+// VENDOR PREFIXES
+// =============================================================================
+
+.user-select(@value: none) {
+  -webkit-user-select: @value;
+  -moz-user-select: @value;
+  -ms-user-select: @value;
+  user-select: @value;
+}
+
+.appearance(@value: none) {
+  -webkit-appearance: @value;
+  -moz-appearance: @value;
+  appearance: @value;
+}
+
+// =============================================================================
+// FORM UTILITIES
+// =============================================================================
+
+.form-control-base() {
+  width: 100%;
+  padding: @spacing-lg @spacing-xxl;
+  border: 1px solid @border-light;
+  border-radius: @border-radius-small;
+  font-size: @font-size-sm;
+  
+  &:focus {
+    outline: none;
+    border-color: darken(@border-light, 20%);
+  }
+}
+
+// =============================================================================
+// IMAGE UTILITIES
+// =============================================================================
+
+.image-cover() {
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-contain() {
+  object-fit: contain;
+  object-position: center;
+}
+
+.background-cover() {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}

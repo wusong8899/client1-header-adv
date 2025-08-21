@@ -1,0 +1,99 @@
+// =============================================================================
+// CONTAINER COMPONENTS
+// =============================================================================
+// Layout containers for different sections and embedded content
+
+// =============================================================================
+// MAIN CONTAINERS
+// =============================================================================
+
+.zhiboContainer {
+  left: 0;
+  width: 100%;
+  display: none;
+  margin-top: 0;
+  margin-bottom: -@spacing-lg;
+  font-size: @font-size-xl;
+  font-weight: @font-weight-bold;
+  color: var(--button-color);
+}
+
+.zhiboSubContainer {
+  text-align: center;
+  vertical-align: middle;
+  .flex-center();
+  right: 0;
+  height: 46px;
+  background: var(--header-bg);
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  z-index: @z-fixed-footer;
+}
+
+.youxiContainer {
+  display: none;
+  .flex-center();
+  border: 2px solid var(--button-color);
+  border-radius: @border-radius-large;
+  margin-top: @spacing-lg;
+  margin-bottom: -@spacing-lg;
+  font-size: @font-size-xl;
+  font-weight: @font-weight-bold;
+  color: var(--button-color);
+}
+
+.shangchengContainer {
+  display: none;
+  .flex-center();
+  border: 2px solid var(--button-color);
+  border-radius: @border-radius-large;
+  margin-top: @spacing-lg;
+  margin-bottom: -@spacing-lg;
+  font-size: @font-size-xl;
+  font-weight: @font-weight-bold;
+  color: var(--button-color);
+}
+
+// =============================================================================
+// IFRAME CONTAINERS
+// =============================================================================
+
+.zhiboIframe {
+  width: 100%;
+  border: 0;
+}
+
+.customButtonIframe {
+  width: 100%;
+  border: 0;
+}
+
+// =============================================================================
+// AVATAR AND USER CONTAINERS
+// =============================================================================
+
+#avatarClone {
+  right: @avatar-clone-offset;
+  
+  .username {
+    display: none;
+  }
+}
+
+// =============================================================================
+// MOBILE RESPONSIVE CONTAINERS
+// =============================================================================
+
+@media @phone {
+  // Hide drawer items on mobile
+  .App-drawer {
+    .item-withdrawal {
+      display: none !important;
+    }
+    
+    .item-session {
+      display: none !important;
+    }
+  }
+}

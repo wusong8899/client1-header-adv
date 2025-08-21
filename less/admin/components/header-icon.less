@@ -1,0 +1,192 @@
+// =============================================================================
+// HEADER ICON SETTING COMPONENT
+// =============================================================================
+// Admin interface styles for header icon configuration
+
+// =============================================================================
+// MAIN CONTAINER
+// =============================================================================
+
+.HeaderIconSetting {
+  border: 1px solid @border-light;
+  border-radius: @border-radius-small;
+  padding: @spacing-xxl;
+  background: @bg-light;
+  
+  &-input {
+    margin-bottom: @spacing-xxl;
+    
+    .FormControl {
+      .form-control-base();
+    }
+    
+    .FormLabel {
+      display: block;
+      margin-bottom: @spacing-md;
+      font-weight: @font-weight-semibold;
+      color: @text-secondary;
+    }
+  }
+  
+  &-preview {
+    margin-bottom: @spacing-xxl;
+    
+    &Label {
+      display: block;
+      font-weight: @font-weight-semibold;
+      margin-bottom: @spacing-md;
+      color: @text-secondary;
+      font-size: @font-size-sm;
+    }
+    
+    &Container {
+      .flex-center();
+      min-height: 60px;
+      background: white;
+      border: 1px solid @border-lighter;
+      border-radius: @border-radius-small;
+      padding: @spacing-lg;
+      position: relative;
+      
+      &:empty::after {
+        content: "No image URL provided";
+        color: @text-muted;
+        font-style: italic;
+        font-size: @font-size-sm;
+      }
+    }
+    
+    &Image {
+      max-height: 40px;
+      max-width: 200px;
+      .image-contain();
+      
+      &.loading {
+        opacity: 0.5;
+      }
+      
+      &.error {
+        display: none;
+      }
+    }
+    
+    &Error {
+      color: @button-danger-bg;
+      font-style: italic;
+      font-size: @font-size-sm;
+      .flex-center();
+      
+      &::before {
+        content: "⚠ ";
+        margin-right: @spacing-xs;
+      }
+    }
+    
+    &Loading {
+      color: @text-muted;
+      font-style: italic;
+      font-size: @font-size-sm;
+      .flex-center();
+      
+      &::before {
+        content: "⏳ ";
+        margin-right: @spacing-xs;
+      }
+    }
+  }
+  
+  &-upload {
+    border-top: 1px solid @border-light;
+    padding-top: @spacing-xxl;
+    
+    &Label {
+      display: block;
+      font-weight: @font-weight-semibold;
+      margin-bottom: @spacing-md;
+      color: @text-secondary;
+      font-size: @font-size-sm;
+    }
+    
+    &Help {
+      margin-top: @spacing-md;
+      font-size: @font-size-xs;
+      color: @text-muted;
+      line-height: 1.4;
+    }
+    
+    &Button {
+      .button-base();
+      background: var(--secondary-color, #6c757d);
+      color: white;
+      padding: @spacing-md @spacing-lg;
+      border-radius: @border-radius-small;
+      font-size: @font-size-sm;
+      
+      &:hover {
+        background: darken(#6c757d, 10%);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      .icon {
+        margin-right: @spacing-md;
+      }
+    }
+    
+    input[type="file"] {
+      display: none;
+    }
+  }
+}
+
+// =============================================================================
+// VALIDATION STATES
+// =============================================================================
+
+.HeaderIconSetting {
+  &.has-error {
+    border-color: @button-danger-bg;
+    
+    .HeaderIconSetting-input .FormControl {
+      border-color: @button-danger-bg;
+      box-shadow: 0 0 0 1px fade(@button-danger-bg, 20%);
+    }
+  }
+  
+  &.has-success {
+    border-color: @button-success-bg;
+    
+    .HeaderIconSetting-preview-container {
+      border-color: @button-success-bg;
+    }
+  }
+}
+
+// =============================================================================
+// RESPONSIVE BEHAVIOR
+// =============================================================================
+
+@media @phone {
+  .HeaderIconSetting {
+    padding: @spacing-lg;
+    
+    &-preview {
+      &Container {
+        min-height: 40px;
+        padding: @spacing-md;
+      }
+      
+      &Image {
+        max-height: 30px;
+        max-width: 150px;
+      }
+    }
+    
+    &-upload {
+      padding-top: @spacing-lg;
+    }
+  }
+}
