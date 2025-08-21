@@ -130,8 +130,8 @@
   background-image: @shadow-gradient-left;
 }
 
-.glow-effect(@color: @accent-color, @intensity: 0.65) {
-  box-shadow: 0 0 2px rgba(@color, @intensity), inset 0 0 2px rgba(@color, @intensity);
+.glow-effect(@color: @accent-color, @intensity: 65%) {
+  box-shadow: 0 0 2px fade(@color, @intensity), inset 0 0 2px fade(@color, @intensity);
 }
 
 // =============================================================================
