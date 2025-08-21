@@ -1,8 +1,6 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
-import SessionDropdown from 'flarum/forum/components/SessionDropdown';
-import m from 'mithril';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
@@ -10,125 +8,6 @@ import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
 import { defaultConfig } from '../common/config';
 
-// Track mounted component for cleanup
-let navSessionMount: HTMLElement | null = null;
-
-/**
- * Check if current device is mobile
- */
-function isMobile(): boolean {
-    return window.innerWidth <= 767.98; // Matches Flarum's @phone breakpoint
-}
-
-/**
- * Mount SessionDropdown in navigation bar (mobile tags page only)
- */
-function mountSessionDropdownInNav(configManager: any): void {
-    // Only proceed on mobile tags page for logged-in users
-    if (!app.session.user || !isMobile() || !configManager.isTagsPage()) {
-        cleanupNavSession();
-        return;
-    }
-    
-    // Clean up any existing mount
-    cleanupNavSession();
-    
-    // Create mount point in navigation bar
-    const appNavigation = document.getElementById('app-navigation');
-    if (appNavigation) {
-        navSessionMount = document.createElement('div');
-        navSessionMount.id = 'nav-session-mount';
-        navSessionMount.className = 'nav-session-dropdown';
-        appNavigation.appendChild(navSessionMount);
-        
-        // Mount SessionDropdown component
-        try {
-            m.mount(navSessionMount, SessionDropdown);
-            
-            // Initialize Bootstrap dropdown after mounting
-            setTimeout(() => {
-                initializeDropdownEvents(navSessionMount);
-            }, 100);
-        } catch (error) {
-            console.warn('Failed to mount SessionDropdown in navigation:', error);
-            cleanupNavSession();
-        }
-    }
-}
-
-/**
- * Initialize Bootstrap dropdown events for mounted SessionDropdown
- */
-function initializeDropdownEvents(container: HTMLElement): void {
-    const dropdownToggle = container.querySelector('[data-toggle="dropdown"]');
-    const dropdown = container.querySelector('.SessionDropdown');
-    
-    if (dropdownToggle && dropdown) {
-        try {
-            // Initialize Bootstrap dropdown if available
-            if ((window as any).$ && (window as any).$.fn.dropdown) {
-                (window as any).$(dropdownToggle).dropdown();
-                
-                // Ensure proper event delegation with Bootstrap
-                (window as any).$(container).off('click.bs.dropdown.data-api').on('click.bs.dropdown.data-api', '[data-toggle="dropdown"]', function(e: Event) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    (window as any).$(this).dropdown('toggle');
-                });
-            } else {
-                // Fallback: Manual dropdown toggle without Bootstrap
-                dropdownToggle.addEventListener('click', function(e: Event) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const isOpen = dropdown.classList.contains('open');
-                    
-                    // Close all other dropdowns first
-                    document.querySelectorAll('.SessionDropdown.open').forEach(el => {
-                        if (el !== dropdown) {
-                            el.classList.remove('open');
-                        }
-                    });
-                    
-                    // Toggle this dropdown
-                    if (isOpen) {
-                        dropdown.classList.remove('open');
-                        dropdownToggle.setAttribute('aria-expanded', 'false');
-                    } else {
-                        dropdown.classList.add('open');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                });
-                
-                // Close dropdown when clicking outside
-                document.addEventListener('click', function(e: Event) {
-                    if (!container.contains(e.target as Node)) {
-                        dropdown.classList.remove('open');
-                        dropdownToggle.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            }
-        } catch (error) {
-            console.warn('Failed to initialize dropdown events:', error);
-        }
-    }
-}
-
-/**
- * Cleanup function for unmounting SessionDropdown
- */
-function cleanupNavSession(): void {
-    if (navSessionMount) {
-        try {
-            m.mount(navSessionMount, null); // Unmount component
-            navSessionMount.remove();
-        } catch {
-            // Silent cleanup - just remove the element
-            navSessionMount.remove();
-        }
-        navSessionMount = null;
-    }
-}
 
 /**
  * Main extension initializer
@@ -154,19 +33,15 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                     hideHeaderIcon();
                     addMoneyDisplay();
                     
-                    // Mount SessionDropdown in navigation bar for mobile
-                    mountSessionDropdownInNav(configManager);
                 } else {
                     // Not logged in on tags page: show header icon only
                     addHeaderIcon();
-                    cleanupNavSession(); // Ensure cleanup for non-logged users
                 }
 
                 // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
             } else {
                 // On other pages: hide any custom header elements that might be showing
-                cleanupNavSession(); // Cleanup SessionDropdown from navigation bar
                 
                 if (app.session.user) {
                     hideMoneyDisplay();
@@ -315,7 +190,5 @@ function hideMoneyDisplay(): void {
     }
 }
 
-// Note: hideUserAvatar() function removed - now using CSS repositioning
-// The original SessionDropdown in HeaderSecondary is repositioned via CSS
 
 

@@ -9,88 +9,14 @@
 // =============================================================================
 
 @media @phone {
+
   // Hide original SessionDropdown on mobile tags page (replaced by mounted component)
   .tags #header-secondary .item-session {
     display: none !important;
   }
-  
-  // Style the new mounted SessionDropdown in navigation bar
-  .nav-session-dropdown {
-    position: fixed !important;
-    top: 12px;  // Align with mobile navigation bar
-    right: 10px;
-    z-index: 1001; // Above navigation elements
-    
-    // Style the dropdown button for navigation bar appearance
-    .SessionDropdown {
-      .Dropdown-toggle {
-        background: var(--header-bg);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: @border-radius-medium;
-        padding: 6px 12px;
-        min-height: 32px;
-        
-        // Adjust avatar for mobile navigation
-        .Avatar {
-          border: 2px solid var(--header-control-color);
-          width: 24px;
-          height: 24px;
-          font-size: 12px;
-        }
-        
-        // Hide username on mobile to save space
-        .username {
-          display: none;
-        }
-        
-        &:hover {
-          background: var(--header-control-bg);
-        }
-      }
-      
-      // Ensure dropdown menu works properly from navigation bar
-      .Dropdown-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        left: auto;
-        margin-top: 8px;
-        width: 200px;
-        max-height: 70vh;
-        border-radius: @border-radius-medium;
-        visibility: visible !important; // Fix hidden visibility issue
-        opacity: 0;
-        transition: opacity 0.15s ease;
-        
-        // Show dropdown when open or active
-        &.show,
-        .open &,
-        .dropdown.open & {
-          position: absolute !important;
-          bottom: auto !important;
-          transform: none !important;
-          left: auto !important;
-          right: 0 !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-        }
-      }
-      
-      // Ensure dropdown opens when clicked
-      &.open .Dropdown-menu,
-      &.show .Dropdown-menu {
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-    }
-  }
-  
-  // Adjust money display on mobile to avoid overlap - ONLY on tags page
-  .tags .clientCustomizeWithdrawalHeaderTotalMoney {
-    right: 180px !important; // Give space for repositioned SessionDropdown
-    max-width: calc(100vw - 200px); // Prevent overflow
-  }
-  
+
+
+
   // Ensure NotificationsPage and other pages keep original SessionDropdown behavior
   .NotificationsPage #header-secondary .item-session,
   .DiscussionPage #header-secondary .item-session,
@@ -99,7 +25,7 @@
     top: auto !important;
     right: auto !important;
     z-index: auto !important;
-    
+
     .SessionDropdown .Dropdown-menu {
       // Let Flarum's native mobile bottom sheet behavior work
       position: fixed !important;
@@ -109,7 +35,7 @@
       width: auto !important;
       transform: translate(0, 70vh) !important;
       border-radius: 0 !important;
-      
+
       .open & {
         transform: none !important;
       }
