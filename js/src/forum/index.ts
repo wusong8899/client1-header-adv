@@ -61,17 +61,53 @@ function mountSessionDropdownInNav(configManager: any): void {
  */
 function initializeDropdownEvents(container: HTMLElement): void {
     const dropdownToggle = container.querySelector('[data-toggle="dropdown"]');
-    if (dropdownToggle && (window as any).$ && (window as any).$.fn.dropdown) {
+    const dropdown = container.querySelector('.SessionDropdown');
+    
+    if (dropdownToggle && dropdown) {
         try {
-            // Initialize Bootstrap dropdown
-            (window as any).$(dropdownToggle).dropdown();
-            
-            // Ensure proper event delegation
-            (window as any).$(container).off('click.bs.dropdown.data-api').on('click.bs.dropdown.data-api', '[data-toggle="dropdown"]', function(e: Event) {
-                e.preventDefault();
-                e.stopPropagation();
-                (window as any).$(this).dropdown('toggle');
-            });
+            // Initialize Bootstrap dropdown if available
+            if ((window as any).$ && (window as any).$.fn.dropdown) {
+                (window as any).$(dropdownToggle).dropdown();
+                
+                // Ensure proper event delegation with Bootstrap
+                (window as any).$(container).off('click.bs.dropdown.data-api').on('click.bs.dropdown.data-api', '[data-toggle="dropdown"]', function(e: Event) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    (window as any).$(this).dropdown('toggle');
+                });
+            } else {
+                // Fallback: Manual dropdown toggle without Bootstrap
+                dropdownToggle.addEventListener('click', function(e: Event) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const isOpen = dropdown.classList.contains('open');
+                    
+                    // Close all other dropdowns first
+                    document.querySelectorAll('.SessionDropdown.open').forEach(el => {
+                        if (el !== dropdown) {
+                            el.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle this dropdown
+                    if (isOpen) {
+                        dropdown.classList.remove('open');
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
+                    } else {
+                        dropdown.classList.add('open');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    }
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e: Event) {
+                    if (!container.contains(e.target as Node)) {
+                        dropdown.classList.remove('open');
+                        dropdownToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
         } catch (error) {
             console.warn('Failed to initialize dropdown events:', error);
         }

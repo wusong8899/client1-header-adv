@@ -58,16 +58,29 @@
         width: 200px;
         max-height: 70vh;
         border-radius: @border-radius-medium;
+        visibility: visible !important; // Fix hidden visibility issue
+        opacity: 0;
+        transition: opacity 0.15s ease;
         
-        // Only override mobile bottom sheet when dropdown is open
+        // Show dropdown when open or active
         &.show,
-        .open & {
+        .open &,
+        .dropdown.open & {
           position: absolute !important;
           bottom: auto !important;
           transform: none !important;
           left: auto !important;
           right: 0 !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
+      }
+      
+      // Ensure dropdown opens when clicked
+      &.open .Dropdown-menu,
+      &.show .Dropdown-menu {
+        visibility: visible !important;
+        opacity: 1 !important;
       }
     }
   }
