@@ -173,6 +173,14 @@ export class ConfigManager {
     }
 
     /**
+     * Check if current route is notifications page
+     * @returns {boolean} True if on notifications page
+     */
+    isNotificationsPage(): boolean {
+        return this.getCurrentRoute() === 'notifications';
+    }
+
+    /**
      * Get extension configuration object
      * @returns {object} Extension configuration
      */

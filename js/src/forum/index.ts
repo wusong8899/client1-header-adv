@@ -40,8 +40,16 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                 
                 // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
+            } else {
+                // On other pages: hide any custom header elements that might be showing
+                if (app.session.user) {
+                    hideMoneyDisplay();
+                    hideUserAvatar();
+                    addHeaderIcon(); // Show header icon for branding on other pages
+                } else {
+                    addHeaderIcon(); // Always show header icon for non-logged users
+                }
             }
-            // On other pages: don't show any custom header elements
         }, 'HeaderPrimary view extension');
     });
 });
@@ -169,6 +177,26 @@ function addMoneyDisplay(): void {
     } else if (moneyDisplayContainer) {
         // Make sure it's visible for logged-in users
         moneyDisplayContainer.style.display = 'flex';
+    }
+}
+
+/**
+ * Hide money display component
+ */
+function hideMoneyDisplay(): void {
+    const moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
+    if (moneyDisplayContainer) {
+        moneyDisplayContainer.style.display = 'none';
+    }
+}
+
+/**
+ * Hide user avatar component
+ */
+function hideUserAvatar(): void {
+    const userAvatarContainer = document.getElementById("userAvatarContainer");
+    if (userAvatarContainer) {
+        userAvatarContainer.style.display = 'none';
     }
 }
 
