@@ -29,10 +29,8 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
             // Only show these elements on the tags page (main page)
             if (configManager.isTagsPage()) {
                 if (app.session.user) {
-                    // Logged in users on tags page: show money display
+                    // Logged in users on tags page: hide header icon
                     hideHeaderIcon();
-                    addMoneyDisplay();
-                    
                 } else {
                     // Not logged in on tags page: show header icon only
                     addHeaderIcon();
@@ -41,14 +39,8 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                 // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
             } else {
-                // On other pages: hide any custom header elements that might be showing
-                
-                if (app.session.user) {
-                    hideMoneyDisplay();
-                    addHeaderIcon(); // Show header icon for branding on other pages
-                } else {
-                    addHeaderIcon(); // Always show header icon for non-logged users
-                }
+                // On other pages: show header icon for branding
+                addHeaderIcon();
             }
         }, 'HeaderPrimary view extension');
     });
@@ -129,66 +121,6 @@ function hideHeaderIcon(): void {
     }
 }
 
-/**
- * Add money display component with withdrawal button (replaces header icon position when logged in)
- */
-function addMoneyDisplay(): void {
-    let moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
-
-    if (moneyDisplayContainer === null && app.session.user) {
-        const appNavigation = document.getElementById("app-navigation");
-        const moneyName = app.forum.attribute('antoinefr-money.moneyname') || '[money]';
-        const userMoneyText = moneyName.replace('[money]', app.session.user.attribute("money"));
-
-        moneyDisplayContainer = document.createElement("div");
-        moneyDisplayContainer.id = "moneyDisplayContainer";
-        moneyDisplayContainer.className = "client1-header-adv-wrapper clientCustomizeWithdrawalHeaderTotalMoney";
-
-        const moneyText = document.createElement("div");
-        moneyText.innerHTML = '<span><i class="fab fa-bitcoin" style="padding-right: 8px;color: gold;"></i></span>' + userMoneyText;
-        moneyText.className = "clientCustomizeWithdrawalHeaderText";
-
-        const moneyIcon = document.createElement("div");
-        moneyIcon.innerHTML = '<i class="fas fa-wallet"></i>';
-        moneyIcon.className = "clientCustomizeWithdrawalHeaderIcon";
-
-        // Add withdrawal button next to wallet icon
-        const withdrawalButton = document.createElement("div");
-        withdrawalButton.innerHTML = '<i class="fas fa-money-bill-transfer"></i><span style="margin-left: 4px; font-size: 12px;">提款</span>';
-        withdrawalButton.className = "clientCustomizeWithdrawalButton";
-        withdrawalButton.style.cursor = "pointer";
-        withdrawalButton.title = "提款";
-
-        // Add click handler for withdrawal button
-        withdrawalButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Navigate to withdrawal page
-            window.location.href = '/withdrawal';
-        });
-
-        moneyDisplayContainer.appendChild(moneyText);
-        moneyDisplayContainer.appendChild(moneyIcon);
-        moneyDisplayContainer.appendChild(withdrawalButton);
-
-        if (appNavigation) {
-            appNavigation.appendChild(moneyDisplayContainer);
-        }
-    } else if (moneyDisplayContainer) {
-        // Make sure it's visible for logged-in users
-        moneyDisplayContainer.style.display = 'flex';
-    }
-}
-
-/**
- * Hide money display component
- */
-function hideMoneyDisplay(): void {
-    const moneyDisplayContainer = document.getElementById("moneyDisplayContainer");
-    if (moneyDisplayContainer) {
-        moneyDisplayContainer.style.display = 'none';
-    }
-}
 
 
 

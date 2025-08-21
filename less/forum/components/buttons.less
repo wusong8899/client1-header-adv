@@ -118,56 +118,6 @@
     }
   }
 
-  // =============================================================================
-  // HEADER MONEY/WITHDRAWAL BUTTONS
-  // =============================================================================
-
-  .clientCustomizeWithdrawalHeaderTotalMoney {
-    background: @bg-overlay;
-    border-radius: @border-radius-small;
-    font-size: @font-size-xs;
-    padding: 0;
-    .flex-center();
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    margin-left: @spacing-sm;
-    width: auto;
-    color: var(--header-color);
-  }
-
-  .clientCustomizeWithdrawalHeaderText {
-    max-width: @header-money-width;
-    .text-ellipsis();
-    padding: 0 @spacing-sm 0 @spacing-lg;
-    display: inline-block;
-  }
-
-  .clientCustomizeWithdrawalHeaderIcon {
-    display: inline-block;
-    background: orange;
-    padding: @spacing-xs;
-    border-radius: @border-radius-small;
-    width: @header-money-min-width;
-    text-align: center;
-  }
-
-  .clientCustomizeWithdrawalButton {
-    display: inline-block;
-    background: @button-success-bg;
-    color: white;
-    padding: @spacing-xs @spacing-md;
-    border-radius: @border-radius-small;
-    width: auto;
-    min-width: @header-money-min-width;
-    text-align: center;
-    margin-left: @spacing-xs;
-    .transition(background-color);
-
-    &:hover {
-      background: @button-success-hover-bg;
-    }
-  }
 
   // =============================================================================
   // HIDDEN BUTTONS
