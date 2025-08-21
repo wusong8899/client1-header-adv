@@ -7,21 +7,22 @@
 // UTILITY BUTTONS
 // =============================================================================
 
-.u-btn {
-  .button-rounded(@button-primary-bg, @text-primary, @border-radius-medium);
-  font-size: @font-size-xs;
-}
+.client1-header-adv-wrapper {
+  .u-btn {
+    .button-rounded(@button-primary-bg, @text-primary, @border-radius-medium);
+    font-size: @font-size-xs;
+  }
 
-.u-btn-text {
-  min-width: 53px;
-  display: inline-block;
-}
+  .u-btn-text {
+    min-width: 53px;
+    display: inline-block;
+  }
 
 // =============================================================================
 // REGISTER BUTTON (ANIMATED)
 // =============================================================================
 
-.buttonRegister {
+  .buttonRegister {
   width: 74px;
   margin-right: 0;
   font-size: @font-size-sm;
@@ -44,13 +45,13 @@
   &:after {
     .shockwave-pseudo-element(0.65s);
   }
-}
+  }
 
 // =============================================================================
 // SWITCH BUTTONS
 // =============================================================================
 
-.selectTitleContainer {
+  .selectTitleContainer {
   text-align: center;
 }
 
@@ -97,9 +98,9 @@
       color: @gold-color;
     }
   }
-}
+  }
 
-.selected-bg {
+  .selected-bg {
   width: 106px;
   height: 43px;
   position: absolute;
@@ -114,13 +115,13 @@
   @media @phone {
     height: 33px !important;
   }
-}
+  }
 
 // =============================================================================
 // HEADER MONEY/WITHDRAWAL BUTTONS
 // =============================================================================
 
-.clientCustomizeWithdrawalHeaderTotalMoney {
+  .clientCustomizeWithdrawalHeaderTotalMoney {
   background: @bg-overlay;
   border-radius: @border-radius-small;
   font-size: @font-size-xs;
@@ -130,25 +131,25 @@
   left: @header-money-left-offset;
   .absolute-center-y();
   color: var(--header-color);
-}
+  }
 
-.clientCustomizeWithdrawalHeaderText {
+  .clientCustomizeWithdrawalHeaderText {
   max-width: @header-money-width;
   .text-ellipsis();
   padding: 0 @spacing-sm 0 @spacing-lg;
   display: inline-block;
-}
+  }
 
-.clientCustomizeWithdrawalHeaderIcon {
+  .clientCustomizeWithdrawalHeaderIcon {
   display: inline-block;
   background: orange;
   padding: @spacing-xs;
   border-radius: @border-radius-small;
   width: @header-money-min-width;
   text-align: center;
-}
+  }
 
-.clientCustomizeWithdrawalButton {
+  .clientCustomizeWithdrawalButton {
   display: inline-block;
   background: @button-success-bg;
   color: white;
@@ -162,14 +163,15 @@
 
   &:hover {
     background: @button-success-hover-bg;
+    }
   }
-}
 
 // =============================================================================
 // HIDDEN BUTTONS
 // =============================================================================
 
-#client1HeaderButton2,
-#client1HeaderButton3 {
-  display: none;
+  #client1HeaderButton2,
+  #client1HeaderButton3 {
+    display: none;
+  }
 }

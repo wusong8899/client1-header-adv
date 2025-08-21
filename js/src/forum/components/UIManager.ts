@@ -39,7 +39,7 @@ export class UIManager {
      */
     private createTagSwiperContainer(): HTMLElement {
         const container = createElement('div', {
-            className: 'swiperTagContainer',
+            className: 'client1-header-adv-wrapper swiperTagContainer',
             id: 'swiperTagContainer'
         });
 

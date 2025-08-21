@@ -18,21 +18,22 @@
 // BASE SWIPER STYLES
 // =============================================================================
 
-.swiper {
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  overflow: hidden;
-  list-style: none;
-  padding: 0;
-  z-index: @z-swiper; /* Fix of Webkit flickering */
-}
+.client1-header-adv-wrapper {
+  .swiper {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    z-index: @z-swiper; /* Fix of Webkit flickering */
+  }
 
-.swiper-vertical > .swiper-wrapper {
-  flex-direction: column;
-}
+  .swiper-vertical > .swiper-wrapper {
+    flex-direction: column;
+  }
 
-.swiper-wrapper {
+  .swiper-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
@@ -353,4 +354,5 @@
     left: 0;
     top: 0;
   }
+}
 }

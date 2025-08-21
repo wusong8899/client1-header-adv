@@ -142,7 +142,7 @@ function addMoneyDisplay(): void {
 
         moneyDisplayContainer = document.createElement("div");
         moneyDisplayContainer.id = "moneyDisplayContainer";
-        moneyDisplayContainer.className = "clientCustomizeWithdrawalHeaderTotalMoney";
+        moneyDisplayContainer.className = "client1-header-adv-wrapper clientCustomizeWithdrawalHeaderTotalMoney";
 
         const moneyText = document.createElement("div");
         moneyText.innerHTML = '<span><i class="fab fa-bitcoin" style="padding-right: 8px;color: gold;"></i></span>' + userMoneyText;

@@ -7,179 +7,181 @@
 // SLIDESHOW CONTAINERS
 // =============================================================================
 
-.swiperAdContainer {
-  margin-top: @spacing-lg;
-  margin-bottom: -@spacing-lg;
-  
-  @media @phone {
-    width: calc(~"100vw * @{mobile-slide-width-multiplier} - 50px");
-    margin-left: calc(~"-1 * (100vw * @{mobile-slide-width-multiplier} - 50px) * @{mobile-slide-margin-factor}");
+.client1-header-adv-wrapper {
+  .swiperAdContainer {
+    margin-top: @spacing-lg;
+    margin-bottom: -@spacing-lg;
+    
+    @media @phone {
+      width: calc(~"100vw * @{mobile-slide-width-multiplier} - 50px");
+      margin-left: calc(~"-1 * (100vw * @{mobile-slide-width-multiplier} - 50px) * @{mobile-slide-margin-factor}");
+    }
   }
-}
 
-.swiperTagContainer {
-  margin-top: @spacing-lg;
-  margin-bottom: -@spacing-lg;
-  padding-bottom: @spacing-lg;
-}
+  .swiperTagContainer {
+    margin-top: @spacing-lg;
+    margin-bottom: -@spacing-lg;
+    padding-bottom: @spacing-lg;
+  }
 
 // =============================================================================
 // SWIPER SLIDES
 // =============================================================================
 
-.swiper-slide {
-  height: @slide-height;
-  width: @slide-width;
-  flex-shrink: 0;
-  position: relative;
-  transition-property: transform;
-  
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: @border-radius-large;
-    .image-cover();
-  }
-  
-  @media @phone {
+  .swiper-slide {
+    height: @slide-height;
+    width: @slide-width;
+    flex-shrink: 0;
+    position: relative;
+    transition-property: transform;
+    
     img {
+      display: block;
       width: 100%;
       height: 100%;
       border-radius: @border-radius-large;
+      .image-cover();
+    }
+    
+    @media @phone {
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: @border-radius-large;
+      }
     }
   }
-}
 
 // =============================================================================
 // SWIPER SLIDE VARIANTS
 // =============================================================================
 
-.swiper-slide-tag {
-  .transform-hover-lift();
-}
-
-.swiper-slide-tag-inner {
-  border-radius: @border-radius-large;
-  width: @slide-tag-width;
-  height: @slide-tag-height;
-  text-align: center;
-  padding: @spacing-xxl;
-  .flex-center();
-  
-  // Ensure background image covers the entire area when no text
-  &:empty {
-    padding: 0;
+  .swiper-slide-tag {
+    .transform-hover-lift();
   }
-}
 
-.swiper-slide-tag-inner-mobile {
-  border-radius: @border-radius-large;
-  width: @slide-tag-mobile-width;
-  height: @slide-tag-mobile-height;
-  text-align: center;
-  padding: @spacing-lg;
-  .flex-center();
-  
-  // Ensure background image covers the entire area when no text
-  &:empty {
-    padding: 0;
+  .swiper-slide-tag-inner {
+    border-radius: @border-radius-large;
+    width: @slide-tag-width;
+    height: @slide-tag-height;
+    text-align: center;
+    padding: @spacing-xxl;
+    .flex-center();
+    
+    // Ensure background image covers the entire area when no text
+    &:empty {
+      padding: 0;
+    }
   }
-}
+
+  .swiper-slide-tag-inner-mobile {
+    border-radius: @border-radius-large;
+    width: @slide-tag-mobile-width;
+    height: @slide-tag-mobile-height;
+    text-align: center;
+    padding: @spacing-lg;
+    .flex-center();
+    
+    // Ensure background image covers the entire area when no text
+    &:empty {
+      padding: 0;
+    }
+  }
 
 // =============================================================================
 // SWIPER SHADOWS
 // =============================================================================
 
-.swiper-slide-shadow-right {
-  border-radius: @border-radius-large;
-}
+  .swiper-slide-shadow-right {
+    border-radius: @border-radius-large;
+  }
 
-.swiper-slide-shadow-left {
-  border-radius: @border-radius-large;
-}
+  .swiper-slide-shadow-left {
+    border-radius: @border-radius-large;
+  }
 
-.swiper-slide-invisible-blank {
-  visibility: hidden;
-}
+  .swiper-slide-invisible-blank {
+    visibility: hidden;
+  }
 
 // =============================================================================
 // TAG COMPONENTS
 // =============================================================================
 
-.TagTextOuterContainer {
-  background: @bg-dark;
-  padding: @spacing-lg;
-  border-radius: 1rem;
-}
+  .TagTextOuterContainer {
+    background: @bg-dark;
+    padding: @spacing-lg;
+    border-radius: 1rem;
+  }
 
-.TagTextContainer {
-  font-size: @font-size-sm;
-  padding: 0 0 @spacing-lg 0;
-  font-weight: @font-weight-bold;
-}
+  .TagTextContainer {
+    font-size: @font-size-sm;
+    padding: 0 0 @spacing-lg 0;
+    font-weight: @font-weight-bold;
+  }
 
-.TagTextIcon {
-  background-image: url(@tag-text-icon);
-  content: "";
-  display: inline-block;
-  vertical-align: -3px;
-  width: 24px;
-  height: 24px;
-  line-height: 26px;
-  .background-cover();
-  margin-right: @spacing-sm;
-}
+  .TagTextIcon {
+    background-image: url(@tag-text-icon);
+    content: "";
+    display: inline-block;
+    vertical-align: -3px;
+    width: 24px;
+    height: 24px;
+    line-height: 26px;
+    .background-cover();
+    margin-right: @spacing-sm;
+  }
 
-.tagSwiper {
-  padding-top: @spacing-sm !important;
-}
+  .tagSwiper {
+    padding-top: @spacing-sm !important;
+  }
 
 // =============================================================================
 // LINK BEHAVIOR
 // =============================================================================
 
-.swiper-wrapper a {
-  .text-no-decoration();
-}
+  .swiper-wrapper a {
+    .text-no-decoration();
+  }
 
 // =============================================================================
 // MOBILE RESPONSIVE OVERRIDES
 // =============================================================================
 
-@media @phone {
-  .swiper {
-    height: 100%;
+  @media @phone {
+    .swiper {
+      height: 100%;
+    }
+    
+    .swiperContainer {
+      // Additional mobile-specific container styles can be added here
+    }
+    
+    // Reset margins for mobile when external arrows are hidden
+    .swiperAdContainer .swiper,
+    .swiperTagContainer .swiper {
+      margin: 0 @spacing-lg; // Restore standard mobile margins
+    }
   }
-  
-  .swiperContainer {
-    // Additional mobile-specific container styles can be added here
-  }
-  
-  // Reset margins for mobile when external arrows are hidden
-  .swiperAdContainer .swiper,
-  .swiperTagContainer .swiper {
-    margin: 0 @spacing-lg; // Restore standard mobile margins
-  }
-}
 
 // =============================================================================
 // EXTERNAL ARROW SUPPORT ENHANCEMENTS
 // =============================================================================
 // Ensures arrows display properly when positioned outside container
 
-.swiperAdContainer,
-.swiperTagContainer {
-  // Provide adequate container spacing for external arrows
-  position: relative;
-  
-  // Ensure parent containers don't clip external arrows
-  &:not(.mobile) {
-    padding: 0 @spacing-xxl; // Additional padding for desktop
-  }
-  
-  @media @phone {
-    // Mobile spacing adjustments
-    padding: 0;
+  .swiperAdContainer,
+  .swiperTagContainer {
+    // Provide adequate container spacing for external arrows
+    position: relative;
+    
+    // Ensure parent containers don't clip external arrows
+    &:not(.mobile) {
+      padding: 0 @spacing-xxl; // Additional padding for desktop
+    }
+    
+    @media @phone {
+      // Mobile spacing adjustments
+      padding: 0;
+    }
   }
 }

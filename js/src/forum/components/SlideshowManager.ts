@@ -126,7 +126,7 @@ export class SlideshowManager {
      */
     private createSlideshowContainer(): HTMLElement {
         const container = createElement('div', {
-            className: 'swiperAdContainer',
+            className: 'client1-header-adv-wrapper swiperAdContainer',
             id: defaultConfig.slider.dom.containerId
         });
 
