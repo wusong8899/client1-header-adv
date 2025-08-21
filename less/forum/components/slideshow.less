@@ -11,7 +11,7 @@
   .swiperAdContainer {
     margin-top: @spacing-lg;
     margin-bottom: -@spacing-lg;
-    
+
     @media @phone {
       width: calc(~"100vw * @{mobile-slide-width-multiplier} - 50px");
       margin-left: calc(~"-1 * (100vw * @{mobile-slide-width-multiplier} - 50px) * @{mobile-slide-margin-factor}");
@@ -24,9 +24,9 @@
     padding-bottom: @spacing-lg;
   }
 
-// =============================================================================
-// SWIPER SLIDES
-// =============================================================================
+  // =============================================================================
+  // SWIPER SLIDES
+  // =============================================================================
 
   .swiper-slide {
     height: @slide-height;
@@ -34,7 +34,7 @@
     flex-shrink: 0;
     position: relative;
     transition-property: transform;
-    
+
     img {
       display: block;
       width: 100%;
@@ -42,7 +42,7 @@
       border-radius: @border-radius-large;
       .image-cover();
     }
-    
+
     @media @phone {
       img {
         width: 100%;
@@ -52,9 +52,9 @@
     }
   }
 
-// =============================================================================
-// SWIPER SLIDE VARIANTS
-// =============================================================================
+  // =============================================================================
+  // SWIPER SLIDE VARIANTS
+  // =============================================================================
 
   .swiper-slide-tag {
     .transform-hover-lift();
@@ -67,7 +67,7 @@
     text-align: center;
     padding: @spacing-xxl;
     .flex-center();
-    
+
     // Ensure background image covers the entire area when no text
     &:empty {
       padding: 0;
@@ -81,16 +81,16 @@
     text-align: center;
     padding: @spacing-lg;
     .flex-center();
-    
+
     // Ensure background image covers the entire area when no text
     &:empty {
       padding: 0;
     }
   }
 
-// =============================================================================
-// SWIPER SHADOWS
-// =============================================================================
+  // =============================================================================
+  // SWIPER SHADOWS
+  // =============================================================================
 
   .swiper-slide-shadow-right {
     border-radius: @border-radius-large;
@@ -104,9 +104,9 @@
     visibility: hidden;
   }
 
-// =============================================================================
-// TAG COMPONENTS
-// =============================================================================
+  // =============================================================================
+  // TAG COMPONENTS
+  // =============================================================================
 
   .TagTextOuterContainer {
     background: @bg-dark;
@@ -136,27 +136,27 @@
     padding-top: @spacing-sm !important;
   }
 
-// =============================================================================
-// LINK BEHAVIOR
-// =============================================================================
+  // =============================================================================
+  // LINK BEHAVIOR
+  // =============================================================================
 
   .swiper-wrapper a {
     .text-no-decoration();
   }
 
-// =============================================================================
-// MOBILE RESPONSIVE OVERRIDES
-// =============================================================================
+  // =============================================================================
+  // MOBILE RESPONSIVE OVERRIDES
+  // =============================================================================
 
   @media @phone {
     .swiper {
       height: 100%;
     }
-    
+
     .swiperContainer {
       // Additional mobile-specific container styles can be added here
     }
-    
+
     // Reset margins for mobile when external arrows are hidden
     .swiperAdContainer .swiper,
     .swiperTagContainer .swiper {
@@ -164,21 +164,21 @@
     }
   }
 
-// =============================================================================
-// EXTERNAL ARROW SUPPORT ENHANCEMENTS
-// =============================================================================
-// Ensures arrows display properly when positioned outside container
+  // =============================================================================
+  // EXTERNAL ARROW SUPPORT ENHANCEMENTS
+  // =============================================================================
+  // Ensures arrows display properly when positioned outside container
 
   .swiperAdContainer,
   .swiperTagContainer {
     // Provide adequate container spacing for external arrows
     position: relative;
-    
+
     // Ensure parent containers don't clip external arrows
     &:not(.mobile) {
       padding: 0 @spacing-xxl; // Additional padding for desktop
     }
-    
+
     @media @phone {
       // Mobile spacing adjustments
       padding: 0;

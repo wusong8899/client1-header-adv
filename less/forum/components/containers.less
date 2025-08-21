@@ -93,9 +93,11 @@
   .clientCustomizeWithdrawalHeaderTotalMoney {
     // Ensure money display is properly sized for mobile
     font-size: 14px;
+    margin-left: @spacing-xs; // Reduced margin for mobile
     
     .clientCustomizeWithdrawalHeaderText {
       font-size: 14px;
+      max-width: 100px; // Limit width on mobile
       
       span {
         font-size: 14px;
@@ -108,8 +110,8 @@
       
       span {
         font-size: 10px;
-        }
       }
     }
+  }
   }
 }

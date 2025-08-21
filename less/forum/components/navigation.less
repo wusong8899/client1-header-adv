@@ -15,206 +15,206 @@
 
 .client1-header-adv-wrapper {
   .swiper-button-prev {
-  left: -50px !important; // Position outside left edge
-  background: url(@nav-prev-icon);
-  width: @nav-button-size !important;
-  height: @nav-button-size !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important; // Center vertically only
-  background-size: 100% 100%;
-  
-  &:after {
-    display: none; // Hide default Swiper arrow
-  }
-}
+    left: -50px !important; // Position outside left edge
+    background: url(@nav-prev-icon);
+    width: @nav-button-size !important;
+    height: @nav-button-size !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important; // Center vertically only
+    background-size: 100% 100%;
 
-.swiper-button-next {
-  right: -50px !important; // Position outside right edge
-  background: url(@nav-next-icon);
-  width: @nav-button-size !important;
-  height: @nav-button-size !important;
-  top: 50% !important;
-  transform: translateY(-50%) rotateY(180deg) !important; // Center vertically + flip
-  background-size: 100% 100%;
-  
-  &:after {
-    display: none; // Hide default Swiper arrow
-  }
-}
-
-// =============================================================================
-// CONTAINER OVERFLOW CONFIGURATION
-// =============================================================================
-// Ensure arrows are visible when positioned outside container
-
-.swiperAdContainer .swiper,
-.swiperTagContainer .swiper {
-  overflow: visible !important; // Allow arrows to show outside bounds
-  
-  // Add padding to prevent content clipping
-  margin: 0 60px; // Provide space for external arrows
-  
-  @media @phone {
-    margin: 0 20px; // Reduced margin for mobile
-  }
-}
-
-// =============================================================================
-// PAGINATION
-// =============================================================================
-
-.swiper-pagination {
-  transform: translateY(100%) !important;
-  line-height: 0;
-  position: absolute;
-  text-align: center;
-  transition: 300ms opacity;
-  transform: translate3d(0, 0, 0);
-  z-index: @z-pagination;
-  
-  &.swiper-pagination-hidden {
-    opacity: 0;
-  }
-  
-  .swiper-pagination-disabled &,
-  &.swiper-pagination-disabled {
-    display: none !important;
-  }
-}
-
-// =============================================================================
-// PAGINATION BULLETS
-// =============================================================================
-
-.swiper-pagination-bullet {
-  display: inline-block;
-  border-radius: 50%;
-  height: @swiper-pagination-bullet-size;
-  width: @swiper-pagination-bullet-size;
-  opacity: 0.5;
-  background: @text-primary;
-  border: none;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
-  .appearance(none);
-  
-  .swiper-pagination-clickable & {
-    cursor: pointer;
-  }
-  
-  &:only-child {
-    display: none !important;
-  }
-}
-
-.swiper-pagination-bullet-active {
-  opacity: 1;
-  width: @swiper-pagination-bullet-active-width;
-  border-radius: @swiper-pagination-bullet-active-radius;
-}
-
-// =============================================================================
-// PAGINATION LAYOUTS
-// =============================================================================
-
-// Common styles for horizontal and bullets pagination
-.swiper-pagination-fraction,
-.swiper-pagination-custom,
-.swiper-horizontal > .swiper-pagination-bullets,
-.swiper-pagination-bullets.swiper-pagination-horizontal {
-  bottom: @spacing-lg;
-  left: 0;
-  width: 100%;
-}
-
-// Horizontal bullet spacing
-.swiper-horizontal > .swiper-pagination-bullets,
-.swiper-pagination-horizontal.swiper-pagination-bullets {
-  .swiper-pagination-bullet {
-    margin: 0 @spacing-xs;
-  }
-  
-  &.swiper-pagination-bullets-dynamic {
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    
-    .swiper-pagination-bullet {
-      transition: 200ms transform, 200ms left;
+    &:after {
+      display: none; // Hide default Swiper arrow
     }
   }
-}
 
-// Vertical bullet spacing
-.swiper-vertical > .swiper-pagination-bullets,
-.swiper-pagination-vertical.swiper-pagination-bullets {
-  right: @spacing-lg;
-  top: 50%;
-  transform: translate3d(0px, -50%, 0);
-  
-  .swiper-pagination-bullet {
-    margin: @spacing-sm 0;
-    display: block;
-  }
-  
-  &.swiper-pagination-bullets-dynamic {
-    top: 50%;
-    transform: translateY(-50%);
-    width: @spacing-md;
-    
-    .swiper-pagination-bullet {
-      display: inline-block;
-      transition: 200ms transform, 200ms top;
+  .swiper-button-next {
+    right: -50px !important; // Position outside right edge
+    background: url(@nav-next-icon);
+    width: @nav-button-size !important;
+    height: @nav-button-size !important;
+    top: 50% !important;
+    transform: translateY(-50%) rotateY(180deg) !important; // Center vertically + flip
+    background-size: 100% 100%;
+
+    &:after {
+      display: none; // Hide default Swiper arrow
     }
   }
-}
 
-// =============================================================================
-// DYNAMIC BULLETS
-// =============================================================================
+  // =============================================================================
+  // CONTAINER OVERFLOW CONFIGURATION
+  // =============================================================================
+  // Ensure arrows are visible when positioned outside container
 
-.swiper-pagination-bullets-dynamic {
-  overflow: hidden;
-  font-size: 0;
-  
-  .swiper-pagination-bullet {
-    transform: scale(0.33);
-    position: relative;
+  .swiperAdContainer .swiper,
+  .swiperTagContainer .swiper {
+    overflow: visible !important; // Allow arrows to show outside bounds
+
+    // Add padding to prevent content clipping
+    margin: 0 60px; // Provide space for external arrows
+
+    @media @phone {
+      margin: 0 20px; // Reduced margin for mobile
+    }
   }
-  
+
+  // =============================================================================
+  // PAGINATION
+  // =============================================================================
+
+  .swiper-pagination {
+    transform: translateY(100%) !important;
+    line-height: 0;
+    position: absolute;
+    text-align: center;
+    transition: 300ms opacity;
+    transform: translate3d(0, 0, 0);
+    z-index: @z-pagination;
+
+    &.swiper-pagination-hidden {
+      opacity: 0;
+    }
+
+    .swiper-pagination-disabled &,
+    &.swiper-pagination-disabled {
+      display: none !important;
+    }
+  }
+
+  // =============================================================================
+  // PAGINATION BULLETS
+  // =============================================================================
+
+  .swiper-pagination-bullet {
+    display: inline-block;
+    border-radius: 50%;
+    height: @swiper-pagination-bullet-size;
+    width: @swiper-pagination-bullet-size;
+    opacity: 0.5;
+    background: @text-primary;
+    border: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    .appearance(none);
+
+    .swiper-pagination-clickable & {
+      cursor: pointer;
+    }
+
+    &:only-child {
+      display: none !important;
+    }
+  }
+
   .swiper-pagination-bullet-active {
-    transform: scale(1);
+    opacity: 1;
+    width: @swiper-pagination-bullet-active-width;
+    border-radius: @swiper-pagination-bullet-active-radius;
   }
-  
-  .swiper-pagination-bullet-active-main {
-    transform: scale(1);
-  }
-  
-  .swiper-pagination-bullet-active-prev {
-    transform: scale(0.66);
-  }
-  
-  .swiper-pagination-bullet-active-prev-prev {
-    transform: scale(0.33);
-  }
-  
-  .swiper-pagination-bullet-active-next {
-    transform: scale(0.66);
-  }
-  
-  .swiper-pagination-bullet-active-next-next {
-    transform: scale(0.33);
-  }
-}
 
-// =============================================================================
-// DISABLED STATES
-// =============================================================================
+  // =============================================================================
+  // PAGINATION LAYOUTS
+  // =============================================================================
 
-.swiper-button-lock {
-  display: none;
-}
+  // Common styles for horizontal and bullets pagination
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal>.swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: @spacing-lg;
+    left: 0;
+    width: 100%;
+  }
+
+  // Horizontal bullet spacing
+  .swiper-horizontal>.swiper-pagination-bullets,
+  .swiper-pagination-horizontal.swiper-pagination-bullets {
+    .swiper-pagination-bullet {
+      margin: 0 @spacing-xs;
+    }
+
+    &.swiper-pagination-bullets-dynamic {
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+
+      .swiper-pagination-bullet {
+        transition: 200ms transform, 200ms left;
+      }
+    }
+  }
+
+  // Vertical bullet spacing
+  .swiper-vertical>.swiper-pagination-bullets,
+  .swiper-pagination-vertical.swiper-pagination-bullets {
+    right: @spacing-lg;
+    top: 50%;
+    transform: translate3d(0px, -50%, 0);
+
+    .swiper-pagination-bullet {
+      margin: @spacing-sm 0;
+      display: block;
+    }
+
+    &.swiper-pagination-bullets-dynamic {
+      top: 50%;
+      transform: translateY(-50%);
+      width: @spacing-md;
+
+      .swiper-pagination-bullet {
+        display: inline-block;
+        transition: 200ms transform, 200ms top;
+      }
+    }
+  }
+
+  // =============================================================================
+  // DYNAMIC BULLETS
+  // =============================================================================
+
+  .swiper-pagination-bullets-dynamic {
+    overflow: hidden;
+    font-size: 0;
+
+    .swiper-pagination-bullet {
+      transform: scale(0.33);
+      position: relative;
+    }
+
+    .swiper-pagination-bullet-active {
+      transform: scale(1);
+    }
+
+    .swiper-pagination-bullet-active-main {
+      transform: scale(1);
+    }
+
+    .swiper-pagination-bullet-active-prev {
+      transform: scale(0.66);
+    }
+
+    .swiper-pagination-bullet-active-prev-prev {
+      transform: scale(0.33);
+    }
+
+    .swiper-pagination-bullet-active-next {
+      transform: scale(0.66);
+    }
+
+    .swiper-pagination-bullet-active-next-next {
+      transform: scale(0.33);
+    }
+  }
+
+  // =============================================================================
+  // DISABLED STATES
+  // =============================================================================
+
+  .swiper-button-lock {
+    display: none;
+  }
 
   .swiper-pagination-lock {
     display: none;
