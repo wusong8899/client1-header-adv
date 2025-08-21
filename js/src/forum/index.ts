@@ -1,7 +1,6 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
-import DiscussionComposer from 'flarum/forum/components/DiscussionComposer';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
@@ -37,7 +36,7 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                     // Not logged in on tags page: show header icon only
                     addHeaderIcon();
                 }
-                
+
                 // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
             } else {
@@ -158,7 +157,7 @@ function addMoneyDisplay(): void {
         withdrawalButton.className = "clientCustomizeWithdrawalButton";
         withdrawalButton.style.cursor = "pointer";
         withdrawalButton.title = "提款";
-        
+
         // Add click handler for withdrawal button
         withdrawalButton.addEventListener('click', (e) => {
             e.preventDefault();
@@ -239,34 +238,20 @@ function addUserAvatar(): void {
         if (originalDropdown) {
             const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
             avatarClone.id = "avatarClone";
-            
-            // Add click handler to the dropdown toggle button to trigger new discussion
-            const dropdownToggle = avatarClone.querySelector('.Dropdown-toggle');
-            if (dropdownToggle) {
-                dropdownToggle.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Open the new discussion composer
-                    app.composer.load(DiscussionComposer, {
-                        user: app.session.user
-                    });
-                    app.composer.show();
-                });
-            }
-            
+
+
             // Add transfer money button click handler
             const transferButton = avatarClone.querySelector('.item-transferMoney button');
             if (transferButton) {
                 transferButton.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     // Try to access TransferMoneyModal through the extension registry
                     try {
                         const extensions = (window as any).flarum?.reg?.data || {};
                         const moneyTransferExtension = extensions['wusong8899-transfer-money'];
-                        
+
                         if (moneyTransferExtension && moneyTransferExtension.TransferMoneyModal) {
                             app.modal.show(moneyTransferExtension.TransferMoneyModal);
                         } else {
