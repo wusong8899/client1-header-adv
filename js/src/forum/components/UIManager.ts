@@ -1,8 +1,8 @@
 import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
-import { DOMUtils } from '../utils/DOMUtils';
-import { MobileDetection } from '../utils/MobileDetection';
+import { getElementById, querySelectorAll, createElement, appendChild, querySelector, removeElement, setStyles, prependChild } from '../utils/DOMUtils';
+import { isMobileDevice, getSwiperConfig } from '../utils/MobileDetection';
 
 /**
  * UI Manager for handling various UI components
@@ -13,11 +13,11 @@ export class UIManager {
      * Change category layout to swiper-based layout
      */
     async changeCategoryLayout(): Promise<void> {
-        if (DOMUtils.getElementById("swiperTagContainer")) {
+        if (getElementById("swiperTagContainer")) {
             return; // Already exists
         }
 
-        const tagTiles = DOMUtils.querySelectorAll(".TagTile");
+        const tagTiles = querySelectorAll(".TagTile");
         if (tagTiles.length === 0) {
             return;
         }
@@ -38,16 +38,16 @@ export class UIManager {
      * Create tag swiper container
      */
     private createTagSwiperContainer(): HTMLElement {
-        const container = DOMUtils.createElement('div', {
+        const container = createElement('div', {
             className: 'swiperTagContainer',
             id: 'swiperTagContainer'
         });
 
-        const textContainer = DOMUtils.createElement('div', {
+        const textContainer = createElement('div', {
             className: 'TagTextOuterContainer'
         });
 
-        DOMUtils.appendChild(container, textContainer);
+        appendChild(container, textContainer);
         return container;
     }
 
@@ -56,12 +56,12 @@ export class UIManager {
      */
     private createTagSwiper(container: HTMLElement): HTMLElement {
         const textContainer = container.querySelector('.TagTextOuterContainer');
-        const swiper = DOMUtils.createElement('div', {
+        const swiper = createElement('div', {
             className: 'swiper tagSwiper'
         });
 
         if (textContainer) {
-            DOMUtils.appendChild(textContainer, swiper);
+            appendChild(textContainer, swiper);
         }
 
         return swiper;
@@ -71,11 +71,11 @@ export class UIManager {
      * Create tag swiper wrapper
      */
     private createTagSwiperWrapper(swiper: HTMLElement): HTMLElement {
-        const wrapper = DOMUtils.createElement('div', {
+        const wrapper = createElement('div', {
             className: 'swiper-wrapper',
             id: 'swiperTagWrapper'
         });
-        DOMUtils.appendChild(swiper, wrapper);
+        appendChild(swiper, wrapper);
         return wrapper;
     }
 
@@ -83,7 +83,7 @@ export class UIManager {
      * Populate tag slides
      */
     private populateTagSlides(wrapper: HTMLElement, tagTiles: NodeListOf<Element>): void {
-        const isMobile = MobileDetection.isMobileDevice();
+        const isMobile = isMobileDevice();
 
         for (let i = 0; i < tagTiles.length; i++) {
             const tag = tagTiles[i] as HTMLElement;
@@ -91,7 +91,7 @@ export class UIManager {
 
             if (tagData) {
                 const slide = this.createTagSlide(tagData, isMobile);
-                DOMUtils.appendChild(wrapper, slide);
+                appendChild(wrapper, slide);
             }
         }
     }
@@ -176,7 +176,7 @@ export class UIManager {
      * Create individual tag slide
      */
     private createTagSlide(tagData: any, isMobile: boolean): HTMLElement {
-        const slide = DOMUtils.createElement('div', {
+        const slide = createElement('div', {
             className: 'swiper-slide swiper-slide-tag'
         });
 
@@ -218,9 +218,9 @@ export class UIManager {
      * Append tag container to DOM
      */
     private appendTagContainer(container: HTMLElement): void {
-        const contentElement = DOMUtils.querySelector("#content .container .TagsPage-content");
+        const contentElement = querySelector("#content .container .TagsPage-content");
         if (contentElement) {
-            DOMUtils.prependChild(contentElement, container);
+            prependChild(contentElement, container);
         }
     }
 
@@ -230,11 +230,11 @@ export class UIManager {
     private addTagSwiperContent(container: HTMLElement): void {
         const textContainer = container.querySelector('.TagTextOuterContainer');
         if (textContainer) {
-            const titleElement = DOMUtils.createElement('div', {
+            const titleElement = createElement('div', {
                 className: 'TagTextContainer'
             }, "<div class='TagTextIcon'></div>中文玩家社区资讯");
 
-            DOMUtils.prependChild(textContainer, titleElement);
+            prependChild(textContainer, titleElement);
 
             const socialButtons = this.createSocialButtonsHTML();
             textContainer.insertAdjacentHTML('beforeend', socialButtons);
@@ -313,9 +313,9 @@ export class UIManager {
      * Remove original tag tiles
      */
     private removeOriginalTagTiles(): void {
-        const tagTiles = DOMUtils.querySelector(".TagTiles");
+        const tagTiles = querySelector(".TagTiles");
         if (tagTiles) {
-            DOMUtils.removeElement(tagTiles);
+            removeElement(tagTiles);
         }
     }
 
@@ -323,16 +323,16 @@ export class UIManager {
      * Setup mobile-specific styles
      */
     private setupMobileStyles(): void {
-        if (MobileDetection.isMobileDevice()) {
-            const app = DOMUtils.getElementById("app");
-            const appContent = DOMUtils.querySelector(".App-content") as HTMLElement;
+        if (isMobileDevice()) {
+            const app = getElementById("app");
+            const appContent = querySelector(".App-content") as HTMLElement;
 
             if (app) {
-                DOMUtils.setStyles(app, { 'overflow-x': 'hidden' });
+                setStyles(app, { 'overflow-x': 'hidden' });
             }
 
             if (appContent) {
-                DOMUtils.setStyles(appContent, {
+                setStyles(appContent, {
                     'min-height': 'auto',
                     'background': ''
                 });
@@ -345,8 +345,8 @@ export class UIManager {
      */
     private initializeTagSwiper(): void {
         try {
-            const config = MobileDetection.getSwiperConfig();
-            new Swiper(".tagSwiper", {
+            const config = getSwiperConfig();
+            const _tagSwiper = new Swiper(".tagSwiper", {
                 loop: true,
                 spaceBetween: config.spaceBetween,
                 slidesPerView: config.slidesPerView,

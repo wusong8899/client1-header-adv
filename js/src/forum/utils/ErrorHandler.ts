@@ -110,7 +110,7 @@ export class ErrorHandler {
         }
 
         try {
-            new URL(url);
+            const _ = new URL(url);
             return true;
         } catch {
             return false;

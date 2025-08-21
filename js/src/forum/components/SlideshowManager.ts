@@ -1,8 +1,8 @@
 import Swiper from 'swiper';
 import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
-import { DOMUtils } from '../utils/DOMUtils';
-import { MobileDetection } from '../utils/MobileDetection';
+import { getElementById, querySelector, querySelectorAll, createElement, appendChild, setStyles, prependChild, removeElement } from '../utils/DOMUtils';
+import { isMobileDevice } from '../utils/MobileDetection';
 import { defaultConfig } from '../../common/config';
 
 /**
@@ -33,7 +33,7 @@ export class SlideshowManager {
      * @param {any} vdom - Virtual DOM node
      */
     attachAdvertiseHeader(vdom: any): void {
-        if (MobileDetection.isMobileDevice()) {
+        if (isMobileDevice()) {
             this.setupMobileUI();
         }
 
@@ -47,10 +47,10 @@ export class SlideshowManager {
     private setupMobileUI(): void {
         // Only modify UI for non-logged users
         if (!app.session.user) {
-            const newDiscussionButton = DOMUtils.querySelector(".item-newDiscussion .Button-label");
+            const newDiscussionButton = querySelector(".item-newDiscussion .Button-label");
             if (newDiscussionButton) {
                 (newDiscussionButton as HTMLElement).innerHTML = "<div class='buttonRegister'>登录</div>";
-                DOMUtils.setStyles(newDiscussionButton as HTMLElement, {
+                setStyles(newDiscussionButton as HTMLElement, {
                     'display': 'block',
                     'font-size': '14px',
                     'word-spacing': '-1px'
@@ -63,19 +63,19 @@ export class SlideshowManager {
      * Hide unnecessary UI elements
      */
     private hideUIElements(): void {
-        const iconElement = DOMUtils.querySelector(".item-newDiscussion i");
+        const iconElement = querySelector(".item-newDiscussion i");
         if (iconElement) {
-            DOMUtils.setStyles(iconElement as HTMLElement, { 'display': 'none' });
+            setStyles(iconElement as HTMLElement, { 'display': 'none' });
         }
 
-        const navElements = DOMUtils.querySelectorAll(".item-nav");
+        const navElements = querySelectorAll(".item-nav");
         navElements.forEach(element => {
-            DOMUtils.removeElement(element);
+            removeElement(element);
         });
 
-        const tagTiles = DOMUtils.querySelector(".TagTiles");
+        const tagTiles = querySelector(".TagTiles");
         if (tagTiles) {
-            DOMUtils.setStyles(tagTiles as HTMLElement, { 'display': 'none' });
+            setStyles(tagTiles as HTMLElement, { 'display': 'none' });
         }
     }
 
@@ -96,7 +96,7 @@ export class SlideshowManager {
      * Create the main slideshow
      */
     private createSlideshow(): void {
-        if (DOMUtils.getElementById(defaultConfig.slider.dom.containerId)) {
+        if (getElementById(defaultConfig.slider.dom.containerId)) {
             return; // Already exists
         }
 
@@ -125,15 +125,15 @@ export class SlideshowManager {
      * @returns {HTMLElement} Container element
      */
     private createSlideshowContainer(): HTMLElement {
-        const container = DOMUtils.createElement('div', {
+        const container = createElement('div', {
             className: 'swiperAdContainer',
             id: defaultConfig.slider.dom.containerId
         });
 
-        if (MobileDetection.isMobileDevice()) {
+        if (isMobileDevice()) {
             const screenWidth = window.innerWidth;
             const styleWidth = screenWidth * 2 - 50;
-            DOMUtils.setStyles(container, {
+            setStyles(container, {
                 'width': `${styleWidth}px`,
                 'margin-left': `${-(styleWidth * 0.254)}px`
             });
@@ -149,10 +149,10 @@ export class SlideshowManager {
      * @returns {HTMLElement} Swiper element
      */
     private createSwiperElement(container: HTMLElement): HTMLElement {
-        const swiper = DOMUtils.createElement('div', {
+        const swiper = createElement('div', {
             className: `swiper ${defaultConfig.slider.dom.swiperClass}`
         });
-        DOMUtils.appendChild(container, swiper);
+        appendChild(container, swiper);
         return swiper;
     }
 
@@ -162,10 +162,10 @@ export class SlideshowManager {
      * @returns {HTMLElement} Wrapper element
      */
     private createSwiperWrapper(swiper: HTMLElement): HTMLElement {
-        const wrapper = DOMUtils.createElement('div', {
+        const wrapper = createElement('div', {
             className: 'swiper-wrapper'
         });
-        DOMUtils.appendChild(swiper, wrapper);
+        appendChild(swiper, wrapper);
         return wrapper;
     }
 
@@ -180,7 +180,7 @@ export class SlideshowManager {
 
             if (imageSrc) {
                 const slide = this.createSlide(String(imageSrc), String(imageLink || ''));
-                DOMUtils.appendChild(wrapper, slide);
+                appendChild(wrapper, slide);
             }
         }
     }
@@ -192,7 +192,7 @@ export class SlideshowManager {
      * @returns {HTMLElement} Slide element
      */
     private createSlide(imageSrc: string, imageLink: string): HTMLElement {
-        const slide = DOMUtils.createElement('div', {
+        const slide = createElement('div', {
             className: 'swiper-slide'
         });
 
@@ -207,19 +207,19 @@ export class SlideshowManager {
      * @param {HTMLElement} swiper - Swiper element
      */
     private addSwiperControls(swiper: HTMLElement): void {
-        const nextButton = DOMUtils.createElement('div', {
+        const nextButton = createElement('div', {
             className: 'swiper-button-next'
         });
-        const prevButton = DOMUtils.createElement('div', {
+        const prevButton = createElement('div', {
             className: 'swiper-button-prev'
         });
-        const pagination = DOMUtils.createElement('div', {
+        const pagination = createElement('div', {
             className: 'swiper-pagination'
         });
 
-        DOMUtils.appendChild(swiper, nextButton);
-        DOMUtils.appendChild(swiper, prevButton);
-        DOMUtils.appendChild(swiper, pagination);
+        appendChild(swiper, nextButton);
+        appendChild(swiper, prevButton);
+        appendChild(swiper, pagination);
     }
 
     /**
@@ -227,9 +227,9 @@ export class SlideshowManager {
      * @param {HTMLElement} container - Container element
      */
     private appendToDOM(container: HTMLElement): void {
-        const contentContainer = DOMUtils.querySelector("#content .container");
+        const contentContainer = querySelector("#content .container");
         if (contentContainer) {
-            DOMUtils.prependChild(contentContainer, container);
+            prependChild(contentContainer, container);
         }
     }
 
@@ -280,7 +280,7 @@ export class SlideshowManager {
         }
 
         if (this.container) {
-            DOMUtils.removeElement(this.container);
+            removeElement(this.container);
             this.container = null;
         }
     }

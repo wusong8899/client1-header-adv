@@ -263,16 +263,52 @@
   }
 }
 
+// =============================================================================
+// CUSTOM POSITIONING OVERRIDE
+// =============================================================================
+// Custom positioning is handled in navigation.less for external placement
+// These default styles are overridden for our specific needs
+
 .swiper-button-prev,
 .swiper-rtl .swiper-button-next {
+  // Default positioning - overridden by navigation.less
   left: @spacing-lg;
   right: auto;
 }
 
 .swiper-button-next,
 .swiper-rtl .swiper-button-prev {
+  // Default positioning - overridden by navigation.less  
   right: @spacing-lg;
   left: auto;
+}
+
+// =============================================================================
+// ENHANCED BUTTON STYLES FOR EXTERNAL POSITIONING
+// =============================================================================
+
+.swiperAdContainer .swiper-button-prev,
+.swiperAdContainer .swiper-button-next,
+.swiperTagContainer .swiper-button-prev,
+.swiperTagContainer .swiper-button-next {
+  // Ensure buttons are clickable when positioned outside
+  z-index: @z-navigation + 1;
+  
+  // Enhanced visibility and interaction
+  opacity: 0.8;
+  transition: opacity @transition-fast @transition-easing;
+  
+  &:hover {
+    opacity: 1;
+  }
+  
+  // Ensure buttons don't interfere with slide content
+  pointer-events: auto;
+  
+  @media @phone {
+    // Hide external arrows on mobile for better UX
+    display: none !important;
+  }
 }
 
 // =============================================================================

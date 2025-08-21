@@ -7,12 +7,19 @@
 // NAVIGATION BUTTONS
 // =============================================================================
 
+// =============================================================================
+// NAVIGATION BUTTON POSITIONING - EXTERNAL PLACEMENT
+// =============================================================================
+// Position arrows outside the slideshow container for better UX
+// Requires parent container to have overflow: visible
+
 .swiper-button-prev {
-  left: calc(~"50% - @{nav-button-offset}px") !important;
+  left: -50px !important; // Position outside left edge
   background: url(@nav-prev-icon);
   width: @nav-button-size !important;
   height: @nav-button-size !important;
-  .absolute-center();
+  top: 50% !important;
+  transform: translateY(-50%) !important; // Center vertically only
   background-size: 100% 100%;
   
   &:after {
@@ -21,15 +28,33 @@
 }
 
 .swiper-button-next {
-  right: calc(~"50% - @{nav-button-offset + 15}px") !important;
+  right: -50px !important; // Position outside right edge
   background: url(@nav-next-icon);
-  transform: translate(-50%, -50%) rotateY(180deg);
   width: @nav-button-size !important;
   height: @nav-button-size !important;
+  top: 50% !important;
+  transform: translateY(-50%) rotateY(180deg) !important; // Center vertically + flip
   background-size: 100% 100%;
   
   &:after {
     display: none; // Hide default Swiper arrow
+  }
+}
+
+// =============================================================================
+// CONTAINER OVERFLOW CONFIGURATION
+// =============================================================================
+// Ensure arrows are visible when positioned outside container
+
+.swiperAdContainer .swiper,
+.swiperTagContainer .swiper {
+  overflow: visible !important; // Allow arrows to show outside bounds
+  
+  // Add padding to prevent content clipping
+  margin: 0 60px; // Provide space for external arrows
+  
+  @media @phone {
+    margin: 0 20px; // Reduced margin for mobile
   }
 }
 

@@ -92,7 +92,7 @@ export default class SlideManager extends Component<SlideManagerAttrs> {
       }
       
       this.state.error = { hasError: false };
-    } catch (_error) {
+    } catch {
       this.state.error = {
         hasError: true,
         message: 'Failed to remove slide. Please try again.'
@@ -137,7 +137,7 @@ export default class SlideManager extends Component<SlideManagerAttrs> {
     
     if (value && field === 'link') {
       try {
-        new URL(value);
+        const _ = new URL(value);
       } catch {
         errors.push('Please enter a valid URL');
       }
@@ -145,7 +145,7 @@ export default class SlideManager extends Component<SlideManagerAttrs> {
     
     if (value && field === 'image') {
       try {
-        new URL(value);
+        const _ = new URL(value);
         // Additional image validation could be added here
       } catch {
         errors.push('Please enter a valid image URL');

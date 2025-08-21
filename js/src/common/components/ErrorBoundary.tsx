@@ -63,6 +63,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryAttrs> {
       }
     };
 
+// oxlint-disable-next-line prefer-add-event-listener
     this.onupdate = (vnode: any) => {
       try {
         if (originalOnupdate) {

@@ -56,7 +56,7 @@ export class SlideProvider {
       }
 
       this.state.error = { hasError: false };
-    } catch (_error) {
+    } catch {
       this.state.error = {
         hasError: true,
         message: 'Failed to load slides'
@@ -179,7 +179,7 @@ export class SlideProvider {
 
     if (value && (field === 'link' || field === 'image')) {
       try {
-        new URL(value);
+        const _ = new URL(value);
       } catch {
         errors.push(`Please enter a valid ${field === 'link' ? 'URL' : 'image URL'}`);
       }

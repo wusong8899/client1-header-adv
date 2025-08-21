@@ -155,4 +155,31 @@
   .swiperContainer {
     // Additional mobile-specific container styles can be added here
   }
+  
+  // Reset margins for mobile when external arrows are hidden
+  .swiperAdContainer .swiper,
+  .swiperTagContainer .swiper {
+    margin: 0 @spacing-lg; // Restore standard mobile margins
+  }
+}
+
+// =============================================================================
+// EXTERNAL ARROW SUPPORT ENHANCEMENTS
+// =============================================================================
+// Ensures arrows display properly when positioned outside container
+
+.swiperAdContainer,
+.swiperTagContainer {
+  // Provide adequate container spacing for external arrows
+  position: relative;
+  
+  // Ensure parent containers don't clip external arrows
+  &:not(.mobile) {
+    padding: 0 @spacing-xxl; // Additional padding for desktop
+  }
+  
+  @media @phone {
+    // Mobile spacing adjustments
+    padding: 0;
+  }
 }
