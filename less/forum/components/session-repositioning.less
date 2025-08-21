@@ -55,18 +55,19 @@
         right: 0;
         left: auto;
         margin-top: 8px;
-        
-        // Override Flarum's mobile bottom sheet behavior for this specific case
-        position: absolute !important;
-        bottom: auto !important;
-        transform: none !important;
-        width: 200px !important;
+        width: 200px;
         max-height: 70vh;
-        border-radius: @border-radius-medium !important;
+        border-radius: @border-radius-medium;
         
-        // Ensure visibility
-        visibility: visible !important;
-        opacity: 1 !important;
+        // Only override mobile bottom sheet when dropdown is open
+        &.show,
+        .open & {
+          position: absolute !important;
+          bottom: auto !important;
+          transform: none !important;
+          left: auto !important;
+          right: 0 !important;
+        }
       }
     }
   }

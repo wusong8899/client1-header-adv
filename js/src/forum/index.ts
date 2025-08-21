@@ -44,9 +44,36 @@ function mountSessionDropdownInNav(configManager: any): void {
         // Mount SessionDropdown component
         try {
             m.mount(navSessionMount, SessionDropdown);
+            
+            // Initialize Bootstrap dropdown after mounting
+            setTimeout(() => {
+                initializeDropdownEvents(navSessionMount);
+            }, 100);
         } catch (error) {
             console.warn('Failed to mount SessionDropdown in navigation:', error);
             cleanupNavSession();
+        }
+    }
+}
+
+/**
+ * Initialize Bootstrap dropdown events for mounted SessionDropdown
+ */
+function initializeDropdownEvents(container: HTMLElement): void {
+    const dropdownToggle = container.querySelector('[data-toggle="dropdown"]');
+    if (dropdownToggle && (window as any).$ && (window as any).$.fn.dropdown) {
+        try {
+            // Initialize Bootstrap dropdown
+            (window as any).$(dropdownToggle).dropdown();
+            
+            // Ensure proper event delegation
+            (window as any).$(container).off('click.bs.dropdown.data-api').on('click.bs.dropdown.data-api', '[data-toggle="dropdown"]', function(e: Event) {
+                e.preventDefault();
+                e.stopPropagation();
+                (window as any).$(this).dropdown('toggle');
+            });
+        } catch (error) {
+            console.warn('Failed to initialize dropdown events:', error);
         }
     }
 }
