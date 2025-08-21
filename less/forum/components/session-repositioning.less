@@ -9,9 +9,13 @@
 // =============================================================================
 
 @media @phone {
-  // Position SessionDropdown in mobile navigation bar ONLY on tags page
-  // On other pages (like NotificationsPage), keep original behavior
+  // Hide original SessionDropdown on mobile tags page (replaced by mounted component)
   .tags #header-secondary .item-session {
+    display: none !important;
+  }
+  
+  // Style the new mounted SessionDropdown in navigation bar
+  .nav-session-dropdown {
     position: fixed !important;
     top: 12px;  // Align with mobile navigation bar
     right: 10px;

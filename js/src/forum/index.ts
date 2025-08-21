@@ -1,12 +1,71 @@
 import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
+import SessionDropdown from 'flarum/forum/components/SessionDropdown';
+import m from 'mithril';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
 import { defaultConfig } from '../common/config';
+
+// Track mounted component for cleanup
+let navSessionMount: HTMLElement | null = null;
+
+/**
+ * Check if current device is mobile
+ */
+function isMobile(): boolean {
+    return window.innerWidth <= 767.98; // Matches Flarum's @phone breakpoint
+}
+
+/**
+ * Mount SessionDropdown in navigation bar (mobile tags page only)
+ */
+function mountSessionDropdownInNav(configManager: any): void {
+    // Only proceed on mobile tags page for logged-in users
+    if (!app.session.user || !isMobile() || !configManager.isTagsPage()) {
+        cleanupNavSession();
+        return;
+    }
+    
+    // Clean up any existing mount
+    cleanupNavSession();
+    
+    // Create mount point in navigation bar
+    const appNavigation = document.getElementById('app-navigation');
+    if (appNavigation) {
+        navSessionMount = document.createElement('div');
+        navSessionMount.id = 'nav-session-mount';
+        navSessionMount.className = 'nav-session-dropdown';
+        appNavigation.appendChild(navSessionMount);
+        
+        // Mount SessionDropdown component
+        try {
+            m.mount(navSessionMount, SessionDropdown);
+        } catch (error) {
+            console.warn('Failed to mount SessionDropdown in navigation:', error);
+            cleanupNavSession();
+        }
+    }
+}
+
+/**
+ * Cleanup function for unmounting SessionDropdown
+ */
+function cleanupNavSession(): void {
+    if (navSessionMount) {
+        try {
+            m.mount(navSessionMount, null); // Unmount component
+            navSessionMount.remove();
+        } catch {
+            // Silent cleanup - just remove the element
+            navSessionMount.remove();
+        }
+        navSessionMount = null;
+    }
+}
 
 /**
  * Main extension initializer
@@ -29,21 +88,25 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
             if (configManager.isTagsPage()) {
                 if (app.session.user) {
                     // Logged in users on tags page: show money display
-                    // Note: User avatar will be repositioned via CSS from HeaderSecondary
                     hideHeaderIcon();
                     addMoneyDisplay();
+                    
+                    // Mount SessionDropdown in navigation bar for mobile
+                    mountSessionDropdownInNav(configManager);
                 } else {
                     // Not logged in on tags page: show header icon only
                     addHeaderIcon();
+                    cleanupNavSession(); // Ensure cleanup for non-logged users
                 }
 
                 // Initialize full extension (slideshow, etc.)
                 initializeExtension(vnode, slideshowManager, uiManager);
             } else {
                 // On other pages: hide any custom header elements that might be showing
+                cleanupNavSession(); // Cleanup SessionDropdown from navigation bar
+                
                 if (app.session.user) {
                     hideMoneyDisplay();
-                    // Note: hideUserAvatar() is now deprecated - CSS handles positioning
                     addHeaderIcon(); // Show header icon for branding on other pages
                 } else {
                     addHeaderIcon(); // Always show header icon for non-logged users
