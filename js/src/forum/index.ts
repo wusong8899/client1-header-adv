@@ -28,10 +28,10 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
             // Only show these elements on the tags page (main page)
             if (configManager.isTagsPage()) {
                 if (app.session.user) {
-                    // Logged in users on tags page: show money display and user avatar
+                    // Logged in users on tags page: show money display
+                    // Note: User avatar will be repositioned via CSS from HeaderSecondary
                     hideHeaderIcon();
                     addMoneyDisplay();
-                    addUserAvatar();
                 } else {
                     // Not logged in on tags page: show header icon only
                     addHeaderIcon();
@@ -43,7 +43,7 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                 // On other pages: hide any custom header elements that might be showing
                 if (app.session.user) {
                     hideMoneyDisplay();
-                    hideUserAvatar();
+                    // Note: hideUserAvatar() is now deprecated - CSS handles positioning
                     addHeaderIcon(); // Show header icon for branding on other pages
                 } else {
                     addHeaderIcon(); // Always show header icon for non-logged users
@@ -189,102 +189,7 @@ function hideMoneyDisplay(): void {
     }
 }
 
-/**
- * Hide user avatar component
- */
-function hideUserAvatar(): void {
-    const userAvatarContainer = document.getElementById("userAvatarContainer");
-    if (userAvatarContainer) {
-        userAvatarContainer.style.display = 'none';
-    }
-}
-
-/**
- * Add user avatar dropdown to the right side of navigation
- */
-function addUserAvatar(): void {
-    if (!app.session.user) {
-        return;
-    }
-
-    let userAvatarContainer = document.getElementById("userAvatarContainer");
-    const appNavigation = document.getElementById("app-navigation");
-
-    // Create container if it doesn't exist
-    if (userAvatarContainer === null) {
-        userAvatarContainer = document.createElement("div");
-        userAvatarContainer.id = "userAvatarContainer";
-        userAvatarContainer.style.position = "absolute";
-        userAvatarContainer.style.right = "10px";
-        userAvatarContainer.style.top = "50%";
-        userAvatarContainer.style.transform = "translateY(-50%)";
-
-        if (appNavigation) {
-            appNavigation.appendChild(userAvatarContainer);
-        }
-    }
-
-    // Always try to add avatar if container exists but is empty
-    if (userAvatarContainer && userAvatarContainer.children.length === 0) {
-        // Try multiple selectors to find the original dropdown
-        let originalDropdown = document.querySelector("#header-secondary .item-session .SessionDropdown");
-        if (!originalDropdown) {
-            originalDropdown = document.querySelector(".SessionDropdown");
-        }
-        if (!originalDropdown) {
-            originalDropdown = document.querySelector(".item-session");
-        }
-
-        if (originalDropdown) {
-            const avatarClone = originalDropdown.cloneNode(true) as HTMLElement;
-            avatarClone.id = "avatarClone";
-            
-            // Ensure the clone maintains proper Bootstrap dropdown classes for mobile UI
-            if (!avatarClone.classList.contains('Dropdown')) {
-                avatarClone.classList.add('Dropdown');
-            }
-
-
-            // Add transfer money button click handler
-            const transferButton = avatarClone.querySelector('.item-transferMoney button');
-            if (transferButton) {
-                transferButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    // Try to access TransferMoneyModal through the extension registry
-                    try {
-                        const extensions = (window as any).flarum?.reg?.data || {};
-                        const moneyTransferExtension = extensions['wusong8899-transfer-money'];
-
-                        if (moneyTransferExtension && moneyTransferExtension.TransferMoneyModal) {
-                            app.modal.show(moneyTransferExtension.TransferMoneyModal);
-                        } else {
-                            // Fallback: try to trigger the original button if it exists
-                            const originalTransferButton = document.querySelector('#header-secondary .item-transferMoney button');
-                            if (originalTransferButton) {
-                                (originalTransferButton as HTMLElement).click();
-                            } else {
-                                console.warn('TransferMoneyModal not available');
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error accessing TransferMoneyModal:', error);
-                        // Fallback to original button
-                        const originalTransferButton = document.querySelector('#header-secondary .item-transferMoney button');
-                        if (originalTransferButton) {
-                            (originalTransferButton as HTMLElement).click();
-                        }
-                    }
-                });
-            }
-
-            userAvatarContainer.appendChild(avatarClone);
-            console.log('Avatar clone added successfully');
-        } else {
-            console.warn('Original dropdown not found for cloning');
-        }
-    }
-}
+// Note: hideUserAvatar() function removed - now using CSS repositioning
+// The original SessionDropdown in HeaderSecondary is repositioned via CSS
 
 

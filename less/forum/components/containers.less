@@ -72,14 +72,7 @@
 // =============================================================================
 // AVATAR AND USER CONTAINERS
 // =============================================================================
-
-#avatarClone {
-  right: @avatar-clone-offset;
-  
-  .username {
-    display: none;
-  }
-}
+// Note: Avatar positioning now handled by session-repositioning.less
 
 // =============================================================================
 // MOBILE RESPONSIVE CONTAINERS
@@ -94,10 +87,7 @@
   }
   
   // Mobile optimizations for custom header components
-  #userAvatarContainer {
-    // Let Flarum's built-in dropdown mobile system handle positioning
-    // The dropdown will automatically become a bottom sheet on mobile
-  }
+  // Note: SessionDropdown positioning now handled by session-repositioning.less
   
   .clientCustomizeWithdrawalHeaderTotalMoney {
     // Ensure money display is properly sized for mobile

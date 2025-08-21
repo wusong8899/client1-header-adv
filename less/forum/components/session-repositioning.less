@@ -1,0 +1,110 @@
+// =============================================================================
+// SESSION DROPDOWN REPOSITIONING
+// =============================================================================
+// Visually relocate the SessionDropdown to the navigation bar while preserving
+// all native Flarum functionality including mobile UI
+
+// =============================================================================
+// DESKTOP POSITIONING
+// =============================================================================
+
+@media @tablet-up {
+  // Only apply on tags page where we show the custom header
+  .tags {
+    #header-secondary .item-session {
+      position: fixed;
+      top: 12px;  // Align with navigation bar
+      right: 10px;
+      z-index: 1001; // Above navigation but below modals
+      
+      // Ensure the SessionDropdown component maintains functionality
+      .SessionDropdown {
+        // Preserve dropdown menu positioning
+        .Dropdown-menu {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          left: auto;
+          
+          // Ensure proper z-index for dropdown menu
+          z-index: inherit;
+        }
+      }
+      
+      // Ensure button maintains proper styling
+      .Dropdown-toggle {
+        background: var(--header-bg);
+        border: 1px solid var(--header-control-bg);
+        border-radius: @border-radius-medium;
+        
+        // Ensure proper contrast in navigation area
+        .Avatar {
+          border: 2px solid var(--header-control-color);
+        }
+        
+        .username {
+          color: var(--header-color);
+        }
+      }
+    }
+  }
+  
+  // Adjust money display position to avoid overlap
+  .tags .clientCustomizeWithdrawalHeaderTotalMoney {
+    right: 280px; // Give space for repositioned SessionDropdown
+  }
+}
+
+// =============================================================================
+// MOBILE BEHAVIOR
+// =============================================================================
+
+@media @phone {
+  // On mobile, keep SessionDropdown in its native position
+  // This ensures Flarum's mobile dropdown UI (bottom sheet) works properly
+  #header-secondary .item-session {
+    position: static !important;
+    visibility: visible !important;
+    
+    // Let Flarum's native mobile system handle the dropdown
+    .SessionDropdown {
+      // Native mobile behavior - becomes bottom sheet automatically
+    }
+  }
+}
+
+// =============================================================================
+// ACCESSIBILITY & INTERACTION
+// =============================================================================
+
+// Ensure the repositioned dropdown remains keyboard accessible
+@media @tablet-up {
+  .tags #header-secondary .item-session {
+    .Dropdown-toggle {
+      &:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+      
+      &:hover {
+        background: var(--header-control-bg);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// FALLBACK STYLES
+// =============================================================================
+
+// Ensure the original HeaderSecondary doesn't show duplicate
+@media @tablet-up {
+  .tags #header-secondary {
+    // The repositioned item-session will be positioned absolutely
+    // so we don't need to hide the original container
+    .Header-controls .item-session {
+      // Keep visible but positioned elsewhere
+      opacity: 1;
+    }
+  }
+}
