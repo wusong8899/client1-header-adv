@@ -33,14 +33,14 @@
   margin-top: -5px;
   .flex-center();
   position: relative;
-  
+
   // Apply shockwave animation
   .shockwave-animation();
-  
+
   &:before {
     .shockwave-pseudo-element(0.5s);
   }
-  
+
   &:after {
     .shockwave-pseudo-element(0.65s);
   }
@@ -59,7 +59,7 @@
   overflow: hidden;
   padding-top: @spacing-lg;
   padding-bottom: 5px;
-  
+
   .switch-btns {
     width: auto;
     overflow-x: auto;
@@ -68,12 +68,12 @@
     border-radius: @border-radius-round;
     padding: @spacing-xs;
     .hide-scrollbar();
-    
+
     .btns-container {
       position: relative;
       .flex-center();
     }
-    
+
     button {
       color: @text-primary;
       padding: @spacing-lg @spacing-xxl;
@@ -85,13 +85,13 @@
       cursor: pointer;
       white-space: nowrap;
       border: none;
-      
+
       @media @phone {
         font-size: @font-size-sm !important;
         padding: @spacing-sm @spacing-sm !important;
       }
     }
-    
+
     i {
       margin-right: @spacing-xs;
       color: @gold-color;
@@ -110,7 +110,7 @@
   z-index: 0;
   opacity: 0;
   .transition();
-  
+
   @media @phone {
     height: 33px !important;
   }
@@ -122,7 +122,7 @@
 
 .clientCustomizeWithdrawalHeaderTotalMoney {
   background: @bg-overlay;
-  border-radius: @border-radius-sm;
+  border-radius: @border-radius-small;
   font-size: @font-size-xs;
   padding: 0;
   .flex-center();
@@ -143,7 +143,7 @@
   display: inline-block;
   background: orange;
   padding: @spacing-xs;
-  border-radius: @border-radius-sm;
+  border-radius: @border-radius-small;
   width: @header-money-min-width;
   text-align: center;
 }
@@ -153,13 +153,13 @@
   background: @button-success-bg;
   color: white;
   padding: @spacing-xs @spacing-md;
-  border-radius: @border-radius-sm;
+  border-radius: @border-radius-small;
   width: auto;
   min-width: @header-money-min-width;
   text-align: center;
   margin-left: @spacing-xs;
   .transition(background-color);
-  
+
   &:hover {
     background: @button-success-hover-bg;
   }
