@@ -287,8 +287,8 @@ export class UIManager {
                     return '';
                 }
 
-                const marginStyle = index > 0 ? 'margin-left: 20px;' : '';
-                return `<img onClick="window.open('${url}', '_blank')" style="width: 32px;${marginStyle}" src="${iconUrl}">`;
+                const iconClass = index > 0 ? 'social-icon' : 'social-icon';
+                return `<img onClick="window.open('${url}', '_blank')" class="${iconClass}" src="${iconUrl}">`;
             })
             .filter(button => button !== '') // Remove empty buttons
             .join('');
@@ -299,9 +299,9 @@ export class UIManager {
         }
 
         return `
-            <div style="text-align:center;">
-                <button class="Button Button--primary" type="button" style="font-weight: normal !important; color:#ffa000; background: #1a1d2e !important;border-radius: 2rem !important;">
-                    <div style="margin-top: 5px;" class="Button-label">
+            <div class="social-buttons-container">
+                <button class="Button Button--primary social-button" type="button">
+                    <div class="Button-label">
                         ${socialButtons}
                     </div>
                 </button>

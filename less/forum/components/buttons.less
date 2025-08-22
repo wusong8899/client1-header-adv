@@ -120,6 +120,36 @@
 
 
   // =============================================================================
+  // SOCIAL MEDIA BUTTONS
+  // =============================================================================
+
+  .social-buttons-container {
+    text-align: center;
+    padding-top: 10px;
+
+    .social-button {
+      .button-base();
+      background: @social-button-bg !important;
+      color: @social-button-color;
+      border-radius: @border-radius-pill !important;
+      font-weight: normal !important;
+
+      .Button-label {
+        margin-top: @social-button-margin;
+
+        .social-icon {
+          width: @social-icon-size;
+          cursor: pointer;
+
+          &:not(:first-child) {
+            margin-left: @social-icon-spacing;
+          }
+        }
+      }
+    }
+  }
+
+  // =============================================================================
   // HIDDEN BUTTONS
   // =============================================================================
 
