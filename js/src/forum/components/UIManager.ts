@@ -299,7 +299,7 @@ export class UIManager {
         }
 
         return `
-            <div style="text-align:center;padding-top: 10px;">
+            <div style="text-align:center;">
                 <button class="Button Button--primary" type="button" style="font-weight: normal !important; color:#ffa000; background: #1a1d2e !important;border-radius: 2rem !important;">
                     <div style="margin-top: 5px;" class="Button-label">
                         ${socialButtons}

@@ -2,7 +2,8 @@ import { extend } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import Navigation from 'flarum/common/components/Navigation';
-import MobileHeaderIcon from './components/MobileHeaderIcon';
+import MobileRegisterButton from './components/MobileRegisterButton';
+import MobileBrandLogo from './components/MobileBrandLogo';
 
 import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
@@ -36,13 +37,9 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
         }, 'HeaderPrimary view extension');
     });
 
-    // Add mobile navigation extension similar to move-session-dropdown
+    // Add mobile navigation components (register button for logged out users + brand logo)
     extend(Navigation.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
-            // Only work on logged out users
-            if (app.session.user) {
-                return;
-            }
             // Only work on mobile devices (viewport width <= 768px)
             if (window.innerWidth > 768) {
                 return;
@@ -58,19 +55,33 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                 return;
             }
 
-            // Check if we already added the header icon component to avoid duplication
-            const hasHeaderIcon = vnode.children.some((child: any) =>
-                child && child.attrs && child.attrs.className &&
-                child.attrs.className.includes('Navigation-mobileHeaderIcon')
-            );
+            // Add register button and brand logo for logged out users
+            if (!app.session.user) {
+                const hasRegisterButton = vnode.children.some((child: any) =>
+                    child && child.attrs && child.attrs.className &&
+                    child.attrs.className.includes('Navigation-mobileRegister')
+                );
 
-            if (!hasHeaderIcon) {
-                // Add MobileHeaderIcon component to navigation
-                vnode.children.push(MobileHeaderIcon.component({
-                    className: "item-header Navigation-mobileHeaderIcon"
-                }));
+                if (!hasRegisterButton) {
+                    vnode.children.push(MobileRegisterButton.component({
+                        className: "item-register Navigation-mobileRegister"
+                    }));
+                }
+
+                const hasBrandLogo = vnode.children.some((child: any) =>
+                    child && child.attrs && child.attrs.className &&
+                    child.attrs.className.includes('Navigation-mobileBrandLogo')
+                );
+
+                if (!hasBrandLogo) {
+                    vnode.children.push(MobileBrandLogo.component({
+                        className: "item-brand Navigation-mobileBrandLogo"
+                    }));
+                }
             }
-        }, 'Navigation mobile header icon extension');
+
+
+        }, 'Navigation mobile components extension');
     });
 });
 
