@@ -3,6 +3,7 @@ import { Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
 import { getElementById, querySelectorAll, createElement, appendChild, querySelector, removeElement, setStyles, prependChild } from '../utils/DOMUtils';
 import { isMobileDevice, getSwiperConfig } from '../utils/MobileDetection';
+import { ConfigManager } from '../utils/ConfigManager';
 
 /**
  * UI Manager for handling various UI components
