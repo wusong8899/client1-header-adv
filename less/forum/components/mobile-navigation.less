@@ -148,34 +148,3 @@
     }
   }
 }
-
-// =============================================================================
-// INTEGRATION WITH EXISTING NAVIGATION ELEMENTS
-// =============================================================================
-
-// Brand Logo spacing with other elements
-.Navigation-session+.Navigation-mobileBrandLogo,
-.Navigation-mobileBrandLogo+.Navigation-session {
-  margin-left: @spacing-xs;
-}
-
-.Navigation-mobileMoneyDisplay+.Navigation-mobileBrandLogo,
-.Navigation-mobileBrandLogo+.Navigation-mobileMoneyDisplay {
-  margin-left: @spacing-xs;
-}
-
-// Register Button spacing with other elements
-.Navigation-session+.Navigation-mobileRegister,
-.Navigation-mobileRegister+.Navigation-session {
-  margin-left: @spacing-xs;
-}
-
-.Navigation-mobileMoneyDisplay+.Navigation-mobileRegister,
-.Navigation-mobileRegister+.Navigation-mobileMoneyDisplay {
-  margin-left: @spacing-xs;
-}
-
-// Brand Logo and Register Button spacing
-.Navigation-mobileBrandLogo+.Navigation-mobileRegister {
-  margin-left: @spacing-xs;
-}
