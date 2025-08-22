@@ -39,6 +39,10 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
     // Add mobile navigation extension similar to move-session-dropdown
     extend(Navigation.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
+            // Only work on logged out users
+            if (app.session.user) {
+                return;
+            }
             // Only work on mobile devices (viewport width <= 768px)
             if (window.innerWidth > 768) {
                 return;
