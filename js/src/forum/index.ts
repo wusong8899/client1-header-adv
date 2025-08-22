@@ -57,17 +57,6 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
             // Add register button and brand logo for logged out users
             if (!app.session.user) {
-                const hasRegisterButton = vnode.children.some((child: any) =>
-                    child && child.attrs && child.attrs.className &&
-                    child.attrs.className.includes('Navigation-mobileRegister')
-                );
-
-                if (!hasRegisterButton) {
-                    vnode.children.push(MobileRegisterButton.component({
-                        className: "item-register Navigation-mobileRegister"
-                    }));
-                }
-
                 const hasBrandLogo = vnode.children.some((child: any) =>
                     child && child.attrs && child.attrs.className &&
                     child.attrs.className.includes('Navigation-mobileBrandLogo')
@@ -76,6 +65,17 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
                 if (!hasBrandLogo) {
                     vnode.children.push(MobileBrandLogo.component({
                         className: "item-brand Navigation-mobileBrandLogo"
+                    }));
+                }
+
+                const hasRegisterButton = vnode.children.some((child: any) =>
+                    child && child.attrs && child.attrs.className &&
+                    child.attrs.className.includes('Navigation-mobileRegister')
+                );
+
+                if (!hasRegisterButton) {
+                    vnode.children.push(MobileRegisterButton.component({
+                        className: "item-register Navigation-mobileRegister"
                     }));
                 }
             }
