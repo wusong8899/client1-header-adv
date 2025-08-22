@@ -46,6 +46,7 @@
   display: flex;
   align-items: center;
   margin-left: auto; // Push to the right side of navigation
+  margin-right: @spacing-sm;
 
   @media @phone {
     display: flex;
@@ -145,8 +146,6 @@
     }
 
     .Navigation-mobileRegister {
-      // Ensure button doesn't overlap with other navigation elements
-      margin-left: @spacing-sm;
       flex-shrink: 0; // Prevent shrinking
     }
   }
