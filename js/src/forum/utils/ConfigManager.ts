@@ -153,7 +153,7 @@ export class ConfigManager {
      * @returns {boolean} True if user is logged in
      */
     isUserLoggedIn(): boolean {
-        return !!(app as any)?.session?.user;
+        return !!(app).session.user;
     }
 
     /**
@@ -161,7 +161,7 @@ export class ConfigManager {
      * @returns {string | null} Current route name
      */
     getCurrentRoute(): string | null {
-        return ((app as any)?.current?.get?.('routeName')) || null;
+        return (app.current.get?.('routeName')) || null;
     }
 
     /**

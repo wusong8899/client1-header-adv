@@ -12,6 +12,11 @@ import { ConfigManager } from './utils/ConfigManager';
 import { defaultConfig } from '../common/config';
 
 
+// Global variables for lifecycle management
+let slideshowManager: SlideshowManager | null = null;
+let uiManager: UIManager | null = null;
+let isSlideshowActive = false;
+
 /**
  * Main extension initializer
  */
@@ -24,15 +29,21 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
         return;
     }
 
-    const slideshowManager = new SlideshowManager();
-    const uiManager = new UIManager();
+    slideshowManager = new SlideshowManager();
+    uiManager = new UIManager();
 
     extend(HeaderPrimary.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
-            // Only show these elements on the tags page (main page)
-            if (configManager.isTagsPage()) {
-                // Initialize full extension (slideshow, etc.)
-                initializeExtension(vnode, slideshowManager, uiManager);
+            const isOnTagsPage = configManager.isTagsPage();
+            
+            if (isOnTagsPage && !isSlideshowActive) {
+                // Initialize slideshow on tags page if not already active
+                initializeExtension(vnode, slideshowManager!, uiManager!);
+                isSlideshowActive = true;
+            } else if (!isOnTagsPage && isSlideshowActive) {
+                // Clean up slideshow when navigating away from tags page
+                cleanupExtension();
+                isSlideshowActive = false;
             }
         }, 'HeaderPrimary view extension');
     });
@@ -116,6 +127,29 @@ async function setupUIComponents(uiManager: UIManager): Promise<void> {
         }
     } catch {
         // Silently handle UI setup errors
+    }
+}
+
+/**
+ * Clean up extension components when navigating away from tags page
+ */
+function cleanupExtension(): void {
+    try {
+        // Destroy slideshow
+        if (slideshowManager) {
+            slideshowManager.destroy();
+        }
+
+        // Clean up any UI modifications
+        if (uiManager) {
+            // Restore hidden elements if needed
+            const tagTiles = document.querySelector(".TagTiles") as HTMLElement;
+            if (tagTiles) {
+                tagTiles.style.display = '';
+            }
+        }
+    } catch {
+        // Silently handle cleanup errors
     }
 }
 
