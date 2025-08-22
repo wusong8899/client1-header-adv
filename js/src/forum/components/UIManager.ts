@@ -8,12 +8,14 @@ import { isMobileDevice, getSwiperConfig } from '../utils/MobileDetection';
  * UI Manager for handling various UI components
  */
 export class UIManager {
+    private transformationApplied = false;
 
     /**
      * Change category layout to swiper-based layout
      */
     async changeCategoryLayout(): Promise<void> {
         if (getElementById("swiperTagContainer")) {
+            this.transformationApplied = true;
             return; // Already exists
         }
 
@@ -32,6 +34,58 @@ export class UIManager {
         this.removeOriginalTagTiles();
         this.setupMobileStyles();
         this.initializeTagSwiper();
+        
+        this.transformationApplied = true;
+    }
+
+    /**
+     * Recheck and reapply TagTiles transformation if needed
+     * This is called when page changes are detected
+     */
+    async recheckAndTransform(): Promise<void> {
+        try {
+            // Check if we're on the tags page
+            const configManager = ConfigManager.getInstance();
+            if (!configManager.isTagsPage()) {
+                this.transformationApplied = false;
+                return;
+            }
+
+            // Check if TagTiles exist but transformation hasn't been applied
+            const tagTilesExist = document.querySelector('.TagTiles') !== null;
+            const transformationExists = document.querySelector('#swiperTagContainer') !== null;
+
+            if (tagTilesExist && !transformationExists && !this.transformationApplied) {
+                await this.changeCategoryLayout();
+            } else if (!tagTilesExist && transformationExists) {
+                // TagTiles removed but transformation still exists - clean up
+                this.cleanup();
+            }
+        } catch (error) {
+            console.error('Failed to recheck and transform TagTiles:', error);
+        }
+    }
+
+    /**
+     * Clean up applied transformations
+     */
+    cleanup(): void {
+        try {
+            const swiperContainer = getElementById("swiperTagContainer");
+            if (swiperContainer) {
+                removeElement(swiperContainer);
+            }
+            this.transformationApplied = false;
+        } catch (error) {
+            console.error('Failed to cleanup TagTiles transformation:', error);
+        }
+    }
+
+    /**
+     * Check if transformation has been applied
+     */
+    isTransformationApplied(): boolean {
+        return this.transformationApplied;
     }
 
     /**

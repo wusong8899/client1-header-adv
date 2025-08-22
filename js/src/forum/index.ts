@@ -9,12 +9,14 @@ import { SlideshowManager } from './components/SlideshowManager';
 import { UIManager } from './components/UIManager';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
+import { PageChangeObserver } from './utils/PageChangeObserver';
 import { defaultConfig } from '../common/config';
 
 
 // Global variables for lifecycle management
 let slideshowManager: SlideshowManager | null = null;
 let uiManager: UIManager | null = null;
+let pageChangeObserver: PageChangeObserver | null = null;
 let isSlideshowActive = false;
 
 /**
@@ -31,6 +33,16 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
     slideshowManager = new SlideshowManager();
     uiManager = new UIManager();
+    pageChangeObserver = PageChangeObserver.getInstance();
+
+    // Start page change observer to detect TagTiles appearance
+    pageChangeObserver.startObserving(() => {
+        errorHandler.handleSync(async () => {
+            if (uiManager) {
+                await uiManager.recheckAndTransform();
+            }
+        }, 'PageChangeObserver callback');
+    });
 
     extend(HeaderPrimary.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
@@ -94,6 +106,13 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
 
         }, 'Navigation mobile components extension');
     });
+
+    // Add cleanup on page unload to stop observers
+    window.addEventListener('beforeunload', () => {
+        if (pageChangeObserver) {
+            pageChangeObserver.stopObserving();
+        }
+    });
 });
 
 /**
@@ -121,10 +140,8 @@ async function initializeExtension(
  */
 async function setupUIComponents(uiManager: UIManager): Promise<void> {
     try {
-        if (!document.getElementById("swiperTagContainer")) {
-            await uiManager.changeCategoryLayout();
-            // Additional UI setup would go here
-        }
+        // Use the new recheck method which handles state management better
+        await uiManager.recheckAndTransform();
     } catch {
         // Silently handle UI setup errors
     }
@@ -147,7 +164,13 @@ function cleanupExtension(): void {
             if (tagTiles) {
                 tagTiles.style.display = '';
             }
+            
+            // Clean up TagTiles transformation
+            uiManager.cleanup();
         }
+
+        // Note: We don't stop the PageChangeObserver here because it should 
+        // continue monitoring for when we return to the tags page
     } catch {
         // Silently handle cleanup errors
     }
