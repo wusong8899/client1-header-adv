@@ -13,18 +13,16 @@ export default class MobileHeaderIcon extends Component<ComponentAttrs> {
     const headerIconUrl = app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || defaultConfig.ui.headerIconUrl;
 
     return (
-      <div className="Navigation-mobileHeaderIcon">
-        <div 
-          className="Navigation-iconSection"
-          onclick={this.handleIconClick.bind(this)}
-          title="Client Header Icon"
-        >
-          <img 
-            src={headerIconUrl} 
-            alt="Header Icon"
-            className="Navigation-headerIcon"
-          />
-        </div>
+      <div 
+        className="Navigation-mobileHeaderIcon"
+        onclick={this.handleIconClick.bind(this)}
+        title="Client Header Icon"
+      >
+        <img 
+          src={headerIconUrl} 
+          alt="Header Icon"
+          className="Navigation-headerIcon"
+        />
       </div>
     );
   }
