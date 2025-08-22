@@ -13,11 +13,11 @@
   display: flex;
   align-items: center;
   margin-left: auto; // Push to the right side of navigation
-  
+
   @media @phone {
     display: flex;
   }
-  
+
   // Hide on desktop
   @media @tablet-up {
     display: none !important;
@@ -27,14 +27,13 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: @spacing-xs @spacing-sm;
     border-radius: @border-radius;
     transition: background-color 0.2s ease;
-    
+
     &:hover {
       background-color: @control-bg;
     }
-    
+
     &:active {
       background-color: @control-bg;
       transform: scale(0.95);
@@ -46,10 +45,10 @@
     width: auto;
     max-width: 48px;
     object-fit: contain;
-    
+
     // Ensure the icon looks good on different backgrounds
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-    
+
     // Responsive sizing for smaller screens
     @media @phone {
       height: 20px;
@@ -78,13 +77,13 @@
 // =============================================================================
 
 // Adjust spacing when both session dropdown and header icon are present
-.Navigation-session + .Navigation-mobileHeaderIcon,
-.Navigation-mobileHeaderIcon + .Navigation-session {
+.Navigation-session+.Navigation-mobileHeaderIcon,
+.Navigation-mobileHeaderIcon+.Navigation-session {
   margin-left: @spacing-xs;
 }
 
 // Adjust spacing when money display and header icon are present
-.Navigation-mobileMoneyDisplay + .Navigation-mobileHeaderIcon,
-.Navigation-mobileHeaderIcon + .Navigation-mobileMoneyDisplay {
+.Navigation-mobileMoneyDisplay+.Navigation-mobileHeaderIcon,
+.Navigation-mobileHeaderIcon+.Navigation-mobileMoneyDisplay {
   margin-left: @spacing-xs;
 }
