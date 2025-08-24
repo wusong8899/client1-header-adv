@@ -3,6 +3,7 @@ import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/module
 import app from 'flarum/forum/app';
 import { getElementById, querySelector, querySelectorAll, createElement, appendChild, setStyles, prependChild, removeElement } from '../utils/DOMUtils';
 import { isMobileDevice } from '../utils/MobileDetection';
+import { ConfigManager } from '../utils/ConfigManager';
 import { defaultConfig } from '../../common/config';
 
 /**
@@ -11,9 +12,19 @@ import { defaultConfig } from '../../common/config';
 export class SlideshowManager {
     private swiper: Swiper | null = null;
     private container: HTMLElement | null = null;
-    private readonly maxSlides = defaultConfig.slider.maxSlides;
+    private configManager: ConfigManager;
     private readonly checkTime = defaultConfig.slider.checkTime;
 
+    constructor() {
+        this.configManager = ConfigManager.getInstance();
+    }
+
+    /**
+     * Get maximum number of slides from configuration
+     */
+    private getMaxSlides(): number {
+        return this.configManager.get('maxSlides', defaultConfig.slider.maxSlides);
+    }
 
     /**
      * Safely read a forum attribute if available
@@ -174,15 +185,22 @@ export class SlideshowManager {
      * @param {HTMLElement} wrapper - Swiper wrapper element
      */
     private populateSlides(wrapper: HTMLElement): void {
-        for (let i = 1; i <= this.maxSlides; i++) {
+        const maxSlides = this.getMaxSlides();
+        console.log(`[SlideshowManager] Using maxSlides: ${maxSlides} (from ConfigManager)`);
+        
+        let validSlideCount = 0;
+        for (let i = 1; i <= maxSlides; i++) {
             const imageSrc = this.getForumAttribute(`Client1HeaderAdvImage${i}`);
             const imageLink = this.getForumAttribute(`Client1HeaderAdvLink${i}`);
 
             if (imageSrc) {
                 const slide = this.createSlide(String(imageSrc), String(imageLink || ''));
                 appendChild(wrapper, slide);
+                validSlideCount++;
             }
         }
+        
+        console.log(`[SlideshowManager] Found ${validSlideCount} valid slides out of ${maxSlides} configured slots`);
     }
 
     /**

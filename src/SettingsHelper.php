@@ -55,10 +55,12 @@ final class SettingsHelper
                 'Client1HeaderAdvHeaderIconUrl',
                 ExtensionConstants::getSettingKey('HeaderIconUrl')
             ),
-            // Max slides configuration setting
+            // Max slides configuration setting with default value
             (new Extend\Settings)->serializeToForum(
                 'Client1HeaderAdvMaxSlides',
-                ExtensionConstants::getSettingKey('MaxSlides')
+                function () use ($maxSlides) {
+                    return app('flarum.settings')->get(ExtensionConstants::getSettingKey('MaxSlides'), (string) $maxSlides);
+                }
             ),
         ];
     }

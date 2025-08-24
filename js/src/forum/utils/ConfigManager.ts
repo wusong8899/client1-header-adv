@@ -33,6 +33,8 @@ export class ConfigManager {
         const backendMaxSlides = this.getForumAttribute('Client1HeaderAdvMaxSlides');
         const maxSlides = backendMaxSlides ? parseInt(String(backendMaxSlides)) : this.typedConfig.slider.maxSlides;
         
+        console.log(`[ConfigManager] Backend maxSlides: ${backendMaxSlides}, Final maxSlides: ${maxSlides}`);
+        
         // Seed from centralized defaults (kept as flat keys for backward compatibility)
         this.config.set('maxSlides', maxSlides);
         this.config.set('defaultTransitionTime', this.typedConfig.slider.defaultTransitionTime);
