@@ -242,6 +242,8 @@ export class SlideshowManager {
             this.swiper = new Swiper(`.${defaultConfig.slider.dom.swiperClass}`, {
                 autoplay: {
                     delay: transitionTime,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
                 },
                 loop: true,
                 spaceBetween: defaultConfig.slider.swiper.spaceBetween,
