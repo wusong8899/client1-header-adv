@@ -216,7 +216,10 @@ export class ConfigManager {
         for (let i = 1; i <= maxSlides; i++) {
             if (this.isSlideValid(i)) {
                 count++;
+            } else {
+                console.log(`Slide ${i} is not valid`);
             }
+
         }
 
         return count;
