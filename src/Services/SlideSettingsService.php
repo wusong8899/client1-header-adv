@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace wusong8899\Client1HeaderAdv\Services;
 
 use Flarum\Extend;
+use Flarum\Settings\SettingsRepositoryInterface;
+use wusong8899\Client1HeaderAdv\Enums\ExtensionConstants;
 
 /**
  * Service for generating slide-related settings configurations
@@ -12,8 +14,27 @@ use Flarum\Extend;
 final class SlideSettingsService
 {
     public function __construct(
-        private readonly int $maxSlides = 30
+        private readonly int $maxSlides
     ) {}
+
+    /**
+     * Create service instance with maxSlides read from database settings
+     *
+     * @param SettingsRepositoryInterface $settings Settings repository
+     * @return self Service instance with dynamic maxSlides
+     */
+    public static function createFromSettings(SettingsRepositoryInterface $settings): self
+    {
+        $maxSlides = (int) $settings->get(
+            'Client1HeaderAdvMaxSlides', 
+            ExtensionConstants::DEFAULT_MAX_SLIDES->value
+        );
+        
+        // Ensure maxSlides is within reasonable bounds (1-100)
+        $maxSlides = max(1, min(100, $maxSlides));
+        
+        return new self($maxSlides);
+    }
 
     /**
      * Generate settings configuration for advertisement slides

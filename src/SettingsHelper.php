@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace wusong8899\Client1HeaderAdv;
 
 use Flarum\Extend;
+use Flarum\Settings\SettingsRepositoryInterface;
 use wusong8899\Client1HeaderAdv\Services\{SlideSettingsService, SocialMediaSettingsService};
 use wusong8899\Client1HeaderAdv\Enums\{ExtensionConstants, AssetPaths};
 
@@ -17,18 +18,27 @@ final class SettingsHelper
     /**
      * Generate settings configuration for advertisement slides
      *
+     * @param int|null $maxSlides Maximum slides (null for dynamic from database)
      * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Array of Extend configurations
      */
     public static function generateSlideSettings(int $maxSlides = null): array
     {
-        $maxSlides ??= ExtensionConstants::DEFAULT_MAX_SLIDES->asInt();
-
-        $slideService = new SlideSettingsService($maxSlides);
+        // Get settings repository for dynamic configuration
+        $settings = resolve(SettingsRepositoryInterface::class);
+        
+        // Create slide service with dynamic maxSlides if not explicitly provided
+        $slideService = $maxSlides !== null 
+            ? new SlideSettingsService($maxSlides)
+            : SlideSettingsService::createFromSettings($settings);
+            
         $socialService = new SocialMediaSettingsService();
+        
+        // Get the actual maxSlides value for core settings
+        $actualMaxSlides = $maxSlides ?? $slideService->getMaxSlides();
 
         return [
             // Core settings (including maxSlides serialization)
-            ...self::generateCoreSettings($maxSlides),
+            ...self::generateCoreSettings($actualMaxSlides),
             // Social media settings
             ...$socialService->generateSocialMediaSettings(),
             // Slide settings
@@ -86,13 +96,11 @@ final class SettingsHelper
     /**
      * Get complete extension configuration
      * 
-     * @param int|null $maxSlides Maximum number of slides (defaults to extension constant)
+     * @param int|null $maxSlides Maximum number of slides (null for dynamic from database)
      * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Complete configuration array
      */
     public static function getExtensionConfig(int $maxSlides = null): array
     {
-        $maxSlides ??= ExtensionConstants::DEFAULT_MAX_SLIDES->asInt();
-
         return [
             ...self::getFrontendConfig(),
             ...self::generateSlideSettings($maxSlides)
