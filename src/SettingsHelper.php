@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace wusong8899\Client1HeaderAdv;
 
 use Flarum\Extend;
-use Flarum\Settings\SettingsRepositoryInterface;
 use wusong8899\Client1HeaderAdv\Services\{SlideSettingsService, SocialMediaSettingsService};
 use wusong8899\Client1HeaderAdv\Enums\{ExtensionConstants, AssetPaths};
 
@@ -18,27 +17,21 @@ final class SettingsHelper
     /**
      * Generate settings configuration for advertisement slides
      *
-     * @param int|null $maxSlides Maximum slides (null for dynamic from database)
+     * @param int|null $maxSlides Maximum slides (null = use default from constants)
      * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Array of Extend configurations
      */
     public static function generateSlideSettings(int $maxSlides = null): array
     {
-        // Get settings repository for dynamic configuration
-        $settings = resolve(SettingsRepositoryInterface::class);
+        // Use default or provided maxSlides value
+        // Note: We register a fixed number of settings. The frontend will use MaxSlides setting to determine how many to actually use.
+        $maxSlides ??= ExtensionConstants::DEFAULT_MAX_SLIDES->asInt();
         
-        // Create slide service with dynamic maxSlides if not explicitly provided
-        $slideService = $maxSlides !== null 
-            ? new SlideSettingsService($maxSlides)
-            : SlideSettingsService::createFromSettings($settings);
-            
+        $slideService = new SlideSettingsService($maxSlides);
         $socialService = new SocialMediaSettingsService();
-        
-        // Get the actual maxSlides value for core settings
-        $actualMaxSlides = $maxSlides ?? $slideService->getMaxSlides();
 
         return [
             // Core settings (including maxSlides serialization)
-            ...self::generateCoreSettings($actualMaxSlides),
+            ...self::generateCoreSettings($maxSlides),
             // Social media settings
             ...$socialService->generateSocialMediaSettings(),
             // Slide settings
