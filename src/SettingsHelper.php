@@ -58,8 +58,7 @@ final class SettingsHelper
             // Max slides configuration setting
             (new Extend\Settings)->serializeToForum(
                 'Client1HeaderAdvMaxSlides',
-                ExtensionConstants::getSettingKey('MaxSlides'),
-                (string) $maxSlides
+                ExtensionConstants::getSettingKey('MaxSlides')
             ),
         ];
     }
