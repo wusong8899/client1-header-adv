@@ -31,7 +31,9 @@ export class ConfigManager {
         // Get maxSlides from backend settings, fallback to default
         // This ensures synchronization between PHP backend configuration and frontend
         const backendMaxSlides = this.getForumAttribute('Client1HeaderAdvMaxSlides');
-        const maxSlides = backendMaxSlides ? parseInt(String(backendMaxSlides)) : this.typedConfig.slider.maxSlides;
+        const maxSlides = (backendMaxSlides && backendMaxSlides !== null && backendMaxSlides !== '') 
+            ? parseInt(String(backendMaxSlides)) 
+            : this.typedConfig.slider.maxSlides;
         
         console.log(`[ConfigManager] Backend maxSlides: ${backendMaxSlides}, Final maxSlides: ${maxSlides}`);
         
