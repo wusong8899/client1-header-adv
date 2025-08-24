@@ -2,7 +2,7 @@ import Swiper from 'swiper';
 import { Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
 import { getElementById, querySelectorAll, createElement, appendChild, querySelector, removeElement, setStyles, prependChild } from '../utils/DOMUtils';
-import { isMobileDevice, getSwiperConfig } from '../utils/MobileDetection';
+import { isMobileDevice, getTagSwiperConfig, onViewportChange, getDeviceType } from '../utils/MobileDetection';
 import { ConfigManager } from '../utils/ConfigManager';
 
 /**
@@ -10,6 +10,7 @@ import { ConfigManager } from '../utils/ConfigManager';
  */
 export class UIManager {
     private transformationApplied = false;
+    private viewportCleanup: (() => void) | null = null;
 
     /**
      * Change category layout to swiper-based layout
@@ -35,6 +36,7 @@ export class UIManager {
         this.removeOriginalTagTiles();
         this.setupMobileStyles();
         this.initializeTagSwiper();
+        this.setupResponsiveBehavior();
         
         this.transformationApplied = true;
     }
@@ -76,6 +78,13 @@ export class UIManager {
             if (swiperContainer) {
                 removeElement(swiperContainer);
             }
+            
+            // Clean up viewport change listener
+            if (this.viewportCleanup) {
+                this.viewportCleanup();
+                this.viewportCleanup = null;
+            }
+            
             this.transformationApplied = false;
         } catch (error) {
             console.error('Failed to cleanup TagTiles transformation:', error);
@@ -400,7 +409,7 @@ export class UIManager {
      */
     private initializeTagSwiper(): void {
         try {
-            const config = getSwiperConfig();
+            const config = getTagSwiperConfig();
             const _tagSwiper = new Swiper(".tagSwiper", {
                 loop: true,
                 spaceBetween: config.spaceBetween,
@@ -414,5 +423,33 @@ export class UIManager {
         } catch (error) {
             console.error('Failed to initialize tag swiper:', error);
         }
+    }
+
+    /**
+     * Set up responsive behavior that reacts to viewport changes
+     */
+    private setupResponsiveBehavior(): void {
+        // Clean up any existing listener
+        if (this.viewportCleanup) {
+            this.viewportCleanup();
+        }
+
+        // Set up new viewport change listener
+        this.viewportCleanup = onViewportChange(() => {
+            const deviceType = getDeviceType();
+            console.log(`Device type changed to: ${deviceType}`);
+            
+            // Re-apply mobile styles when switching between device types
+            this.setupMobileStyles();
+            
+            // Reinitialize swiper with new configuration
+            const existingSwiper = document.querySelector('.tagSwiper') as any;
+            if (existingSwiper && existingSwiper.swiper) {
+                const newConfig = getTagSwiperConfig();
+                existingSwiper.swiper.params.spaceBetween = newConfig.spaceBetween;
+                existingSwiper.swiper.params.slidesPerView = newConfig.slidesPerView;
+                existingSwiper.swiper.update();
+            }
+        }, 300); // 300ms debounce for better performance
     }
 }

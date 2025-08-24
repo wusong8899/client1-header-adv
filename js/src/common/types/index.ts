@@ -211,9 +211,11 @@ export interface SettingsProviderInterface {
 
 export interface MobileDetectionInterface {
   isMobileDevice: () => boolean;
-  isTablet: () => boolean;
-  isDesktop: () => boolean;
+  isTabletDevice: () => boolean;
+  isDesktopDevice: () => boolean;
   getDeviceType: () => 'mobile' | 'tablet' | 'desktop';
+  getViewportWidth: () => number;
+  onViewportChange: (callback: () => void, debounceMs?: number) => () => void;
 }
 
 // =============================================================================

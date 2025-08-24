@@ -10,6 +10,7 @@ import { UIManager } from './components/UIManager';
 import { ErrorHandler } from './utils/ErrorHandler';
 import { ConfigManager } from './utils/ConfigManager';
 import { PageChangeObserver } from './utils/PageChangeObserver';
+import { isMobileDevice, logDetectionState } from './utils/MobileDetection';
 import { defaultConfig } from '../common/config';
 
 
@@ -25,6 +26,9 @@ let isSlideshowActive = false;
 app.initializers.add(defaultConfig.app.extensionId, () => {
     const errorHandler = ErrorHandler.getInstance();
     const configManager = ConfigManager.getInstance();
+
+    // Log initial mobile detection state for debugging
+    logDetectionState('Extension Initialization');
 
     // Initialize error handling
     if (!errorHandler.initialize()) {
@@ -63,8 +67,8 @@ app.initializers.add(defaultConfig.app.extensionId, () => {
     // Add mobile navigation components (register button for logged out users + brand logo)
     extend(Navigation.prototype, 'view', function (vnode) {
         errorHandler.handleSync(() => {
-            // Only work on mobile devices (viewport width <= 768px)
-            if (window.innerWidth > 768) {
+            // Only work on mobile devices (viewport width < 768px)
+            if (!isMobileDevice()) {
                 return;
             }
 
