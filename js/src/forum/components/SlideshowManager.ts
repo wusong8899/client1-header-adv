@@ -20,7 +20,7 @@ export class SlideshowManager {
      */
     private getForumAttribute(key: string): any {
         try {
-            const forum = (app as any)?.forum;
+            const forum = app.forum;
             const attrFn = forum?.attribute;
             return typeof attrFn === 'function' ? attrFn.call(forum, key) : undefined;
         } catch {

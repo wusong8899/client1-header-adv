@@ -139,7 +139,7 @@ export class ConfigManager {
      */
     translate(key: string, parameters: Record<string, unknown> = {}): string {
         const fullKey = this.getTranslationKey(key);
-        const translator = (app as any)?.translator;
+        const translator = app.translator;
         if (translator?.trans) {
             const result = translator.trans(fullKey, parameters);
             // app.translator.trans returns a NestedStringArray; convert to plain text
