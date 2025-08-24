@@ -27,8 +27,8 @@ final class SettingsHelper
         $socialService = new SocialMediaSettingsService();
 
         return [
-            // Core settings
-            ...self::generateCoreSettings(),
+            // Core settings (including maxSlides serialization)
+            ...self::generateCoreSettings($maxSlides),
             // Social media settings
             ...$socialService->generateSocialMediaSettings(),
             // Slide settings
@@ -37,11 +37,12 @@ final class SettingsHelper
     }
 
     /**
-     * Generate core extension settings (transition time, header icon)
+     * Generate core extension settings (transition time, header icon, max slides)
      *
+     * @param int $maxSlides Maximum number of slides to configure
      * @return array<Extend\Settings>
      */
-    private static function generateCoreSettings(): array
+    private static function generateCoreSettings(int $maxSlides): array
     {
         return [
             // Transition time setting
@@ -53,6 +54,12 @@ final class SettingsHelper
             (new Extend\Settings)->serializeToForum(
                 'Client1HeaderAdvHeaderIconUrl',
                 ExtensionConstants::getSettingKey('HeaderIconUrl')
+            ),
+            // Max slides configuration setting
+            (new Extend\Settings)->serializeToForum(
+                'Client1HeaderAdvMaxSlides',
+                ExtensionConstants::getSettingKey('MaxSlides'),
+                (string) $maxSlides
             ),
         ];
     }
@@ -80,6 +87,7 @@ final class SettingsHelper
     /**
      * Get complete extension configuration
      * 
+     * @param int|null $maxSlides Maximum number of slides (defaults to extension constant)
      * @return array<Extend\Settings|Extend\Frontend|Extend\Locales> Complete configuration array
      */
     public static function getExtensionConfig(int $maxSlides = null): array

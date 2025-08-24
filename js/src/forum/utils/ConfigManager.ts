@@ -28,8 +28,12 @@ export class ConfigManager {
      * Load default configuration values
      */
     private loadDefaultConfig(): void {
+        // Get maxSlides from backend settings, fallback to default
+        const backendMaxSlides = this.getForumAttribute('Client1HeaderAdvMaxSlides');
+        const maxSlides = backendMaxSlides ? parseInt(String(backendMaxSlides)) : this.typedConfig.slider.maxSlides;
+        
         // Seed from centralized defaults (kept as flat keys for backward compatibility)
-        this.config.set('maxSlides', this.typedConfig.slider.maxSlides);
+        this.config.set('maxSlides', maxSlides);
         this.config.set('defaultTransitionTime', this.typedConfig.slider.defaultTransitionTime);
         this.config.set('checkTime', this.typedConfig.slider.checkTime);
         this.config.set('dataCheckInterval', this.typedConfig.slider.dataCheckInterval);

@@ -57,6 +57,19 @@ export class SettingsGenerator {
   }
 
   /**
+   * Register max slides setting
+   */
+  registerMaxSlidesSetting(): this {
+    this.extensionData.registerSetting({
+      setting: `${this.extensionId}.MaxSlides`,
+      type: 'number',
+      label: app.translator.trans('wusong8899-client1.admin.MaxSlides'),
+      help: app.translator.trans('wusong8899-client1.admin.MaxSlidesHelp'),
+    } as SettingConfig);
+    return this;
+  }
+
+  /**
    * Register social media settings for all supported platforms
    */
   registerSocialMediaSettings(): this {
@@ -109,6 +122,7 @@ export class SettingsGenerator {
     return this
       .registerTransitionTimeSetting()
       .registerHeaderIconUrlSetting()
+      .registerMaxSlidesSetting()
       .registerSocialMediaSettings()
       .registerSlideSettings(maxSlides);
   }
@@ -129,8 +143,12 @@ export const EXTENSION_CONFIG = {
  */
 export function initializeAdminSettings(
   extensionId: string = EXTENSION_CONFIG.EXTENSION_ID, 
-  maxSlides: number = EXTENSION_CONFIG.MAX_SLIDES
+  maxSlides?: number
 ): void {
+  // Get maxSlides from backend settings, fallback to config default
+  const backendMaxSlides = app.data.settings[`${extensionId}.MaxSlides`];
+  const finalMaxSlides = maxSlides ?? (backendMaxSlides ? parseInt(backendMaxSlides) : EXTENSION_CONFIG.MAX_SLIDES);
+  
   const generator = new SettingsGenerator(extensionId);
-  generator.registerAllSettings(maxSlides);
+  generator.registerAllSettings(finalMaxSlides);
 }
