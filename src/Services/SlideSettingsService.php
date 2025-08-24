@@ -46,13 +46,13 @@ final class SlideSettingsService
         return [
             // Link setting
             (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvLink{$slideNumber}",
-                "wusong8899-client1-header-adv.Link{$slideNumber}"
+                "wusong8899-client1-header-adv.Link{$slideNumber}",
+                "Client1HeaderAdvLink{$slideNumber}"
             ),
             // Image setting
             (new Extend\Settings)->serializeToForum(
-                "Client1HeaderAdvImage{$slideNumber}",
-                "wusong8899-client1-header-adv.Image{$slideNumber}"
+                "wusong8899-client1-header-adv.Image{$slideNumber}",
+                "Client1HeaderAdvImage{$slideNumber}"
             ),
         ];
     }

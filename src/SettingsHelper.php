@@ -47,18 +47,18 @@ final class SettingsHelper
         return [
             // Transition time setting
             (new Extend\Settings)->serializeToForum(
-                'Client1HeaderAdvTransitionTime',
-                ExtensionConstants::getSettingKey('TransitionTime')
+                ExtensionConstants::getSettingKey('TransitionTime'),
+                'Client1HeaderAdvTransitionTime'
             ),
             // Header icon URL setting  
             (new Extend\Settings)->serializeToForum(
-                'Client1HeaderAdvHeaderIconUrl',
-                ExtensionConstants::getSettingKey('HeaderIconUrl')
+                ExtensionConstants::getSettingKey('HeaderIconUrl'),
+                'Client1HeaderAdvHeaderIconUrl'
             ),
             // Max slides configuration setting
             (new Extend\Settings)->serializeToForum(
-                'Client1HeaderAdvMaxSlides',
-                ExtensionConstants::getSettingKey('MaxSlides')
+                ExtensionConstants::getSettingKey('MaxSlides'),
+                'Client1HeaderAdvMaxSlides'
             ),
         ];
     }
