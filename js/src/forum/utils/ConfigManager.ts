@@ -62,11 +62,11 @@ export class ConfigManager {
      */
     private getForumAttribute(key: string): any {
         try {
-            const forum = (app as any)?.forum;
-            const attrFn = forum?.attribute;
-            return typeof attrFn === 'function' ? attrFn.call(forum, key) : undefined;
+            const attrFn = app.forum.attribute;
+            return typeof attrFn === 'function' ? attrFn.call(app.forum, key) : undefined;
         } catch {
             return undefined;
+            console.error('Error reading forum attribute:', key);
         }
     }
 
