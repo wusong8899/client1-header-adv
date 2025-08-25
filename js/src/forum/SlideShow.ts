@@ -94,19 +94,29 @@ export class SlideShow {
       
       // Try JSON format first
       const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      console.log('SlideShow: JSON settings attribute:', settingsJson ? 'found' : 'not found');
+      console.log('SlideShow: Raw settings attribute:', settingsJson);
+      console.log('SlideShow: Settings type:', typeof settingsJson);
       
       if (settingsJson) {
-        this.settings = JSON.parse(settingsJson);
-        console.log('SlideShow: Loaded JSON settings successfully');
-        return;
+        if (typeof settingsJson === 'string') {
+          this.settings = JSON.parse(settingsJson);
+          console.log('SlideShow: Parsed JSON settings:', this.settings);
+        } else if (typeof settingsJson === 'object') {
+          this.settings = settingsJson;
+          console.log('SlideShow: Using object settings directly:', this.settings);
+        }
+        
+        if (this.settings && this.settings.slides) {
+          console.log('SlideShow: Successfully loaded settings with', this.settings.slides.length, 'slides');
+          return;
+        }
       }
 
       // Fallback to legacy format
-      console.log('SlideShow: Falling back to legacy settings');
+      console.log('SlideShow: No valid JSON settings found, falling back to legacy settings');
       this.loadLegacySettings();
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error('SlideShow: Failed to load settings:', error);
       console.log('SlideShow: Falling back to legacy settings due to error');
       this.loadLegacySettings();
     }

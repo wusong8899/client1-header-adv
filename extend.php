@@ -21,10 +21,14 @@ return [
     // Locales
     new Extend\Locales(__DIR__ . '/locale'),
     
-    // Core JSON settings
+    // Core JSON settings with serializer callback
     (new Extend\Settings)->serializeToForum(
         'wusong8899-client1-header-adv.settings',
-        'Client1HeaderAdvSettings'
+        'Client1HeaderAdvSettings',
+        function ($value) {
+            // Return raw JSON string, ensuring it's properly serialized
+            return $value ?: '{}';
+        }
     ),
     
     // Legacy compatibility settings (for backward compatibility)

@@ -47,12 +47,22 @@ export default class SocialMediaButtons extends Component {
       
       // Try JSON format first
       const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      console.log('SocialMediaButtons: JSON settings found:', settingsJson ? 'yes' : 'no');
+      console.log('SocialMediaButtons: Raw settings attribute:', settingsJson);
+      console.log('SocialMediaButtons: Settings type:', typeof settingsJson);
       
       if (settingsJson) {
-        this.settings = typeof settingsJson === 'string' ? JSON.parse(settingsJson) : settingsJson;
-        console.log('SocialMediaButtons: Loaded settings:', this.settings);
-        return;
+        if (typeof settingsJson === 'string') {
+          this.settings = JSON.parse(settingsJson);
+          console.log('SocialMediaButtons: Parsed JSON settings:', this.settings);
+        } else if (typeof settingsJson === 'object') {
+          this.settings = settingsJson;
+          console.log('SocialMediaButtons: Using object settings directly:', this.settings);
+        }
+        
+        if (this.settings && this.settings.socialLinks) {
+          console.log('SocialMediaButtons: Successfully loaded', this.settings.socialLinks.length, 'social links');
+          return;
+        }
       }
 
       // If no settings found, initialize empty
@@ -62,7 +72,7 @@ export default class SocialMediaButtons extends Component {
         socialLinks: []
       };
       
-      console.log('SocialMediaButtons: No settings found, using empty defaults');
+      console.log('SocialMediaButtons: No valid settings found, using empty defaults');
     } catch (error) {
       console.error('SocialMediaButtons: Failed to load settings:', error);
       this.settings = {
