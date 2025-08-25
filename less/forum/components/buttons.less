@@ -118,48 +118,6 @@
     }
   }
 
-
-  // =============================================================================
-  // SOCIAL MEDIA BUTTONS
-  // =============================================================================
-
-  .social-buttons-container {
-    text-align: center;
-    padding-top: 10px;
-
-    .social-button {
-      .button-base();
-      background: @social-button-bg !important;
-      color: @social-button-color;
-      border-radius: @border-radius-pill !important;
-      font-weight: normal !important;
-
-      .Button-label {
-        margin-top: @social-button-margin;
-
-        a {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform @transition-fast @transition-easing;
-
-          &:hover {
-            transform: scale(1.1);
-          }
-
-          .social-icon {
-            width: @social-icon-size;
-            cursor: pointer;
-
-            &:hover {
-              opacity: 0.8;
-            }
-          }
-        }
-      }
-    }
-  }
-
   // =============================================================================
   // HIDDEN BUTTONS
   // =============================================================================
@@ -176,17 +134,12 @@
 
 .social-buttons-container {
   text-align: center;
-  padding-top: 10px;
+  width: 250px;
 
   .social-button {
-    .button-base();
-    background: @social-button-bg !important;
-    color: @social-button-color;
     border-radius: @border-radius-pill !important;
-    font-weight: normal !important;
 
     .Button-label {
-      margin-top: @social-button-margin;
 
       a {
         display: inline-flex;
