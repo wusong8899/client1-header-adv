@@ -22,7 +22,7 @@ app.initializers.add(EXTENSION_ID, () => {
     // Extend TagsPage view to initialize slideshow
     extend(TagsPage.prototype, 'view', function (vnode) {
         const result = vnode;
-        
+
         try {
             // Initialize slideshow after TagsPage renders, but only if on tags page
             if (slideShow && isTagsPage()) {
@@ -34,7 +34,7 @@ app.initializers.add(EXTENSION_ID, () => {
         } catch (error) {
             console.error('SlideShow initialization error:', error);
         }
-        
+
         return result;
     });
 
@@ -62,7 +62,7 @@ app.initializers.add(EXTENSION_ID, () => {
             if (shouldUseTagSwiper(pinned)) {
                 return m(TagSwiper, { tags: pinned });
             }
-            
+
             // Fall back to original rendering
             return original(pinned);
         } catch (error) {
@@ -75,7 +75,7 @@ app.initializers.add(EXTENSION_ID, () => {
     // Extend TagsPage view to add social media buttons
     extend(TagsPage.prototype, 'view', function (vnode) {
         const result = vnode;
-        
+
         try {
             // Only add social buttons on tags page
             if (isTagsPage()) {
@@ -87,17 +87,17 @@ app.initializers.add(EXTENSION_ID, () => {
         } catch (error) {
             console.error('SocialMediaButtons integration error:', error);
         }
-        
+
         return result;
     });
 
     // Add method to TagsPage for social media buttons
-    TagsPage.prototype.addSocialMediaButtons = function() {
+    TagsPage.prototype.addSocialMediaButtons = function () {
         // Find the container where we want to add social buttons
-        const container = document.querySelector('.TagTiles') || 
-                         document.querySelector('.tag-slider-container') ||
-                         document.querySelector('.container');
-                         
+        const container = document.querySelector('.TagTiles') ||
+            document.querySelector('.tag-slider-container') ||
+            document.querySelector('.container');
+
         if (!container || document.querySelector('.social-buttons-container')) {
             return; // Container not found or buttons already exist
         }
@@ -105,11 +105,11 @@ app.initializers.add(EXTENSION_ID, () => {
         // Create a wrapper div for social buttons
         const socialWrapper = document.createElement('div');
         socialWrapper.className = 'social-media-wrapper';
-        
+
         // Insert after the main content
         if (container.parentNode) {
             container.parentNode.insertBefore(socialWrapper, container.nextSibling);
-            
+
             // Render social media buttons using Mithril
             m.render(socialWrapper, m(SocialMediaButtons));
         }
@@ -117,7 +117,7 @@ app.initializers.add(EXTENSION_ID, () => {
 
     // Clean up on page navigation
     const originalPush = app.history.push;
-    app.history.push = function(...args) {
+    app.history.push = function (...args) {
         cleanupExtension();
         return originalPush.apply(this, args);
     };
@@ -131,16 +131,16 @@ function shouldUseTagSwiper(tags: any[]): boolean {
     // 1. We have tags to display
     // 2. Not too many tags (performance consideration)
     // 3. Not on mobile (optional - can be adjusted)
-    
+
     if (!tags || tags.length === 0) {
         return false;
     }
-    
+
     // Don't use carousel for too many tags (fallback to grid)
     if (tags.length > 12) {
         return false;
     }
-    
+
     // Always use TagSwiper for now (can add more conditions later)
     return true;
 }

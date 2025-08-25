@@ -299,8 +299,8 @@ export default class TagSwiper extends Component {
         slideShadows: true,
       },
 
-      // Autoplay - disabled on mobile to save battery
-      autoplay: isMobile ? false : {
+      // Autoplay - enabled on all devices
+      autoplay: {
         delay: 5000,
         disableOnInteraction: false,
         pauseOnMouseEnter: true,
