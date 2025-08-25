@@ -23,8 +23,8 @@ return [
     
     // Core JSON settings with serializer callback
     (new Extend\Settings)->serializeToForum(
-        'wusong8899-client1-header-adv.settings',
         'Client1HeaderAdvSettings',
+        'wusong8899-client1-header-adv.settings',
         function ($value) {
             // Return raw JSON string, ensuring it's properly serialized
             return $value ?: '{}';
@@ -33,7 +33,7 @@ return [
     
     // Legacy compatibility settings (for backward compatibility)
     (new Extend\Settings)->serializeToForum(
-        'wusong8899-client1-header-adv.TransitionTime',
-        'Client1HeaderAdvTransitionTime'
+        'Client1HeaderAdvTransitionTime',
+        'wusong8899-client1-header-adv.TransitionTime'
     ),
 ];
