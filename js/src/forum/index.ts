@@ -1,6 +1,5 @@
 import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
-import HeaderPrimary from 'flarum/forum/components/HeaderPrimary';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
 
 import { SlideShow } from './SlideShow';
@@ -19,15 +18,39 @@ app.initializers.add(EXTENSION_ID, () => {
     // Initialize slideshow manager
     slideShow = new SlideShow();
 
-    // Initialize slideshow on header render (for header advertisements)
-    extend(HeaderPrimary.prototype, 'view', function (_vnode) {
+    // Extend TagsPage view to initialize slideshow
+    extend(TagsPage.prototype, 'view', function (vnode) {
+        const result = vnode;
+        
         try {
-            // Initialize slideshow only if we have slide settings
+            // Initialize slideshow after TagsPage renders, but only if on tags page
             if (slideShow && isTagsPage()) {
-                slideShow.init();
+                // Use a small delay to ensure DOM is fully rendered
+                setTimeout(() => {
+                    slideShow.init();
+                }, 100);
             }
         } catch (error) {
             console.error('SlideShow initialization error:', error);
+        }
+        
+        return result;
+    });
+
+    // Also extend oncreate to ensure initialization after DOM creation
+    extend(TagsPage.prototype, 'oncreate', function () {
+        try {
+            // Initialize slideshow when TagsPage component is created
+            if (slideShow && isTagsPage()) {
+                // Delay initialization to allow DOM to be fully ready
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        slideShow.init();
+                    }, 150);
+                });
+            }
+        } catch (error) {
+            console.error('SlideShow oncreate initialization error:', error);
         }
     });
 
@@ -84,8 +107,11 @@ function shouldUseTagSwiper(tags: any[]): boolean {
 function isTagsPage(): boolean {
     try {
         const routeName = app.current.get('routeName');
-        return routeName === 'tags';
-    } catch {
+        const isTagsRoute = routeName === 'tags';
+        console.log('SlideShow: Page check - Route:', routeName, 'Is tags page:', isTagsRoute);
+        return isTagsRoute;
+    } catch (error) {
+        console.log('SlideShow: Page check failed:', error);
         return false;
     }
 }

@@ -33,15 +33,32 @@ export class SlideShow {
   private swiper: Swiper | null = null;
   private settings: ExtensionSettings | null = null;
   private extensionId = 'wusong8899-client1-header-adv';
+  private isInitialized: boolean = false;
 
   /**
    * Initialize the slideshow
    */
   async init(): Promise<void> {
     try {
+      console.log('SlideShow: Starting initialization...');
+      
+      // Prevent duplicate initialization
+      if (this.isInitialized && this.swiper) {
+        console.log('SlideShow: Already initialized, skipping');
+        return;
+      }
+
       this.loadSettings();
 
-      if (!this.settings || this.settings.slides.length === 0) {
+      if (!this.settings) {
+        console.warn('SlideShow: No settings found');
+        return;
+      }
+
+      console.log('SlideShow: Loaded settings:', this.settings);
+
+      if (this.settings.slides.length === 0) {
+        console.warn('SlideShow: No slides configured');
         return;
       }
 
@@ -49,12 +66,20 @@ export class SlideShow {
         .filter(slide => slide.active && slide.image)
         .sort((a, b) => a.order - b.order);
 
+      console.log('SlideShow: Active slides:', activeSlides.length, 'out of', this.settings.slides.length);
+
       if (activeSlides.length === 0) {
+        console.warn('SlideShow: No active slides with images');
         return;
       }
 
+      console.log('SlideShow: Creating DOM structure...');
       this.createDOM(activeSlides);
+      
+      console.log('SlideShow: Initializing Swiper...');
       this.initSwiper();
+      
+      console.log('SlideShow: Initialization completed successfully');
     } catch (error) {
       console.error('SlideShow initialization failed:', error);
     }
@@ -65,17 +90,24 @@ export class SlideShow {
    */
   private loadSettings(): void {
     try {
+      console.log('SlideShow: Loading settings...');
+      
       // Try JSON format first
       const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
+      console.log('SlideShow: JSON settings attribute:', settingsJson ? 'found' : 'not found');
+      
       if (settingsJson) {
         this.settings = JSON.parse(settingsJson);
+        console.log('SlideShow: Loaded JSON settings successfully');
         return;
       }
 
       // Fallback to legacy format
+      console.log('SlideShow: Falling back to legacy settings');
       this.loadLegacySettings();
     } catch (error) {
       console.error('Failed to load settings:', error);
+      console.log('SlideShow: Falling back to legacy settings due to error');
       this.loadLegacySettings();
     }
   }
@@ -84,6 +116,7 @@ export class SlideShow {
    * Load settings from legacy individual keys
    */
   private loadLegacySettings(): void {
+    console.log('SlideShow: Loading legacy settings...');
     const slides: SlideData[] = [];
 
     // Load up to 30 slides from legacy format
@@ -99,14 +132,20 @@ export class SlideShow {
           active: true,
           order: i
         });
+        console.log(`SlideShow: Found legacy slide ${i}:`, { image, link });
       }
     }
 
+    const transitionTime = parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000;
+    console.log('SlideShow: Legacy transition time:', transitionTime);
+
     this.settings = {
       slides,
-      transitionTime: parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000,
+      transitionTime,
       socialLinks: []
     };
+
+    console.log('SlideShow: Loaded legacy settings:', slides.length, 'slides found');
   }
 
   /**
@@ -117,6 +156,10 @@ export class SlideShow {
     if (existingContainer) {
       existingContainer.remove();
     }
+
+    // Create main wrapper with proper CSS classes
+    const wrapper = document.createElement('div');
+    wrapper.className = 'client1-header-adv-wrapper swiperAdContainer';
 
     const container = document.createElement('div');
     container.id = 'client1-header-slideshow';
@@ -150,11 +193,15 @@ export class SlideShow {
     swiperContainer.appendChild(pagination);
 
     container.appendChild(swiperContainer);
+    wrapper.appendChild(container);
 
-    // Insert after header
-    const header = document.querySelector('.Header-primary') || document.querySelector('.Header');
-    if (header && header.parentNode) {
-      header.parentNode.insertBefore(container, header.nextSibling);
+    // Find the best insertion point for tags page
+    const insertionPoint = this.findBestInsertionPoint();
+    if (insertionPoint.element && insertionPoint.method) {
+      insertionPoint.method(wrapper, insertionPoint.element);
+      console.log('SlideShow: Inserted slideshow at', insertionPoint.location);
+    } else {
+      console.warn('SlideShow: No suitable insertion point found');
     }
   }
 
@@ -301,6 +348,67 @@ export class SlideShow {
         console.error('Error destroying SlideShow:', error);
       }
     }
+  }
+
+  /**
+   * Find the best insertion point for the slideshow on tags page
+   */
+  private findBestInsertionPoint(): {
+    element: HTMLElement | null;
+    method: ((wrapper: HTMLElement, target: HTMLElement) => void) | null;
+    location: string;
+  } {
+    // Strategy 1: Insert before TagTiles container (best for tags page)
+    const tagTilesContainer = document.querySelector('.TagTiles') as HTMLElement;
+    if (tagTilesContainer) {
+      return {
+        element: tagTilesContainer,
+        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target),
+        location: 'before TagTiles'
+      };
+    }
+
+    // Strategy 2: Insert inside container div before other content
+    const containerDiv = document.querySelector('.container > div:first-child') as HTMLElement;
+    if (containerDiv && containerDiv.children.length > 0) {
+      return {
+        element: containerDiv,
+        method: (wrapper, target) => target.insertBefore(wrapper, target.firstChild),
+        location: 'inside container div'
+      };
+    }
+
+    // Strategy 3: Insert after page header
+    const pageHeader = document.querySelector('.Hero, .IndexPage-hero') as HTMLElement;
+    if (pageHeader) {
+      return {
+        element: pageHeader,
+        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
+        location: 'after page hero'
+      };
+    }
+
+    // Strategy 4: Insert in main content area
+    const mainContent = document.querySelector('.App-content, .IndexPage') as HTMLElement;
+    if (mainContent) {
+      return {
+        element: mainContent,
+        method: (wrapper, target) => target.insertBefore(wrapper, target.firstChild),
+        location: 'inside main content'
+      };
+    }
+
+    // Strategy 5: Fallback to after global header
+    const header = document.querySelector('.Header-primary, .Header') as HTMLElement;
+    if (header && header.parentNode) {
+      return {
+        element: header,
+        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
+        location: 'after global header'
+      };
+    }
+
+    return { element: null, method: null, location: 'none found' };
   }
 
   /**
