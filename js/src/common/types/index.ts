@@ -53,10 +53,72 @@ export interface ExtensionConfig {
 }
 
 // =============================================================================
-// SLIDE TYPES
+// SMART SLIDE TYPES - NEW ARCHITECTURE
 // =============================================================================
 
-export interface SlideData {
+export interface SmartSlide {
+  id: string;
+  content: SlideContent;
+  settings: SlideSettings;
+  analytics: SlideAnalytics;
+}
+
+export interface SlideContent {
+  image: string;
+  link: string;
+  title?: string;
+  description?: string;
+}
+
+export interface SlideSettings {
+  active: boolean;
+  order: number;
+  target: '_blank' | '_self';
+  visibility: 'all' | 'desktop' | 'mobile';
+}
+
+export interface SlideAnalytics {
+  clicks: number;
+  impressions: number;
+  created_at: string;
+  last_clicked?: string | null;
+  migrated_from_legacy?: boolean;
+}
+
+// =============================================================================
+// SLIDE OPERATIONS
+// =============================================================================
+
+export interface SlideOperation {
+  type: 'add' | 'update' | 'delete' | 'reorder';
+  slideId?: string;
+  data?: Partial<SmartSlide> | { slideIds: string[] };
+}
+
+export interface SlideOperationResult {
+  type: string;
+  result: boolean | SmartSlide;
+}
+
+export interface SlideValidationResult {
+  isValid: boolean;
+  errors: string[];
+  warnings?: string[];
+}
+
+export interface AnalyticsSummary {
+  total_slides: number;
+  active_slides: number;
+  total_clicks: number;
+  total_impressions: number;
+  ctr: number; // Click-through rate
+}
+
+// =============================================================================
+// LEGACY SLIDE TYPES (for backward compatibility)
+// =============================================================================
+
+export interface LegacySlideData {
   id: number;
   link: string;
   image: string;
@@ -65,10 +127,6 @@ export interface SlideData {
 export interface SlideValidation {
   isValid: boolean;
   errors: string[];
-}
-
-export interface SlideSettings {
-  [key: string]: string | undefined;
 }
 
 // =============================================================================
