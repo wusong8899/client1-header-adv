@@ -196,13 +196,22 @@ export default class TagSwiper extends Component {
    */
   private initSwiper(): void {
     if (!this.containerRef) {
+      console.error('TagSwiper: Container ref not found');
+      return;
+    }
+
+    // Check if Swiper is available
+    if (typeof Swiper === 'undefined') {
+      console.error('TagSwiper: Swiper class not found - check if swiper is loaded');
       return;
     }
 
     const config = this.getSwiperConfig();
     
     try {
+      console.log('TagSwiper: Initializing Swiper with config:', config);
       this.swiper = new Swiper(this.containerRef, config);
+      console.log('TagSwiper: Swiper initialized successfully:', this.swiper);
     } catch (error) {
       console.error('Failed to initialize TagSwiper:', error);
     }
