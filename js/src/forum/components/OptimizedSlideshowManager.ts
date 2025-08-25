@@ -2,7 +2,7 @@ import Swiper from 'swiper';
 import { EffectCoverflow, Navigation, Pagination, Autoplay } from 'swiper/modules';
 import app from 'flarum/forum/app';
 import { SlideService } from '../../common/services/SlideService';
-import { getElementById, querySelector, createElement, appendChild, setStyles, removeElement } from '../utils/DOMUtils';
+import { querySelector, createElement, appendChild, setStyles, removeElement } from '../utils/DOMUtils';
 import { isMobileDevice } from '../utils/MobileDetection';
 import { defaultConfig } from '../../common/config';
 import type { SmartSlide } from '../../common/types';
@@ -37,7 +37,7 @@ export class OptimizedSlideshowManager {
         try {
             // Load slides with caching
             const slides = await this.slideService.getAllSlides();
-            const activeSlides = slides.filter(slide => 
+            const activeSlides = slides.filter(slide =>
                 slide.settings.active && this.isSlideVisible(slide)
             );
 
@@ -48,19 +48,19 @@ export class OptimizedSlideshowManager {
 
             // Create container with optimizations
             this.container = this.createOptimizedContainer();
-            
+
             // Populate slides with lazy loading
             this.populateSlides(activeSlides);
-            
+
             // Initialize Swiper with performance settings
             this.initializeOptimizedSwiper();
-            
+
             // Setup intersection observer for analytics
             this.setupIntersectionObserver();
-            
+
             // Setup periodic updates
             this.setupPeriodicUpdates();
-            
+
             this.isInitialized = true;
             console.info(`Slideshow initialized with ${activeSlides.length} slides`);
         } catch (error) {
@@ -103,7 +103,7 @@ export class OptimizedSlideshowManager {
 
         try {
             const slides = await this.slideService.getAllSlides(true);
-            const activeSlides = slides.filter(slide => 
+            const activeSlides = slides.filter(slide =>
                 slide.settings.active && this.isSlideVisible(slide)
             );
 
@@ -146,7 +146,7 @@ export class OptimizedSlideshowManager {
     private applyMobileOptimizations(container: HTMLElement): void {
         const screenWidth = window.innerWidth;
         const optimizedWidth = Math.min(screenWidth * 1.8, 800); // Cap max width
-        
+
         setStyles(container, {
             'width': `${optimizedWidth}px`,
             'margin-left': `${-(optimizedWidth * 0.25)}px`,
@@ -178,7 +178,7 @@ export class OptimizedSlideshowManager {
 
         // Add navigation and pagination
         this.addSwiperControls(swiperWrapper);
-        
+
         appendChild(this.container, swiperWrapper);
     }
 
@@ -187,12 +187,12 @@ export class OptimizedSlideshowManager {
      */
     private createSlideElement(slide: SmartSlide, isFirst: boolean): HTMLElement {
         const slideDiv = createElement('div', { className: 'swiper-slide' });
-        
+
         if (slide.content.link) {
             const link = createElement('a') as HTMLAnchorElement;
             link.href = slide.content.link;
             link.target = slide.settings.target;
-            
+
             if (slide.content.title) {
                 link.title = slide.content.title;
             }
@@ -203,7 +203,7 @@ export class OptimizedSlideshowManager {
             });
 
             appendChild(slideDiv, link);
-            
+
             if (slide.content.image) {
                 const img = this.createOptimizedImage(slide, isFirst);
                 appendChild(link, img);
@@ -221,10 +221,10 @@ export class OptimizedSlideshowManager {
      */
     private createOptimizedImage(slide: SmartSlide, isFirst: boolean): HTMLImageElement {
         const img = createElement('img') as HTMLImageElement;
-        
+
         img.alt = slide.content.title || 'Advertisement slide';
         img.className = 'slide-image';
-        
+
         // Preload first image, lazy load others
         if (isFirst) {
             img.src = slide.content.image;
@@ -278,19 +278,19 @@ export class OptimizedSlideshowManager {
 
         this.swiper = new Swiper(swiperElement as HTMLElement, {
             modules: [EffectCoverflow, Navigation, Pagination, Autoplay],
-            
+
             // Performance optimizations
             speed: 600,
             touchRatio: 0.8,
             resistance: true,
             resistanceRatio: 0.5,
-            
+
             // Visual settings
             effect: 'coverflow',
             centeredSlides: true,
             slidesPerView: isMobileDevice() ? 1.2 : 2,
             spaceBetween: isMobileDevice() ? 15 : 30,
-            
+
             coverflowEffect: {
                 rotate: 0,
                 depth: 100,
@@ -298,18 +298,18 @@ export class OptimizedSlideshowManager {
                 slideShadows: true,
                 stretch: 0,
             },
-            
+
             pagination: {
                 el: '.swiper-pagination',
                 type: 'bullets',
                 clickable: true,
             },
-            
+
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
             },
-            
+
             autoplay: {
                 delay: transitionTime,
                 disableOnInteraction: false,
@@ -350,11 +350,11 @@ export class OptimizedSlideshowManager {
         // Track current slide impression
         const activeIndex = this.swiper.activeIndex;
         const slides = this.container?.querySelectorAll('.swiper-slide');
-        
+
         if (slides && slides[activeIndex]) {
             const slideElement = slides[activeIndex];
             const img = slideElement.querySelector('img');
-            
+
             if (img && img.dataset.slideId) {
                 this.slideService.trackImpression(img.dataset.slideId);
             }
@@ -366,7 +366,7 @@ export class OptimizedSlideshowManager {
      */
     private setupLazyLoading(): void {
         const lazyImages = this.container?.querySelectorAll('img.lazy');
-        
+
         if (!lazyImages || lazyImages.length === 0) return;
 
         const imageObserver = new IntersectionObserver((entries) => {
@@ -445,11 +445,11 @@ export class OptimizedSlideshowManager {
      */
     private isSlideVisible(slide: SmartSlide): boolean {
         const { visibility } = slide.settings;
-        
+
         if (visibility === 'all') return true;
         if (visibility === 'mobile' && isMobileDevice()) return true;
         if (visibility === 'desktop' && !isMobileDevice()) return true;
-        
+
         return false;
     }
 
@@ -460,10 +460,10 @@ export class OptimizedSlideshowManager {
         try {
             const forum = (app as any)?.forum;
             const attrFn = forum?.attribute;
-            const transitionTime = typeof attrFn === 'function' 
+            const transitionTime = typeof attrFn === 'function'
                 ? attrFn.call(forum, 'Client1HeaderAdvTransitionTime')
                 : undefined;
-            
+
             return transitionTime ? parseInt(String(transitionTime)) : defaultConfig.slider.defaultTransitionTime;
         } catch {
             return defaultConfig.slider.defaultTransitionTime;

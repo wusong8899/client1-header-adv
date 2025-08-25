@@ -416,7 +416,6 @@ export default class SmartSlideManager extends Component<SmartSlideManagerAttrs>
   renderSlide(slide: SmartSlide) {
     const validation = this.getValidationStatus(slide.id);
     const hasErrors = validation && !validation.isValid;
-    const hasWarnings = validation && validation.warnings && validation.warnings.length > 0;
 
     return (
       <div

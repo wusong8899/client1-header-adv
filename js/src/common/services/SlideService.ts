@@ -1,11 +1,10 @@
 import app from 'flarum/common/app';
-import type { 
-  SmartSlide, 
-  SlideOperation, 
-  SlideOperationResult, 
+import type {
+  SmartSlide,
+  SlideOperation,
+  SlideOperationResult,
   SlideValidationResult,
   AnalyticsSummary,
-  LegacySlideData
 } from '../types';
 
 /**
@@ -25,7 +24,7 @@ export class SlideService {
 
   private constructor(
     private readonly extensionId: string = 'wusong8899-client1-header-adv'
-  ) {}
+  ) { }
 
   /**
    * Get singleton instance
@@ -42,7 +41,7 @@ export class SlideService {
    */
   async getAllSlides(forceRefresh: boolean = false): Promise<SmartSlide[]> {
     const now = Date.now();
-    
+
     if (!forceRefresh && this.cachedSlides.length > 0 && (now - this.lastFetch) < this.cacheTimeout) {
       return this.cachedSlides;
     }
@@ -50,7 +49,7 @@ export class SlideService {
     try {
       // Try to get from forum attributes first (for forum context)
       const slidesJson = this.getForumAttribute('Slides');
-      
+
       if (slidesJson) {
         const slides = this.parseSlides(slidesJson);
         this.cachedSlides = slides;
@@ -61,7 +60,7 @@ export class SlideService {
       // Fallback to app.data.settings (for admin context)
       const settingKey = `${this.extensionId}.Slides`;
       const slidesData = app.data?.settings?.[settingKey];
-      
+
       if (slidesData) {
         const slides = this.parseSlides(slidesData);
         this.cachedSlides = slides;
@@ -111,12 +110,12 @@ export class SlideService {
 
       const slides = [...this.cachedSlides, newSlide];
       const success = await this.saveSlides(slides);
-      
+
       if (success) {
         this.cachedSlides = slides;
         return newSlide;
       }
-      
+
       return null;
     } catch (error) {
       console.error('Error adding slide:', error);
@@ -130,7 +129,7 @@ export class SlideService {
   async updateSlide(slideId: string, updateData: Partial<SmartSlide>): Promise<boolean> {
     try {
       const slideIndex = this.cachedSlides.findIndex(slide => slide.id === slideId);
-      
+
       if (slideIndex === -1) {
         throw new Error(`Slide with ID ${slideId} not found`);
       }
@@ -161,12 +160,12 @@ export class SlideService {
       slides[slideIndex] = updatedSlide;
 
       const success = await this.saveSlides(slides);
-      
+
       if (success) {
         this.cachedSlides = slides;
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error updating slide:', error);
@@ -180,19 +179,19 @@ export class SlideService {
   async deleteSlide(slideId: string): Promise<boolean> {
     try {
       const slides = this.cachedSlides.filter(slide => slide.id !== slideId);
-      
+
       // Reorder remaining slides
       slides.forEach((slide, index) => {
         slide.settings.order = index + 1;
       });
 
       const success = await this.saveSlides(slides);
-      
+
       if (success) {
         this.cachedSlides = slides;
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error deleting slide:', error);
@@ -226,12 +225,12 @@ export class SlideService {
       });
 
       const success = await this.saveSlides(reorderedSlides);
-      
+
       if (success) {
         this.cachedSlides = reorderedSlides;
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error reordering slides:', error);
@@ -393,7 +392,7 @@ export class SlideService {
     try {
       const slidesJson = JSON.stringify(slides);
       const settingKey = `${this.extensionId}.Slides`;
-      
+
       // Update local cache first
       if (app.data?.settings) {
         app.data.settings[settingKey] = slidesJson;
@@ -441,7 +440,7 @@ export class SlideService {
     for (let i = 1; i <= maxSlides; i++) {
       const linkKey = `${this.extensionId}.Link${i}`;
       const imageKey = `${this.extensionId}.Image${i}`;
-      
+
       const link = app.data?.settings?.[linkKey] || '';
       const image = app.data?.settings?.[imageKey] || '';
 
@@ -472,7 +471,7 @@ export class SlideService {
 
     this.cachedSlides = legacySlides;
     this.lastFetch = Date.now();
-    
+
     return legacySlides;
   }
 

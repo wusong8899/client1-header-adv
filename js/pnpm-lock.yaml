@@ -15,6 +15,9 @@ importers:
       '@types/jquery':
         specifier: ^3.5.32
         version: 3.5.32
+      '@types/mithril':
+        specifier: ^2.2.7
+        version: 2.2.7
       '@types/node':
         specifier: ^24.0.0
         version: 24.2.1

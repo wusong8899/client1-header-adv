@@ -1,6 +1,7 @@
 import app from 'flarum/admin/app';
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
+import m from 'mithril';
 
 interface SlideData {
   id: number;
