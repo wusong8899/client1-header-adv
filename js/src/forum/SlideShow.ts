@@ -77,7 +77,7 @@ export class SlideShow {
       this.createDOM(activeSlides);
       
       console.log('SlideShow: Initializing Swiper...');
-      this.initSwiper();
+      this.initSwiper(activeSlides.length);
       
       console.log('SlideShow: Initialization completed successfully');
     } catch (error) {
@@ -250,13 +250,19 @@ export class SlideShow {
   /**
    * Initialize Swiper with simplified configuration
    */
-  private initSwiper(): void {
+  private initSwiper(slideCount: number): void {
     const container = document.querySelector('#client1-header-slideshow .swiper') as HTMLElement;
     if (!container) {
       return;
     }
 
     try {
+      // Determine if loop should be enabled based on slide count
+      // Need at least 3 slides for safe loop mode operation
+      const enableLoop = slideCount >= 3;
+      
+      console.log(`SlideShow: Initializing Swiper with ${slideCount} slides, loop: ${enableLoop}`);
+      
       this.swiper = new Swiper(container, {
         // Basic configuration
         slidesPerView: 1,
@@ -292,8 +298,8 @@ export class SlideShow {
           clickable: true,
         },
 
-        // Loop
-        loop: true,
+        // Loop (dynamic based on slide count)
+        loop: enableLoop,
 
         // SPA-critical settings for Flarum
         observer: true,
