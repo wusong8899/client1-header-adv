@@ -43,24 +43,17 @@ export default class SocialMediaButtons extends Component {
    */
   private loadSettings(): void {
     try {
-      console.log('SocialMediaButtons: Loading settings...');
-      
       // Try JSON format first
       const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      console.log('SocialMediaButtons: Raw settings attribute:', settingsJson);
-      console.log('SocialMediaButtons: Settings type:', typeof settingsJson);
       
       if (settingsJson) {
         if (typeof settingsJson === 'string') {
           this.settings = JSON.parse(settingsJson);
-          console.log('SocialMediaButtons: Parsed JSON settings:', this.settings);
         } else if (typeof settingsJson === 'object') {
           this.settings = settingsJson;
-          console.log('SocialMediaButtons: Using object settings directly:', this.settings);
         }
         
         if (this.settings && this.settings.socialLinks) {
-          console.log('SocialMediaButtons: Successfully loaded', this.settings.socialLinks.length, 'social links');
           return;
         }
       }
@@ -71,8 +64,6 @@ export default class SocialMediaButtons extends Component {
         transitionTime: 5000,
         socialLinks: []
       };
-      
-      console.log('SocialMediaButtons: No valid settings found, using empty defaults');
     } catch (error) {
       console.error('SocialMediaButtons: Failed to load settings:', error);
       this.settings = {
@@ -88,7 +79,6 @@ export default class SocialMediaButtons extends Component {
    */
   view(): Mithril.Children {
     if (!this.settings || !this.settings.socialLinks || this.settings.socialLinks.length === 0) {
-      console.log('SocialMediaButtons: No social links to display');
       return null;
     }
 
@@ -98,11 +88,8 @@ export default class SocialMediaButtons extends Component {
     );
 
     if (activeSocialLinks.length === 0) {
-      console.log('SocialMediaButtons: No active social links');
       return null;
     }
-
-    console.log('SocialMediaButtons: Rendering', activeSocialLinks.length, 'social buttons');
 
     return (
       <div className="social-buttons-container">
@@ -140,8 +127,7 @@ export default class SocialMediaButtons extends Component {
   /**
    * Track social media clicks for analytics
    */
-  private trackSocialClick(platform: string): void {
-    console.log('SocialMediaButtons: Click tracked for', platform);
+  private trackSocialClick(_platform: string): void {
     // Could integrate with analytics service here
   }
 }

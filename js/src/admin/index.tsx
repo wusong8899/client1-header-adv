@@ -90,7 +90,6 @@ class UnifiedAdminComponent extends ExtensionPage {
       this.setting(`${EXTENSION_ID}.settings`)(json);
       // Also update transition time in separate setting for legacy compatibility
       this.setting(`${EXTENSION_ID}.TransitionTime`)(settings.transitionTime.toString());
-      console.log('Admin: Settings updated via ExtensionPage.setting():', settings);
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
@@ -100,7 +99,6 @@ class UnifiedAdminComponent extends ExtensionPage {
    * Migrate from legacy individual settings to JSON format
    */
   migrateFromLegacy(): void {
-    console.log('Admin: Migrating from legacy settings...');
     
     const settings: ExtensionSettings = {
       slides: [],
@@ -138,14 +136,12 @@ class UnifiedAdminComponent extends ExtensionPage {
     
     // Save migrated data
     this.updateSettings(settings);
-    console.log('Admin: Legacy data migrated:', settings.slides.length, 'slides,', settings.socialLinks.length, 'social links');
   }
 
   /**
    * Add some default slides for testing purposes
    */
   addDefaultSlides(): void {
-    console.log('Adding default test slides...');
     
     const settings = this.getSettings();
     settings.slides = [
@@ -166,7 +162,6 @@ class UnifiedAdminComponent extends ExtensionPage {
     ];
     
     this.updateSettings(settings);
-    console.log('Default slides added:', settings.slides);
   }
 
 

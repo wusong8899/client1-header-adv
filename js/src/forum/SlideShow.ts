@@ -40,25 +40,18 @@ export class SlideShow {
    */
   async init(): Promise<void> {
     try {
-      console.log('SlideShow: Starting initialization...');
-      
       // Prevent duplicate initialization
       if (this.isInitialized && this.swiper) {
-        console.log('SlideShow: Already initialized, skipping');
         return;
       }
 
       this.loadSettings();
 
       if (!this.settings) {
-        console.warn('SlideShow: No settings found');
         return;
       }
 
-      console.log('SlideShow: Loaded settings:', this.settings);
-
       if (this.settings.slides.length === 0) {
-        console.warn('SlideShow: No slides configured');
         return;
       }
 
@@ -66,20 +59,12 @@ export class SlideShow {
         .filter(slide => slide.active && slide.image)
         .sort((a, b) => a.order - b.order);
 
-      console.log('SlideShow: Active slides:', activeSlides.length, 'out of', this.settings.slides.length);
-
       if (activeSlides.length === 0) {
-        console.warn('SlideShow: No active slides with images');
         return;
       }
 
-      console.log('SlideShow: Creating DOM structure...');
       this.createDOM(activeSlides);
-      
-      console.log('SlideShow: Initializing Swiper...');
       this.initSwiper(activeSlides.length);
-      
-      console.log('SlideShow: Initialization completed successfully');
     } catch (error) {
       console.error('SlideShow initialization failed:', error);
     }
@@ -90,34 +75,25 @@ export class SlideShow {
    */
   private loadSettings(): void {
     try {
-      console.log('SlideShow: Loading settings...');
-      
       // Try JSON format first
       const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      console.log('SlideShow: Raw settings attribute:', settingsJson);
-      console.log('SlideShow: Settings type:', typeof settingsJson);
       
       if (settingsJson) {
         if (typeof settingsJson === 'string') {
           this.settings = JSON.parse(settingsJson);
-          console.log('SlideShow: Parsed JSON settings:', this.settings);
         } else if (typeof settingsJson === 'object') {
           this.settings = settingsJson;
-          console.log('SlideShow: Using object settings directly:', this.settings);
         }
         
         if (this.settings && this.settings.slides) {
-          console.log('SlideShow: Successfully loaded settings with', this.settings.slides.length, 'slides');
           return;
         }
       }
 
       // Fallback to legacy format
-      console.log('SlideShow: No valid JSON settings found, falling back to legacy settings');
       this.loadLegacySettings();
     } catch (error) {
       console.error('SlideShow: Failed to load settings:', error);
-      console.log('SlideShow: Falling back to legacy settings due to error');
       this.loadLegacySettings();
     }
   }
@@ -126,7 +102,6 @@ export class SlideShow {
    * Load settings from legacy individual keys
    */
   private loadLegacySettings(): void {
-    console.log('SlideShow: Loading legacy settings...');
     const slides: SlideData[] = [];
 
     // Load up to 30 slides from legacy format
@@ -142,20 +117,16 @@ export class SlideShow {
           active: true,
           order: i
         });
-        console.log(`SlideShow: Found legacy slide ${i}:`, { image, link });
       }
     }
 
     const transitionTime = parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000;
-    console.log('SlideShow: Legacy transition time:', transitionTime);
 
     this.settings = {
       slides,
       transitionTime,
       socialLinks: []
     };
-
-    console.log('SlideShow: Loaded legacy settings:', slides.length, 'slides found');
   }
 
   /**
@@ -209,9 +180,6 @@ export class SlideShow {
     const insertionPoint = this.findBestInsertionPoint();
     if (insertionPoint.element && insertionPoint.method) {
       insertionPoint.method(wrapper, insertionPoint.element);
-      console.log('SlideShow: Inserted slideshow at', insertionPoint.location);
-    } else {
-      console.warn('SlideShow: No suitable insertion point found');
     }
   }
 
@@ -260,8 +228,6 @@ export class SlideShow {
       // Determine if loop should be enabled based on slide count
       // Need at least 3 slides for safe loop mode operation
       const enableLoop = slideCount >= 3;
-      
-      console.log(`SlideShow: Initializing Swiper with ${slideCount} slides, loop: ${enableLoop}`);
       
       this.swiper = new Swiper(container, {
         // Basic configuration
@@ -322,11 +288,9 @@ export class SlideShow {
         on: {
           init: () => {
             this.isInitialized = true;
-            console.log('SlideShow initialized');
           },
           destroy: () => {
             this.isInitialized = false;
-            console.log('SlideShow destroyed');
           }
         },
       });

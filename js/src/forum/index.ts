@@ -112,8 +112,6 @@ app.initializers.add(EXTENSION_ID, () => {
             
             // Render social media buttons using Mithril
             m.render(socialWrapper, m(SocialMediaButtons));
-            
-            console.log('SocialMediaButtons: Added to page');
         }
     };
 
@@ -153,11 +151,8 @@ function shouldUseTagSwiper(tags: any[]): boolean {
 function isTagsPage(): boolean {
     try {
         const routeName = app.current.get('routeName');
-        const isTagsRoute = routeName === 'tags';
-        console.log('SlideShow: Page check - Route:', routeName, 'Is tags page:', isTagsRoute);
-        return isTagsRoute;
-    } catch (error) {
-        console.log('SlideShow: Page check failed:', error);
+        return routeName === 'tags';
+    } catch {
         return false;
     }
 }
