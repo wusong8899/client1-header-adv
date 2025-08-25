@@ -1,7 +1,6 @@
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
-import { Swiper } from 'swiper';
-import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules';
+import Swiper from 'swiper/bundle';
 import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
@@ -37,8 +36,8 @@ interface TagSlideData {
  */
 export default class TagSwiper extends Component {
   private swiper: Swiper | null = null;
-  private containerRef: HTMLElement | null = null;
   private tags: any[] = [];
+  private isInitialized: boolean = false;
 
   /**
    * Initialize component
@@ -60,9 +59,7 @@ export default class TagSwiper extends Component {
 
     return (
       <div id="tag-slider-container" className="tag-slider-container TagSwiper-container">
-        <div className="swiper tag-swiper" oncreate={(vnodeDiv: Mithril.VnodeDOM) => {
-          this.containerRef = vnodeDiv.dom as HTMLElement;
-        }}>
+        <div className="swiper tag-swiper">
           <div className="swiper-wrapper">
             {tags.map((tag: any) => this.renderSlide(tag))}
           </div>
@@ -79,11 +76,15 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Initialize Swiper after DOM creation
+   * Initialize Swiper after DOM creation with delay to ensure DOM is ready
    */
   oncreate(vnode: Mithril.VnodeDOM) {
     super.oncreate(vnode);
-    this.initSwiper();
+    
+    // Use requestAnimationFrame to ensure DOM is fully ready
+    requestAnimationFrame(() => {
+      this.initSwiper();
+    });
   }
 
   /**
@@ -102,15 +103,19 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Clean up Swiper instance
+   * Clean up Swiper instance before removal
+   */
+  onbeforeremove(vnode: Mithril.VnodeDOM) {
+    super.onbeforeremove(vnode);
+    this.destroySwiper();
+  }
+  
+  /**
+   * Final cleanup on removal
    */
   onremove(vnode: Mithril.VnodeDOM) {
     super.onremove(vnode);
-    if (this.swiper) {
-      this.swiper.destroy(true, true);
-      this.swiper = null;
-    }
-    this.containerRef = null;
+    this.destroySwiper();
   }
 
   /**
@@ -192,11 +197,11 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Initialize Swiper with responsive configuration
+   * Initialize Swiper with improved container finding
    */
   private initSwiper(): void {
-    if (!this.containerRef) {
-      console.error('TagSwiper: Container ref not found');
+    if (this.isInitialized) {
+      console.log('TagSwiper: Already initialized, skipping');
       return;
     }
 
@@ -206,11 +211,23 @@ export default class TagSwiper extends Component {
       return;
     }
 
+    // Find container with multiple strategies
+    const container = this.findContainer();
+    if (!container) {
+      console.error('TagSwiper: Container not found');
+      return;
+    }
+
     const config = this.getSwiperConfig();
     
     try {
       console.log('TagSwiper: Initializing Swiper with config:', config);
-      this.swiper = new Swiper(this.containerRef, config);
+      this.swiper = new Swiper(container, config);
+      
+      // Store reference for cleanup
+      (container as any).swiperInstance = this.swiper;
+      this.isInitialized = true;
+      
       console.log('TagSwiper: Swiper initialized successfully:', this.swiper);
     } catch (error) {
       console.error('Failed to initialize TagSwiper:', error);
@@ -218,15 +235,55 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Get Swiper configuration with responsive settings
+   * Find Swiper container with multiple strategies
+   */
+  private findContainer(): HTMLElement | null {
+    // Strategy 1: Use jQuery selector if available
+    if (this.$) {
+      const jqueryContainer = this.$('.swiper.tag-swiper')[0];
+      if (jqueryContainer) {
+        return jqueryContainer as HTMLElement;
+      }
+    }
+
+    // Strategy 2: Direct DOM query
+    const directContainer = this.element?.querySelector('.swiper.tag-swiper');
+    if (directContainer) {
+      return directContainer as HTMLElement;
+    }
+
+    // Strategy 3: Global query as fallback
+    const globalContainer = document.querySelector('.swiper.tag-swiper');
+    if (globalContainer) {
+      return globalContainer as HTMLElement;
+    }
+
+    return null;
+  }
+
+  /**
+   * Safely destroy Swiper instance
+   */
+  private destroySwiper(): void {
+    if (this.swiper && typeof this.swiper.destroy === 'function') {
+      try {
+        this.swiper.destroy(true, true);
+        this.swiper = null;
+        this.isInitialized = false;
+      } catch (error) {
+        console.error('Error destroying TagSwiper:', error);
+      }
+    }
+  }
+
+  /**
+   * Get Swiper configuration with SPA-critical settings
    */
   private getSwiperConfig(): SwiperOptions {
     const isMobile = window.innerWidth < 768;
     const isTablet = window.innerWidth < 1024;
     
     return {
-      modules: [Navigation, Pagination, Autoplay, EffectCoverflow],
-      
       // Basic configuration
       slidesPerView: isMobile ? 1 : isTablet ? 2 : 'auto',
       spaceBetween: 20,
@@ -266,12 +323,21 @@ export default class TagSwiper extends Component {
       // Loop - disabled to avoid tag duplication
       loop: false,
       
+      // SPA-critical settings for Flarum
+      observer: true,
+      observeParents: true,
+      watchSlidesProgress: true,
+      
       // Responsive breakpoints
       breakpoints: {
         320: {
           slidesPerView: 1,
           spaceBetween: 10,
           effect: 'slide',
+        },
+        640: {
+          slidesPerView: 1,
+          spaceBetween: 20,
         },
         768: {
           slidesPerView: 2,
@@ -287,6 +353,18 @@ export default class TagSwiper extends Component {
           slidesPerView: 'auto',
           spaceBetween: 25,
           effect: 'coverflow',
+        }
+      },
+
+      // Event callbacks
+      on: {
+        init: () => {
+          this.isInitialized = true;
+          console.log('TagSwiper initialized');
+        },
+        destroy: () => {
+          this.isInitialized = false;
+          console.log('TagSwiper destroyed');
         }
       },
 

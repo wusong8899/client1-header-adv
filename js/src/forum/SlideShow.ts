@@ -1,6 +1,5 @@
 import app from 'flarum/forum/app';
-import { Swiper } from 'swiper';
-import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules';
+import Swiper from 'swiper/bundle';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -200,69 +199,133 @@ export class SlideShow {
       return;
     }
 
-    this.swiper = new Swiper(container, {
-      modules: [Navigation, Pagination, Autoplay, EffectCoverflow],
+    try {
+      this.swiper = new Swiper(container, {
+        // Basic configuration
+        slidesPerView: 1,
+        spaceBetween: 30,
+        centeredSlides: true,
 
-      // Basic configuration
-      slidesPerView: 1,
-      spaceBetween: 30,
-      centeredSlides: true,
-
-      // Effect
-      effect: 'coverflow',
-      coverflowEffect: {
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: true,
-      },
-
-      // Autoplay
-      autoplay: {
-        delay: this.settings?.transitionTime || 5000,
-        disableOnInteraction: false,
-      },
-
-      // Navigation
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-
-      // Pagination
-      pagination: {
-        el: '.swiper-pagination',
-        type: 'bullets',
-        clickable: true,
-      },
-
-      // Loop
-      loop: true,
-
-      // Responsive breakpoints
-      breakpoints: {
-        768: {
-          slidesPerView: 'auto',
-          spaceBetween: 20,
+        // Effect
+        effect: 'coverflow',
+        coverflowEffect: {
+          rotate: 50,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
         },
-      },
-    });
+
+        // Autoplay
+        autoplay: {
+          delay: this.settings?.transitionTime || 5000,
+          disableOnInteraction: false,
+        },
+
+        // Navigation
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+
+        // Pagination
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'bullets',
+          clickable: true,
+        },
+
+        // Loop
+        loop: true,
+
+        // SPA-critical settings for Flarum
+        observer: true,
+        observeParents: true,
+        watchSlidesProgress: true,
+
+        // Responsive breakpoints
+        breakpoints: {
+          640: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 'auto',
+            spaceBetween: 20,
+          },
+        },
+
+        // Event callbacks
+        on: {
+          init: () => {
+            this.isInitialized = true;
+            console.log('SlideShow initialized');
+          },
+          destroy: () => {
+            this.isInitialized = false;
+            console.log('SlideShow destroyed');
+          }
+        },
+      });
+      
+      // Store reference for cleanup
+      (container as any).swiperInstance = this.swiper;
+      
+    } catch (error) {
+      console.error('Failed to initialize SlideShow:', error);
+    }
   }
 
   /**
    * Destroy the slideshow
    */
   destroy(): void {
-    if (this.swiper) {
-      this.swiper.destroy(true, true);
-      this.swiper = null;
-    }
+    this.destroySwiper();
 
     const container = document.getElementById('client1-header-slideshow');
     if (container) {
       container.remove();
     }
+  }
+
+  /**
+   * Safely destroy Swiper instance
+   */
+  private destroySwiper(): void {
+    if (this.swiper && typeof this.swiper.destroy === 'function') {
+      try {
+        this.swiper.destroy(true, true);
+        this.swiper = null;
+        this.isInitialized = false;
+      } catch (error) {
+        console.error('Error destroying SlideShow:', error);
+      }
+    }
+  }
+
+  /**
+   * Find slideshow container with multiple strategies
+   */
+  private findSlideshowContainer(): HTMLElement | null {
+    // Strategy 1: Direct query with specific selector
+    let container = document.querySelector('#client1-header-slideshow .swiper') as HTMLElement;
+    if (container) {
+      return container;
+    }
+
+    // Strategy 2: Broader query as fallback
+    container = document.querySelector('.header-slideshow .swiper') as HTMLElement;
+    if (container) {
+      return container;
+    }
+
+    // Strategy 3: Global query for any swiper in header
+    container = document.querySelector('header .swiper, .Header .swiper') as HTMLElement;
+    if (container) {
+      return container;
+    }
+
+    return null;
   }
 
   /**
