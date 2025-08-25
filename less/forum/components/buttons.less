@@ -184,17 +184,9 @@
     color: @social-button-color;
     border-radius: @border-radius-pill !important;
     font-weight: normal !important;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 
     .Button-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: @social-icon-spacing;
-      margin: 0;
-      padding: @spacing-sm @spacing-lg;
+      margin-top: @social-button-margin;
 
       a {
         display: inline-flex;
@@ -208,11 +200,6 @@
 
         .social-icon {
           width: @social-icon-size;
-          height: @social-icon-size;
-          object-fit: contain;
-          border-radius: @border-radius-small;
-          cursor: pointer;
-          transition: opacity @transition-fast @transition-easing;
 
           &:hover {
             opacity: 0.8;
