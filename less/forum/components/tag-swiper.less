@@ -9,7 +9,7 @@
 
 .TagSwiper-container {
   margin-bottom: 20px;
-  border-radius: @border-radius;
+  border-radius: 8px;
   overflow: hidden;
   
   // Match original TagTiles positioning
@@ -17,7 +17,7 @@
     margin: 0 0 20px 0;
   }
 
-  @media @phone {
+  @media (max-width: 767px) {
     margin: -15px -15px 20px -15px;
     border-radius: 0;
   }
@@ -35,7 +35,7 @@
   // Custom navigation positioning
   .swiper-button-prev,
   .swiper-button-next {
-    color: @primary-color;
+    color: #2b3248;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 50%;
     width: 40px;
@@ -55,7 +55,7 @@
     }
     
     // Hide on mobile to avoid clutter
-    @media @phone {
+    @media (max-width: 767px) {
       display: none;
     }
   }
@@ -73,12 +73,12 @@
     bottom: -30px;
     
     .swiper-pagination-bullet {
-      background: @muted-color;
+      background: #777;
       opacity: 0.5;
       transition: all 0.2s ease;
       
       &.swiper-pagination-bullet-active {
-        background: @primary-color;
+        background: #2b3248;
         opacity: 1;
         transform: scale(1.2);
       }
@@ -91,15 +91,15 @@
 // =============================================================================
 
 .tag-slide {
-  background: var(--tag-bg, @body-bg);
-  border-radius: @border-radius;
+  background: var(--tag-bg, #f9f9f9);
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   
   // Color theming
   &.colored {
-    color: var(--contrast-color, @body-color);
+    color: var(--contrast-color, #f3f3f3);
     
     .tag-slide-link {
       color: inherit;
@@ -116,7 +116,7 @@
 .tag-slide-link {
   display: block;
   text-decoration: none;
-  color: @body-color;
+  color: #555;
   height: 100%;
   
   &:hover {
@@ -156,7 +156,7 @@
   
   .tag-title {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
     margin: 0;
     line-height: 1.2;
     flex: 1;
@@ -211,7 +211,7 @@
 // RESPONSIVE DESIGN
 // =============================================================================
 
-@media @phone {
+@media (max-width: 767px) {
   .tag-swiper {
     height: 180px; // Slightly smaller on mobile
     
@@ -230,7 +230,7 @@
   }
 }
 
-@media @tablet-up {
+@media (min-width: 768px) {
   .tag-swiper {
     // Better spacing on larger screens
     .swiper-slide {
@@ -250,7 +250,7 @@
 // Focus states for better keyboard navigation
 .tag-slide-link {
   &:focus {
-    outline: 2px solid @primary-color;
+    outline: 2px solid #2b3248;
     outline-offset: 2px;
   }
 }
@@ -259,14 +259,14 @@
   .swiper-button-prev,
   .swiper-button-next {
     &:focus {
-      outline: 2px solid @primary-color;
+      outline: 2px solid #2b3248;
       outline-offset: 2px;
     }
   }
   
   .swiper-pagination-bullet {
     &:focus {
-      outline: 2px solid @primary-color;
+      outline: 2px solid #2b3248;
       outline-offset: 2px;
     }
   }
@@ -289,7 +289,7 @@
     left: 50%;
     width: 20px;
     height: 20px;
-    border: 2px solid @primary-color;
+    border: 2px solid #2b3248;
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 1s linear infinite;
