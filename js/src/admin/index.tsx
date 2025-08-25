@@ -50,6 +50,37 @@ class UnifiedAdminComponent extends Component {
 
   oninit() {
     this.loadSettings();
+    // Add default data if no slides exist (for testing)
+    if (this.settings.slides.length === 0) {
+      this.addDefaultSlides();
+    }
+  }
+
+  /**
+   * Add some default slides for testing purposes
+   */
+  addDefaultSlides(): void {
+    console.log('Adding default test slides...');
+    
+    this.settings.slides = [
+      {
+        id: 'slide-default-1',
+        image: 'https://via.placeholder.com/800x400/FF6B6B/FFFFFF?text=Advertisement+1',
+        link: 'https://example.com/ad1',
+        active: true,
+        order: 1
+      },
+      {
+        id: 'slide-default-2', 
+        image: 'https://via.placeholder.com/800x400/4ECDC4/FFFFFF?text=Advertisement+2',
+        link: 'https://example.com/ad2',
+        active: true,
+        order: 2
+      }
+    ];
+    
+    this.saveSettings();
+    console.log('Default slides added:', this.settings.slides);
   }
 
   /**
@@ -57,15 +88,21 @@ class UnifiedAdminComponent extends Component {
    */
   loadSettings(): void {
     try {
+      console.log('Admin: Loading settings...');
       const settingsJson = app.data.settings[`${EXTENSION_ID}.settings`];
+      console.log('Admin: JSON settings found:', settingsJson ? 'yes' : 'no');
+      
       if (settingsJson) {
         this.settings = JSON.parse(settingsJson);
+        console.log('Admin: Loaded JSON settings:', this.settings);
       } else {
+        console.log('Admin: Falling back to legacy settings');
         // Load from legacy format if JSON doesn't exist
         this.loadLegacySettings();
       }
     } catch (error) {
       console.error('Failed to load settings:', error);
+      console.log('Admin: Falling back to legacy settings due to error');
       this.loadLegacySettings();
     }
   }
@@ -113,11 +150,19 @@ class UnifiedAdminComponent extends Component {
   }
 
   /**
-   * Save all settings to Flarum (called by Flarum's save mechanism)
+   * Save all settings to Flarum (uses Flarum's automatic change detection)
    */
   saveSettings(): void {
     const settingsJson = JSON.stringify(this.settings);
+    console.log('Admin: Saving settings:', settingsJson);
+    
+    // Use Flarum's standard setting method (automatic dirty detection)
     app.data.settings[`${EXTENSION_ID}.settings`] = settingsJson;
+    app.data.settings[`${EXTENSION_ID}.TransitionTime`] = this.settings.transitionTime.toString();
+    
+    console.log('Admin: Settings updated in app.data.settings');
+    
+    // Force redraw to update UI
     m.redraw();
   }
 
@@ -316,6 +361,22 @@ class UnifiedAdminComponent extends Component {
  */
 app.initializers.add(EXTENSION_ID, (): void => {
   const extensionData = app.extensionData.for(EXTENSION_ID);
+
+  // Register the main JSON settings
+  extensionData.registerSetting({
+    setting: `${EXTENSION_ID}.settings`,
+    type: 'text',
+    label: '',
+    hidden: true, // This will be handled by our custom component
+  });
+
+  // Register legacy transition time setting for backward compatibility
+  extensionData.registerSetting({
+    setting: `${EXTENSION_ID}.TransitionTime`,
+    type: 'number',
+    label: '',
+    hidden: true, // This will be handled by our custom component
+  });
 
   // Register the unified admin component
   extensionData.registerSetting(() => m(UnifiedAdminComponent));
