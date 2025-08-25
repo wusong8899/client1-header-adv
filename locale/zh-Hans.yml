@@ -13,14 +13,14 @@ wusong8899-client1:
     SlideLinkLabel: 链接地址
     DeleteButton: 删除
     SaveChanges: 保存更改
-    
+
     # 核心设置
-    TransitionTime: 广告轮换时间 (默认5000毫秒)
-    
+    TransitionTime: 广告轮换时间
+
     # 幻灯片管理
     AddSlide: 添加幻灯片
     SlideNumber: "幻灯片 {number}"
-    
+
     # 社交媒体设置
     SocialKickUrl: Kick 链接
     SocialKickUrlHelp: 输入您的 Kick 频道链接（留空则隐藏此按钮）

@@ -13,14 +13,14 @@ wusong8899-client1:
     SlideLinkLabel: Link URL
     DeleteButton: Delete
     SaveChanges: Save Changes
-    
+
     # Core settings
-    TransitionTime: Speed of transitions between slides (default is 5 seconds)
-    
+    TransitionTime: Speed of transitions between slides
+
     # Slide management
     AddSlide: Add Slide
     SlideNumber: "Slide {number}"
-    
+
     # Social Media Settings
     SocialKickUrl: Kick URL
     SocialKickUrlHelp: Enter the URL for your Kick channel (leave empty to hide this button)

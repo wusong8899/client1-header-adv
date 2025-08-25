@@ -41,7 +41,7 @@ export class SlideShow {
   async init(): Promise<void> {
     try {
       this.loadSettings();
-      
+
       if (!this.settings || this.settings.slides.length === 0) {
         return;
       }
@@ -86,12 +86,12 @@ export class SlideShow {
    */
   private loadLegacySettings(): void {
     const slides: SlideData[] = [];
-    
+
     // Load up to 30 slides from legacy format
     for (let i = 1; i <= 30; i++) {
       const link = app.forum.attribute(`Client1HeaderAdvLink${i}`) || '';
       const image = app.forum.attribute(`Client1HeaderAdvImage${i}`) || '';
-      
+
       if (image || link) {
         slides.push({
           id: `legacy-${i}`,
@@ -137,7 +137,7 @@ export class SlideShow {
     // Add navigation
     const prevButton = document.createElement('div');
     prevButton.className = 'swiper-button-prev';
-    
+
     const nextButton = document.createElement('div');
     nextButton.className = 'swiper-button-next';
 
@@ -174,7 +174,7 @@ export class SlideShow {
       img.src = slide.image;
       img.alt = `Slide ${slide.order}`;
       img.loading = 'lazy';
-      
+
       if (slide.link) {
         const link = document.createElement('a');
         link.href = slide.link;
@@ -202,12 +202,12 @@ export class SlideShow {
 
     this.swiper = new Swiper(container, {
       modules: [Navigation, Pagination, Autoplay, EffectCoverflow],
-      
+
       // Basic configuration
       slidesPerView: 1,
       spaceBetween: 30,
       centeredSlides: true,
-      
+
       // Effect
       effect: 'coverflow',
       coverflowEffect: {

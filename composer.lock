@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aebaf49b92ed9cbb19601671f7029e06",
+    "content-hash": "6a439084dbb7205d4af87dfca4df7b35",
     "packages": [
         {
             "name": "axy/backtrace",
@@ -1277,6 +1277,86 @@
                 }
             ],
             "time": "2025-03-12T10:18:56+00:00"
+        },
+        {
+            "name": "flarum/tags",
+            "version": "v1.8.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flarum/tags.git",
+                "reference": "c0c44ba3a913a2560cb75a6c31f0a78341114a12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flarum/tags/zipball/c0c44ba3a913a2560cb75a6c31f0a78341114a12",
+                "reference": "c0c44ba3a913a2560cb75a6c31f0a78341114a12",
+                "shasum": ""
+            },
+            "require": {
+                "flarum/core": "^1.8"
+            },
+            "require-dev": {
+                "flarum/core": "*@dev",
+                "flarum/testing": "^1.0.0"
+            },
+            "type": "flarum-extension",
+            "extra": {
+                "flarum-cli": {
+                    "modules": {
+                        "js": true,
+                        "css": true,
+                        "admin": true,
+                        "forum": true,
+                        "gitConf": true,
+                        "styleci": true,
+                        "jsCommon": true,
+                        "prettier": false,
+                        "typescript": true,
+                        "bundlewatch": false,
+                        "editorConfig": true,
+                        "githubActions": true,
+                        "backendTesting": true
+                    }
+                },
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                },
+                "flarum-extension": {
+                    "icon": {
+                        "name": "fas fa-tags",
+                        "color": "#fff",
+                        "backgroundColor": "#F28326"
+                    },
+                    "title": "Tags",
+                    "category": "feature"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Flarum\\Tags\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Organize discussions into a hierarchy of tags and categories.",
+            "homepage": "https://flarum.org",
+            "keywords": [
+                "discussion"
+            ],
+            "support": {
+                "forum": "https://discuss.flarum.org",
+                "issues": "https://github.com/flarum/framework/issues",
+                "source": "https://github.com/flarum/tags"
+            },
+            "funding": [
+                {
+                    "url": "https://flarum.org/donate/",
+                    "type": "website"
+                }
+            ],
+            "time": "2025-03-12T10:05:43+00:00"
         },
         {
             "name": "franzl/whoops-middleware",

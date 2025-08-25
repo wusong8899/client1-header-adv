@@ -113,25 +113,12 @@ class UnifiedAdminComponent extends Component {
   }
 
   /**
-   * Save all settings to Flarum
+   * Save all settings to Flarum (called by Flarum's save mechanism)
    */
-  async saveSettings(): Promise<void> {
-    try {
-      const settingsJson = JSON.stringify(this.settings);
-      
-      app.data.settings[`${EXTENSION_ID}.settings`] = settingsJson;
-      
-      await app.request({
-        method: 'POST',
-        url: `${app.forum.attribute('apiUrl')}/settings`,
-        body: { [`${EXTENSION_ID}.settings`]: settingsJson }
-      });
-      
-      app.alerts.show({ type: 'success' }, app.translator.trans('core.admin.saved_message'));
-    } catch (error) {
-      console.error('Failed to save settings:', error);
-      app.alerts.show({ type: 'error' }, 'Failed to save settings');
-    }
+  saveSettings(): void {
+    const settingsJson = JSON.stringify(this.settings);
+    app.data.settings[`${EXTENSION_ID}.settings`] = settingsJson;
+    m.redraw();
   }
 
   /**
@@ -147,7 +134,7 @@ class UnifiedAdminComponent extends Component {
     };
     
     this.settings.slides.push(newSlide);
-    m.redraw();
+    this.saveSettings();
   }
 
   /**
@@ -159,7 +146,7 @@ class UnifiedAdminComponent extends Component {
     this.settings.slides.forEach((slide, index) => {
       slide.order = index + 1;
     });
-    m.redraw();
+    this.saveSettings();
   }
 
   /**
@@ -169,7 +156,7 @@ class UnifiedAdminComponent extends Component {
     const slide = this.settings.slides.find(s => s.id === slideId);
     if (slide) {
       (slide as any)[field] = value;
-      m.redraw();
+      this.saveSettings();
     }
   }
 
@@ -177,11 +164,13 @@ class UnifiedAdminComponent extends Component {
    * Update social media link
    */
   updateSocialLink(platform: string, field: 'url' | 'icon', value: string): void {
-    const socialLink = this.settings.socialLinks.find(s => s.platform === platform);
-    if (socialLink) {
-      socialLink[field] = value;
-      m.redraw();
+    let socialLink = this.settings.socialLinks.find(s => s.platform === platform);
+    if (!socialLink) {
+      socialLink = { platform, url: '', icon: '' };
+      this.settings.socialLinks.push(socialLink);
     }
+    socialLink[field] = value;
+    this.saveSettings();
   }
 
   view() {
@@ -201,6 +190,7 @@ class UnifiedAdminComponent extends Component {
             value={this.settings.transitionTime}
             oninput={(e: Event) => {
               this.settings.transitionTime = parseInt((e.target as HTMLInputElement).value);
+              this.saveSettings();
             }}
           />
         </div>
@@ -219,12 +209,6 @@ class UnifiedAdminComponent extends Component {
           <h3>{app.translator.trans('wusong8899-client1.admin.SocialMediaTitle')}</h3>
           
           {SOCIAL_PLATFORMS.map((platform) => this.renderSocialPlatform(platform))}
-        </div>
-
-        <div className="Form-group">
-          <button className="Button Button--primary" onclick={() => this.saveSettings()}>
-            {app.translator.trans('core.admin.save_changes')}
-          </button>
         </div>
       </div>
     );
@@ -249,12 +233,12 @@ class UnifiedAdminComponent extends Component {
             className="Button Button--danger" 
             onclick={() => this.deleteSlide(slide.id)}
           >
-            {app.translator.trans('core.admin.delete')}
+            {app.translator.trans('wusong8899-client1.admin.DeleteButton')}
           </button>
         </div>
         
         <div className="Form-group">
-          <label className="FormLabel">Image URL</label>
+          <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.SlideImageLabel')}</label>
           <input
             className="FormControl"
             type="url"
@@ -266,7 +250,7 @@ class UnifiedAdminComponent extends Component {
         </div>
         
         <div className="Form-group">
-          <label className="FormLabel">Link URL</label>
+          <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.SlideLinkLabel')}</label>
           <input
             className="FormControl"
             type="url"

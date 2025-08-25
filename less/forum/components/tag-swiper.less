@@ -1,0 +1,305 @@
+// =============================================================================
+// TAG SWIPER COMPONENT
+// =============================================================================
+// Styles for the TagSwiper carousel component
+
+// =============================================================================
+// CONTAINER
+// =============================================================================
+
+.TagSwiper-container {
+  margin-bottom: 20px;
+  border-radius: @border-radius;
+  overflow: hidden;
+  
+  // Match original TagTiles positioning
+  .TagsPage-content & {
+    margin: 0 0 20px 0;
+  }
+
+  @media @phone {
+    margin: -15px -15px 20px -15px;
+    border-radius: 0;
+  }
+}
+
+// =============================================================================
+// SWIPER CORE
+// =============================================================================
+
+.tag-swiper {
+  width: 100%;
+  height: 200px; // Match original TagTile height
+  overflow: visible; // Allow 3D effects to show
+  
+  // Custom navigation positioning
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: @primary-color;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    
+    &:after {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.1);
+    }
+    
+    // Hide on mobile to avoid clutter
+    @media @phone {
+      display: none;
+    }
+  }
+  
+  .swiper-button-prev {
+    left: -20px;
+  }
+  
+  .swiper-button-next {
+    right: -20px;
+  }
+  
+  // Custom pagination
+  .swiper-pagination {
+    bottom: -30px;
+    
+    .swiper-pagination-bullet {
+      background: @muted-color;
+      opacity: 0.5;
+      transition: all 0.2s ease;
+      
+      &.swiper-pagination-bullet-active {
+        background: @primary-color;
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// SLIDE STYLES
+// =============================================================================
+
+.tag-slide {
+  background: var(--tag-bg, @body-bg);
+  border-radius: @border-radius;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  // Color theming
+  &.colored {
+    color: var(--contrast-color, @body-color);
+    
+    .tag-slide-link {
+      color: inherit;
+    }
+  }
+  
+  // Hover effects
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.tag-slide-link {
+  display: block;
+  text-decoration: none;
+  color: @body-color;
+  height: 100%;
+  
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.tag-slide-content {
+  position: relative;
+  height: 200px; // Match TagTile height
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+// =============================================================================
+// CONTENT SECTIONS
+// =============================================================================
+
+.tag-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  
+  .tag-icon {
+    font-size: 24px;
+    margin-right: 12px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    
+    .icon {
+      display: block;
+    }
+  }
+  
+  .tag-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
+    flex: 1;
+  }
+}
+
+.tag-description {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+  opacity: 0.7;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.tag-spacer {
+  flex: 1;
+}
+
+.tag-last-post {
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.7;
+  
+  .colored & {
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .last-post-title {
+    margin-bottom: 4px;
+    font-weight: normal;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  time {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: bold;
+  }
+}
+
+// =============================================================================
+// RESPONSIVE DESIGN
+// =============================================================================
+
+@media @phone {
+  .tag-swiper {
+    height: 180px; // Slightly smaller on mobile
+    
+    .tag-slide-content {
+      height: 180px;
+      padding: 15px;
+    }
+    
+    .tag-header .tag-title {
+      font-size: 16px;
+    }
+    
+    .tag-description {
+      -webkit-line-clamp: 2;
+    }
+  }
+}
+
+@media @tablet-up {
+  .tag-swiper {
+    // Better spacing on larger screens
+    .swiper-slide {
+      margin-right: 20px;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// ACCESSIBILITY
+// =============================================================================
+
+// Focus states for better keyboard navigation
+.tag-slide-link {
+  &:focus {
+    outline: 2px solid @primary-color;
+    outline-offset: 2px;
+  }
+}
+
+.tag-swiper {
+  .swiper-button-prev,
+  .swiper-button-next {
+    &:focus {
+      outline: 2px solid @primary-color;
+      outline-offset: 2px;
+    }
+  }
+  
+  .swiper-pagination-bullet {
+    &:focus {
+      outline: 2px solid @primary-color;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// =============================================================================
+// LOADING STATE
+// =============================================================================
+
+.TagSwiper-container.loading {
+  .tag-swiper {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid @primary-color;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
