@@ -358,7 +358,17 @@ export class SlideShow {
     method: ((wrapper: HTMLElement, target: HTMLElement) => void) | null;
     location: string;
   } {
-    // Strategy 1: Insert before TagTiles container (best for tags page)
+    // Strategy 1: Insert before TagSwiper container (best for tags page with TagSwiper)
+    const tagSwiperContainer = document.querySelector('#tag-slider-container, .tag-slider-container') as HTMLElement;
+    if (tagSwiperContainer) {
+      return {
+        element: tagSwiperContainer,
+        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target),
+        location: 'before TagSwiper container'
+      };
+    }
+
+    // Strategy 2: Insert before TagTiles container (fallback for original layout)
     const tagTilesContainer = document.querySelector('.TagTiles') as HTMLElement;
     if (tagTilesContainer) {
       return {
@@ -368,7 +378,7 @@ export class SlideShow {
       };
     }
 
-    // Strategy 2: Insert inside container div before other content
+    // Strategy 3: Insert inside container div before other content
     const containerDiv = document.querySelector('.container > div:first-child') as HTMLElement;
     if (containerDiv && containerDiv.children.length > 0) {
       return {
@@ -378,7 +388,7 @@ export class SlideShow {
       };
     }
 
-    // Strategy 3: Insert after page header
+    // Strategy 4: Insert after page header
     const pageHeader = document.querySelector('.Hero, .IndexPage-hero') as HTMLElement;
     if (pageHeader) {
       return {
@@ -388,7 +398,7 @@ export class SlideShow {
       };
     }
 
-    // Strategy 4: Insert in main content area
+    // Strategy 5: Insert in main content area
     const mainContent = document.querySelector('.App-content, .IndexPage') as HTMLElement;
     if (mainContent) {
       return {
@@ -398,7 +408,7 @@ export class SlideShow {
       };
     }
 
-    // Strategy 5: Fallback to after global header
+    // Strategy 6: Fallback to after global header
     const header = document.querySelector('.Header-primary, .Header') as HTMLElement;
     if (header && header.parentNode) {
       return {

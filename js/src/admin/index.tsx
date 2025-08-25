@@ -6,7 +6,7 @@ import ExtensionPage from 'flarum/admin/components/ExtensionPage';
  */
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
 const SOCIAL_PLATFORMS = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'] as const;
-const DEFAULT_MAX_SLIDES = 30;
+const _DEFAULT_MAX_SLIDES = 30;
 
 /**
  * Simplified slide data structure
@@ -42,20 +42,103 @@ interface ExtensionSettings {
  * Consolidates slideshow management, social media settings, and global configuration
  */
 class UnifiedAdminComponent extends ExtensionPage {
-  private settings: ExtensionSettings = {
-    slides: [],
-    transitionTime: 5000,
-    socialLinks: []
-  };
-
+  
   oninit(vnode) {
     super.oninit(vnode);
     
-    this.loadSettings();
+    // Initialize settings using ExtensionPage's setting method
+    if (!this.setting(`${EXTENSION_ID}.settings`)()) {
+      // Check for legacy data migration first
+      this.migrateFromLegacy();
+    }
+    
     // Add default data if no slides exist (for testing)
-    if (this.settings.slides.length === 0) {
+    const settings = this.getSettings();
+    if (settings.slides.length === 0) {
       this.addDefaultSlides();
     }
+  }
+  
+  /**
+   * Get settings from ExtensionPage's setting method
+   */
+  getSettings(): ExtensionSettings {
+    try {
+      const json = this.setting(`${EXTENSION_ID}.settings`)() || '{}';
+      const parsed = JSON.parse(json);
+      return {
+        slides: parsed.slides || [],
+        transitionTime: parsed.transitionTime || 5000,
+        socialLinks: parsed.socialLinks || []
+      };
+    } catch (error) {
+      console.error('Failed to parse settings JSON:', error);
+      return {
+        slides: [],
+        transitionTime: 5000,
+        socialLinks: []
+      };
+    }
+  }
+  
+  /**
+   * Update settings using ExtensionPage's setting method
+   */
+  updateSettings(settings: ExtensionSettings): void {
+    try {
+      const json = JSON.stringify(settings);
+      this.setting(`${EXTENSION_ID}.settings`)(json);
+      // Also update transition time in separate setting for legacy compatibility
+      this.setting(`${EXTENSION_ID}.TransitionTime`)(settings.transitionTime.toString());
+      console.log('Admin: Settings updated via ExtensionPage.setting():', settings);
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+    }
+  }
+
+  /**
+   * Migrate from legacy individual settings to JSON format
+   */
+  migrateFromLegacy(): void {
+    console.log('Admin: Migrating from legacy settings...');
+    
+    const settings: ExtensionSettings = {
+      slides: [],
+      transitionTime: parseInt(app.data.settings[`${EXTENSION_ID}.TransitionTime`]) || 5000,
+      socialLinks: []
+    };
+    
+    // Migrate old slideshow data (up to 30 slides)
+    for (let i = 1; i <= 30; i++) {
+      const image = app.data.settings[`${EXTENSION_ID}.Image${i}`];
+      const link = app.data.settings[`${EXTENSION_ID}.Link${i}`];
+      if (image || link) {
+        settings.slides.push({
+          id: `legacy-${i}`,
+          image: image || '',
+          link: link || '',
+          active: true,
+          order: i
+        });
+      }
+    }
+    
+    // Migrate social media links
+    SOCIAL_PLATFORMS.forEach(platform => {
+      const url = app.data.settings[`${EXTENSION_ID}.Social${platform}Url`];
+      const icon = app.data.settings[`${EXTENSION_ID}.Social${platform}Icon`];
+      if (url || icon) {
+        settings.socialLinks.push({
+          platform,
+          url: url || '',
+          icon: icon || ''
+        });
+      }
+    });
+    
+    // Save migrated data
+    this.updateSettings(settings);
+    console.log('Admin: Legacy data migrated:', settings.slides.length, 'slides,', settings.socialLinks.length, 'social links');
   }
 
   /**
@@ -64,7 +147,8 @@ class UnifiedAdminComponent extends ExtensionPage {
   addDefaultSlides(): void {
     console.log('Adding default test slides...');
     
-    this.settings.slides = [
+    const settings = this.getSettings();
+    settings.slides = [
       {
         id: 'slide-default-1',
         image: 'https://via.placeholder.com/800x400/FF6B6B/FFFFFF?text=Advertisement+1',
@@ -81,129 +165,51 @@ class UnifiedAdminComponent extends ExtensionPage {
       }
     ];
     
-    this.saveSettings();
-    console.log('Default slides added:', this.settings.slides);
+    this.updateSettings(settings);
+    console.log('Default slides added:', settings.slides);
   }
 
-  /**
-   * Load all settings from Flarum
-   */
-  loadSettings(): void {
-    try {
-      console.log('Admin: Loading settings...');
-      const settingsJson = app.data.settings[`${EXTENSION_ID}.settings`];
-      console.log('Admin: JSON settings found:', settingsJson ? 'yes' : 'no');
-      
-      if (settingsJson) {
-        this.settings = JSON.parse(settingsJson);
-        console.log('Admin: Loaded JSON settings:', this.settings);
-      } else {
-        console.log('Admin: Falling back to legacy settings');
-        // Load from legacy format if JSON doesn't exist
-        this.loadLegacySettings();
-      }
-    } catch (error) {
-      console.error('Failed to load settings:', error);
-      console.log('Admin: Falling back to legacy settings due to error');
-      this.loadLegacySettings();
-    }
-  }
 
-  /**
-   * Load settings from legacy individual keys
-   */
-  loadLegacySettings(): void {
-    const slides: SlideData[] = [];
-    const socialLinks: SocialLink[] = [];
-
-    // Load slides from legacy format
-    for (let i = 1; i <= DEFAULT_MAX_SLIDES; i++) {
-      const link = app.data.settings[`${EXTENSION_ID}.Link${i}`] || '';
-      const image = app.data.settings[`${EXTENSION_ID}.Image${i}`] || '';
-      
-      if (link || image) {
-        slides.push({
-          id: `slide-${i}`,
-          image,
-          link,
-          active: true,
-          order: i
-        });
-      }
-    }
-
-    // Load social media links from legacy format
-    SOCIAL_PLATFORMS.forEach((platform) => {
-      const url = app.data.settings[`${EXTENSION_ID}.Social${platform}Url`] || '';
-      const icon = app.data.settings[`${EXTENSION_ID}.Social${platform}Icon`] || '';
-      
-      socialLinks.push({
-        platform,
-        url,
-        icon
-      });
-    });
-
-    this.settings = {
-      slides,
-      transitionTime: parseInt(app.data.settings[`${EXTENSION_ID}.TransitionTime`]) || 5000,
-      socialLinks
-    };
-  }
-
-  /**
-   * Save all settings using ExtensionPage's built-in method
-   */
-  saveSettings(): void {
-    const settingsJson = JSON.stringify(this.settings);
-    console.log('Admin: Saving settings using ExtensionPage method:', settingsJson);
-    
-    // Use ExtensionPage's setting method for proper save handling
-    this.setting(`${EXTENSION_ID}.settings`)(settingsJson);
-    this.setting(`${EXTENSION_ID}.TransitionTime`)(this.settings.transitionTime.toString());
-    
-    console.log('Admin: Settings updated via ExtensionPage.setting()');
-    
-    // Force redraw to update UI
-    m.redraw();
-  }
 
   /**
    * Add new slide
    */
   addSlide(): void {
+    const settings = this.getSettings();
     const newSlide: SlideData = {
       id: `slide-${Date.now()}`,
       image: '',
       link: '',
       active: true,
-      order: this.settings.slides.length + 1
+      order: settings.slides.length + 1
     };
     
-    this.settings.slides.push(newSlide);
-    this.saveSettings();
+    settings.slides.push(newSlide);
+    this.updateSettings(settings);
   }
 
   /**
    * Delete slide
    */
   deleteSlide(slideId: string): void {
-    this.settings.slides = this.settings.slides.filter(slide => slide.id !== slideId);
+    const settings = this.getSettings();
+    settings.slides = settings.slides.filter(slide => slide.id !== slideId);
     // Reorder remaining slides
-    this.settings.slides.forEach((slide, index) => {
+    settings.slides.forEach((slide, index) => {
       slide.order = index + 1;
     });
-    this.saveSettings();
+    this.updateSettings(settings);
   }
 
   /**
    * Update slide
    */
   updateSlide(slideId: string, field: keyof SlideData, value: any): void {
-    const slide = this.settings.slides.find(s => s.id === slideId);
+    const settings = this.getSettings();
+    const slide = settings.slides.find(s => s.id === slideId);
     if (slide) {
       (slide as any)[field] = value;
-      this.saveSettings();
+      this.updateSettings(settings);
     }
   }
 
@@ -211,16 +217,19 @@ class UnifiedAdminComponent extends ExtensionPage {
    * Update social media link
    */
   updateSocialLink(platform: string, field: 'url' | 'icon', value: string): void {
-    let socialLink = this.settings.socialLinks.find(s => s.platform === platform);
+    const settings = this.getSettings();
+    let socialLink = settings.socialLinks.find(s => s.platform === platform);
     if (!socialLink) {
       socialLink = { platform, url: '', icon: '' };
-      this.settings.socialLinks.push(socialLink);
+      settings.socialLinks.push(socialLink);
     }
     socialLink[field] = value;
-    this.saveSettings();
+    this.updateSettings(settings);
   }
 
   content() {
+    const settings = this.getSettings(); // Get current settings on each render
+    
     return (
       <div className="ExtensionPage-settings">
         <div className="container">
@@ -236,10 +245,11 @@ class UnifiedAdminComponent extends ExtensionPage {
             type="number"
             min="1000"
             max="30000"
-            value={this.settings.transitionTime}
+            value={settings.transitionTime}
             oninput={(e: Event) => {
-              this.settings.transitionTime = parseInt((e.target as HTMLInputElement).value);
-              this.saveSettings();
+              const newSettings = this.getSettings();
+              newSettings.transitionTime = parseInt((e.target as HTMLInputElement).value);
+              this.updateSettings(newSettings);
             }}
           />
         </div>
@@ -247,7 +257,7 @@ class UnifiedAdminComponent extends ExtensionPage {
         <div className="Form-group">
           <h3>{app.translator.trans('wusong8899-client1.admin.SlidesManagement')}</h3>
           
-          {this.settings.slides.map((slide) => this.renderSlide(slide))}
+          {settings.slides.map((slide) => this.renderSlide(slide))}
           
           <button className="Button Button--primary" onclick={() => this.addSlide()}>
             {app.translator.trans('wusong8899-client1.admin.AddSlide')}
@@ -324,7 +334,8 @@ class UnifiedAdminComponent extends ExtensionPage {
    * Render social platform configuration
    */
   renderSocialPlatform(platform: string) {
-    const socialLink = this.settings.socialLinks.find(s => s.platform === platform) || 
+    const settings = this.getSettings();
+    const socialLink = settings.socialLinks.find(s => s.platform === platform) || 
                       { platform, url: '', icon: '' };
 
     return (
