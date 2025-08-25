@@ -125,7 +125,8 @@
 
   .social-buttons-container {
     text-align: center;
-    padding-top: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 
     .social-button {
       .button-base();
@@ -133,16 +134,39 @@
       color: @social-button-color;
       border-radius: @border-radius-pill !important;
       font-weight: normal !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
       .Button-label {
-        margin-top: @social-button-margin;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: @social-icon-spacing;
+        margin: 0;
+        padding: @spacing-sm @spacing-lg;
 
-        .social-icon {
-          width: @social-icon-size;
-          cursor: pointer;
+        a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform @transition-fast @transition-easing;
 
-          &:not(:first-child) {
-            margin-left: @social-icon-spacing;
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          .social-icon {
+            width: @social-icon-size;
+            height: @social-icon-size;
+            object-fit: contain;
+            border-radius: @border-radius-small;
+            cursor: pointer;
+            transition: opacity @transition-fast @transition-easing;
+
+            &:hover {
+              opacity: 0.8;
+            }
           }
         }
       }
