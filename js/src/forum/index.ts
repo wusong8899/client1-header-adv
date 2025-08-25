@@ -4,6 +4,7 @@ import TagsPage from 'flarum/tags/forum/components/TagsPage';
 
 import { SlideShow } from './SlideShow';
 import TagSwiper from './components/TagSwiper';
+import SocialMediaButtons from './components/SocialMediaButtons';
 
 // Extension constants
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
@@ -70,6 +71,51 @@ app.initializers.add(EXTENSION_ID, () => {
             return original(pinned);
         }
     });
+
+    // Extend TagsPage view to add social media buttons
+    extend(TagsPage.prototype, 'view', function (vnode) {
+        const result = vnode;
+        
+        try {
+            // Only add social buttons on tags page
+            if (isTagsPage()) {
+                // Add social media buttons to the page content
+                setTimeout(() => {
+                    this.addSocialMediaButtons();
+                }, 200);
+            }
+        } catch (error) {
+            console.error('SocialMediaButtons integration error:', error);
+        }
+        
+        return result;
+    });
+
+    // Add method to TagsPage for social media buttons
+    TagsPage.prototype.addSocialMediaButtons = function() {
+        // Find the container where we want to add social buttons
+        const container = document.querySelector('.TagTiles') || 
+                         document.querySelector('.tag-slider-container') ||
+                         document.querySelector('.container');
+                         
+        if (!container || document.querySelector('.social-buttons-container')) {
+            return; // Container not found or buttons already exist
+        }
+
+        // Create a wrapper div for social buttons
+        const socialWrapper = document.createElement('div');
+        socialWrapper.className = 'social-media-wrapper';
+        
+        // Insert after the main content
+        if (container.parentNode) {
+            container.parentNode.insertBefore(socialWrapper, container.nextSibling);
+            
+            // Render social media buttons using Mithril
+            m.render(socialWrapper, m(SocialMediaButtons));
+            
+            console.log('SocialMediaButtons: Added to page');
+        }
+    };
 
     // Clean up on page navigation
     const originalPush = app.history.push;

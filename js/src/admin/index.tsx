@@ -1,5 +1,5 @@
 import app from 'flarum/admin/app';
-import Component from 'flarum/common/Component';
+import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 
 /**
  * Extension configuration constants
@@ -41,14 +41,16 @@ interface ExtensionSettings {
  * Unified Admin Management Component
  * Consolidates slideshow management, social media settings, and global configuration
  */
-class UnifiedAdminComponent extends Component {
+class UnifiedAdminComponent extends ExtensionPage {
   private settings: ExtensionSettings = {
     slides: [],
     transitionTime: 5000,
     socialLinks: []
   };
 
-  oninit() {
+  oninit(vnode) {
+    super.oninit(vnode);
+    
     this.loadSettings();
     // Add default data if no slides exist (for testing)
     if (this.settings.slides.length === 0) {
@@ -150,17 +152,17 @@ class UnifiedAdminComponent extends Component {
   }
 
   /**
-   * Save all settings to Flarum (uses Flarum's automatic change detection)
+   * Save all settings using ExtensionPage's built-in method
    */
   saveSettings(): void {
     const settingsJson = JSON.stringify(this.settings);
-    console.log('Admin: Saving settings:', settingsJson);
+    console.log('Admin: Saving settings using ExtensionPage method:', settingsJson);
     
-    // Use Flarum's standard setting method (automatic dirty detection)
-    app.data.settings[`${EXTENSION_ID}.settings`] = settingsJson;
-    app.data.settings[`${EXTENSION_ID}.TransitionTime`] = this.settings.transitionTime.toString();
+    // Use ExtensionPage's setting method for proper save handling
+    this.setting(`${EXTENSION_ID}.settings`)(settingsJson);
+    this.setting(`${EXTENSION_ID}.TransitionTime`)(this.settings.transitionTime.toString());
     
-    console.log('Admin: Settings updated in app.data.settings');
+    console.log('Admin: Settings updated via ExtensionPage.setting()');
     
     // Force redraw to update UI
     m.redraw();
@@ -218,9 +220,11 @@ class UnifiedAdminComponent extends Component {
     this.saveSettings();
   }
 
-  view() {
+  content() {
     return (
-      <div className="UnifiedAdminComponent">
+      <div className="ExtensionPage-settings">
+        <div className="container">
+          <div className="UnifiedAdminComponent">
         <div className="Form-group">
           <h3>{app.translator.trans('wusong8899-client1.admin.GlobalSettings')}</h3>
           
@@ -254,6 +258,13 @@ class UnifiedAdminComponent extends Component {
           <h3>{app.translator.trans('wusong8899-client1.admin.SocialMediaTitle')}</h3>
           
           {SOCIAL_PLATFORMS.map((platform) => this.renderSocialPlatform(platform))}
+        </div>
+        
+        {/* Submit button handled by ExtensionPage */}
+        <div className="Form-group">
+          {this.submitButton()}
+        </div>
+        </div>
         </div>
       </div>
     );
@@ -378,6 +389,6 @@ app.initializers.add(EXTENSION_ID, (): void => {
     hidden: true, // This will be handled by our custom component
   });
 
-  // Register the unified admin component
-  extensionData.registerSetting(() => m(UnifiedAdminComponent));
+  // Register the custom page instead of just a setting component
+  extensionData.registerPage(UnifiedAdminComponent);
 });
