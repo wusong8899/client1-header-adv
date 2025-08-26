@@ -10,17 +10,13 @@
 .TagSwiper-container {
   margin-bottom: 20px;
   border-radius: 8px;
-  overflow: hidden;
-  
+
   // Match original TagTiles positioning
   .TagsPage-content & {
     margin: 0 0 20px 0;
   }
 
-  @media (max-width: 767px) {
-    margin: -15px -15px 20px -15px;
-    border-radius: 0;
-  }
+  @media (max-width: 767px) {}
 }
 
 // =============================================================================
@@ -29,9 +25,8 @@
 
 .tag-swiper {
   width: 100%;
-  height: 200px; // Match original TagTile height
   overflow: visible; // Allow 3D effects to show
-  
+
   // Custom navigation positioning
   .swiper-button-prev,
   .swiper-button-next {
@@ -43,40 +38,40 @@
     margin-top: -20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
-    
+
     &:after {
       font-size: 16px;
       font-weight: bold;
     }
-    
+
     &:hover {
       background: rgba(255, 255, 255, 1);
       transform: scale(1.1);
     }
-    
+
     // Hide on mobile to avoid clutter
     @media (max-width: 767px) {
       display: none;
     }
   }
-  
+
   .swiper-button-prev {
     left: -20px;
   }
-  
+
   .swiper-button-next {
     right: -20px;
   }
-  
+
   // Custom pagination
   .swiper-pagination {
     bottom: -30px;
-    
+
     .swiper-pagination-bullet {
       background: #777;
       opacity: 0.5;
       transition: all 0.2s ease;
-      
+
       &.swiper-pagination-bullet-active {
         background: #2b3248;
         opacity: 1;
@@ -96,16 +91,16 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  
+
   // Color theming
   &.colored {
     color: var(--contrast-color, #f3f3f3);
-    
+
     .tag-slide-link {
       color: inherit;
     }
   }
-  
+
   // Hover effects
   &:hover {
     transform: translateY(-2px);
@@ -118,7 +113,7 @@
   text-decoration: none;
   color: #555;
   height: 100%;
-  
+
   &:hover {
     text-decoration: none;
     color: inherit;
@@ -127,7 +122,6 @@
 
 .tag-slide-content {
   position: relative;
-  height: 200px; // Match TagTile height
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -142,18 +136,18 @@
   display: flex;
   align-items: flex-start;
   margin-bottom: 10px;
-  
+
   .tag-icon {
     font-size: 24px;
     margin-right: 12px;
     margin-top: 2px;
     flex-shrink: 0;
-    
+
     .icon {
       display: block;
     }
   }
-  
+
   .tag-title {
     font-size: 18px;
     font-weight: 700;
@@ -186,11 +180,11 @@
   margin-top: 10px;
   font-size: 12px;
   opacity: 0.7;
-  
+
   .colored & {
     border-top-color: rgba(255, 255, 255, 0.2);
   }
-  
+
   .last-post-title {
     margin-bottom: 4px;
     font-weight: normal;
@@ -199,7 +193,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  
+
   time {
     text-transform: uppercase;
     font-size: 11px;
@@ -214,16 +208,16 @@
 @media (max-width: 767px) {
   .tag-swiper {
     height: 180px; // Slightly smaller on mobile
-    
+
     .tag-slide-content {
       height: 180px;
       padding: 15px;
     }
-    
+
     .tag-header .tag-title {
       font-size: 16px;
     }
-    
+
     .tag-description {
       -webkit-line-clamp: 2;
     }
@@ -232,10 +226,11 @@
 
 @media (min-width: 768px) {
   .tag-swiper {
+
     // Better spacing on larger screens
     .swiper-slide {
       margin-right: 20px;
-      
+
       &:last-child {
         margin-right: 0;
       }
@@ -256,6 +251,7 @@
 }
 
 .tag-swiper {
+
   .swiper-button-prev,
   .swiper-button-next {
     &:focus {
@@ -263,7 +259,7 @@
       outline-offset: 2px;
     }
   }
-  
+
   .swiper-pagination-bullet {
     &:focus {
       outline: 2px solid #2b3248;
@@ -281,7 +277,7 @@
     opacity: 0.6;
     pointer-events: none;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
