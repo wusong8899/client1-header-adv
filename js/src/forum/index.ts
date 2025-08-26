@@ -1,10 +1,14 @@
 import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
+import Navigation from 'flarum/forum/components/Navigation';
 import { hasContent, reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
 import { SlideShow } from './SlideShow';
 import TagSwiper from './components/TagSwiper';
 import SocialMediaButtons from './components/SocialMediaButtons';
+import MobileRegisterButton from './components/MobileRegisterButton';
+import MobileBrandLogo from './components/MobileBrandLogo';
+import { errorHandler } from './utils/ErrorHandler';
 import m from 'mithril';
 
 // Extension constants
@@ -141,6 +145,51 @@ app.initializers.add(EXTENSION_ID, () => {
         }
     };
 
+    // Add mobile navigation components (register button for logged out users + brand logo)
+    extend(Navigation.prototype, 'view', function (vnode) {
+        return errorHandler.handleSync(() => {
+            // Only work on mobile devices (viewport width < 768px)
+            if (!isMobileDevice()) {
+                return;
+            }
+
+            // Only work on homepage (tags page)
+            const routeName = app.current.get('routeName');
+            if (routeName !== 'tags') {
+                return;
+            }
+
+            if (!vnode || !vnode.children || !Array.isArray(vnode.children)) {
+                return;
+            }
+
+            // Add register button and brand logo for logged out users
+            if (!app.session.user) {
+                const hasBrandLogo = vnode.children.some((child: any) =>
+                    child && child.attrs && child.attrs.className &&
+                    child.attrs.className.includes('Navigation-mobileBrandLogo')
+                );
+
+                if (!hasBrandLogo) {
+                    vnode.children.push(MobileBrandLogo.component({
+                        className: "item-brand Navigation-mobileBrandLogo"
+                    }));
+                }
+
+                const hasRegisterButton = vnode.children.some((child: any) =>
+                    child && child.attrs && child.attrs.className &&
+                    child.attrs.className.includes('Navigation-mobileRegister')
+                );
+
+                if (!hasRegisterButton) {
+                    vnode.children.push(MobileRegisterButton.component({
+                        className: "item-register Navigation-mobileRegister"
+                    }));
+                }
+            }
+        }, 'Navigation mobile components extension');
+    });
+
     // Clean up on page navigation
     const originalPush = app.history.push;
     app.history.push = function (...args) {
@@ -181,6 +230,13 @@ function isTagsPage(): boolean {
     } catch {
         return false;
     }
+}
+
+/**
+ * Check if current device is mobile (viewport width < 768px)
+ */
+function isMobileDevice(): boolean {
+    return window.innerWidth < 768;
 }
 
 /**
