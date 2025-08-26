@@ -35,6 +35,12 @@ export function reloadSettings(): ExtensionSettings {
  */
 function loadSettings(): ExtensionSettings {
   try {
+    // Check if app.forum is initialized
+    if (!app.forum) {
+      console.warn('SettingsManager: Forum not initialized yet, returning empty settings');
+      return getEmptySettings();
+    }
+
     // Try JSON format first
     const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
     
@@ -64,6 +70,12 @@ function loadSettings(): ExtensionSettings {
  * Load settings from legacy individual keys
  */
 function loadLegacySettings(): ExtensionSettings {
+  // Check if app.forum is initialized
+  if (!app.forum) {
+    console.warn('SettingsManager: Forum not initialized, cannot load legacy settings');
+    return getEmptySettings();
+  }
+
   const settings: ExtensionSettings = {
     slides: [],
     transitionTime: parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000,
@@ -102,6 +114,17 @@ function loadLegacySettings(): ExtensionSettings {
   });
 
   return settings;
+}
+
+/**
+ * Return empty settings as fallback when forum isn't initialized
+ */
+function getEmptySettings(): ExtensionSettings {
+  return {
+    slides: [],
+    transitionTime: 5000,
+    socialLinks: []
+  };
 }
 
 /**

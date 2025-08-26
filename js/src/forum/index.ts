@@ -1,9 +1,11 @@
 import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
-import { hasContent, reloadSettings } from './utils/SettingsManager';
+import { hasContent, reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
 import { SlideShow } from './SlideShow';
 import TagSwiper from './components/TagSwiper';
+import SocialMediaButtons from './components/SocialMediaButtons';
+import m from 'mithril';
 
 // Extension constants
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
@@ -15,10 +17,8 @@ let slideShow: SlideShow | null = null;
  * Main extension initializer
  */
 app.initializers.add(EXTENSION_ID, () => {
-    // Initialize slideshow manager only if content exists
-    if (hasContent()) {
-        slideShow = new SlideShow();
-    }
+    // Defer slideshow initialization until first use
+    // This avoids accessing app.forum before it's initialized
 
     // Extend TagsPage view to initialize slideshow
     extend(TagsPage.prototype, 'view', function (vnode) {
@@ -26,11 +26,18 @@ app.initializers.add(EXTENSION_ID, () => {
 
         try {
             // Initialize slideshow after TagsPage renders, but only if on tags page
-            if (slideShow && isTagsPage()) {
-                // Use a small delay to ensure DOM is fully rendered
-                setTimeout(() => {
-                    slideShow.init();
-                }, 100);
+            if (isTagsPage()) {
+                // Initialize slideshow only when needed and if content exists
+                if (!slideShow && hasContent()) {
+                    slideShow = new SlideShow();
+                }
+                
+                // Initialize slideshow after DOM is ready
+                if (slideShow) {
+                    setTimeout(() => {
+                        slideShow.init();
+                    }, 100);
+                }
             }
         } catch (error) {
             console.error('SlideShow initialization error:', error);
@@ -43,13 +50,20 @@ app.initializers.add(EXTENSION_ID, () => {
     extend(TagsPage.prototype, 'oncreate', function () {
         try {
             // Initialize slideshow when TagsPage component is created
-            if (slideShow && isTagsPage()) {
-                // Delay initialization to allow DOM to be fully ready
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        slideShow.init();
-                    }, 150);
-                });
+            if (isTagsPage()) {
+                // Initialize slideshow only when needed and if content exists
+                if (!slideShow && hasContent()) {
+                    slideShow = new SlideShow();
+                }
+                
+                // Initialize slideshow after DOM is fully ready
+                if (slideShow) {
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            slideShow.init();
+                        }, 150);
+                    });
+                }
             }
         } catch (error) {
             console.error('SlideShow oncreate initialization error:', error);
@@ -94,25 +108,36 @@ app.initializers.add(EXTENSION_ID, () => {
 
     // Add method to TagsPage for social media buttons
     TagsPage.prototype.addSocialMediaButtons = function () {
-        // Find the container where we want to add social buttons
-        const container = document.querySelector('.TagTiles') ||
-            document.querySelector('.tag-slider-container') ||
-            document.querySelector('.container');
+        try {
+            // Get active social links
+            const socialLinks = getActiveSocialLinks();
+            
+            if (!socialLinks || socialLinks.length === 0) {
+                return; // No social links to display
+            }
 
-        if (!container || document.querySelector('.social-buttons-container')) {
-            return; // Container not found or buttons already exist
-        }
+            // Find the container where we want to add social buttons
+            const container = document.querySelector('.TagTiles') ||
+                document.querySelector('.tag-slider-container') ||
+                document.querySelector('.container');
 
-        // Create a wrapper div for social buttons
-        const socialWrapper = document.createElement('div');
-        socialWrapper.className = 'social-media-wrapper';
+            if (!container || document.querySelector('.social-buttons-container')) {
+                return; // Container not found or buttons already exist
+            }
 
-        // Insert after the main content
-        if (container.parentNode) {
-            container.parentNode.insertBefore(socialWrapper, container.nextSibling);
+            // Create a wrapper div for social buttons
+            const socialWrapper = document.createElement('div');
+            socialWrapper.className = 'social-media-wrapper';
 
-            // Render social media buttons using Mithril
-            m.render(socialWrapper, m(SocialMediaButtons));
+            // Insert after the main content
+            if (container.parentNode) {
+                container.parentNode.insertBefore(socialWrapper, container.nextSibling);
+
+                // Render social media buttons using Mithril with social links as props
+                m.render(socialWrapper, m(SocialMediaButtons, { socialLinks }));
+            }
+        } catch (error) {
+            console.error('SocialMediaButtons addSocialMediaButtons error:', error);
         }
     };
 
