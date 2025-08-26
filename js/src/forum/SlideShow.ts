@@ -19,8 +19,8 @@ export class SlideShow {
    */
   async init(): Promise<void> {
     try {
-      // Prevent duplicate initialization
-      if (this.isInitialized && this.swiper) {
+      // Complete check: return if already initialized and DOM exists
+      if (this.isInitialized && this.swiper && document.getElementById('client1-header-slideshow')) {
         return;
       }
 
@@ -30,6 +30,9 @@ export class SlideShow {
         return;
       }
 
+      // Clean up any existing wrappers to prevent duplicates
+      this.cleanupExistingWrappers();
+
       this.createDOM(activeSlides);
       await this.initSwiper(activeSlides.length);
     } catch (error) {
@@ -37,6 +40,33 @@ export class SlideShow {
     }
   }
 
+
+  /**
+   * Clean up existing wrapper elements to prevent duplicates
+   */
+  private cleanupExistingWrappers(): void {
+    try {
+      // Remove all existing slideshow wrappers
+      const existingWrappers = document.querySelectorAll('.client1-header-adv-wrapper.swiperAdContainer');
+      existingWrappers.forEach(wrapper => {
+        wrapper.remove();
+      });
+      
+      // Also ensure the main slideshow container is removed
+      const existingSlideshow = document.getElementById('client1-header-slideshow');
+      if (existingSlideshow) {
+        // Remove the parent wrapper if it exists
+        const parentWrapper = existingSlideshow.closest('.client1-header-adv-wrapper');
+        if (parentWrapper) {
+          parentWrapper.remove();
+        } else {
+          existingSlideshow.remove();
+        }
+      }
+    } catch (error) {
+      console.error('Error cleaning up existing wrappers:', error);
+    }
+  }
 
   /**
    * Create DOM structure for slideshow
@@ -167,11 +197,9 @@ export class SlideShow {
    */
   destroy(): void {
     this.destroySwiper();
-
-    const container = document.getElementById('client1-header-slideshow');
-    if (container) {
-      container.remove();
-    }
+    
+    // Use cleanup method to ensure all wrappers are removed
+    this.cleanupExistingWrappers();
   }
 
   /**

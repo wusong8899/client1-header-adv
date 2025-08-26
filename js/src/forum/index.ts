@@ -24,33 +24,10 @@ app.initializers.add(EXTENSION_ID, () => {
     // Defer slideshow initialization until first use
     // This avoids accessing app.forum before it's initialized
 
-    // Extend TagsPage view to initialize slideshow
-    extend(TagsPage.prototype, 'view', function (vnode) {
-        const result = vnode;
+    // Note: SlideShow initialization moved to oncreate to prevent duplicate calls
+    // The view method is called on every render, causing multiple slideshow containers
 
-        try {
-            // Initialize slideshow after TagsPage renders, but only if on tags page
-            if (isTagsPage()) {
-                // Initialize slideshow only when needed and if content exists
-                if (!slideShow && hasContent()) {
-                    slideShow = new SlideShow();
-                }
-                
-                // Initialize slideshow after DOM is ready
-                if (slideShow) {
-                    setTimeout(() => {
-                        slideShow.init();
-                    }, 100);
-                }
-            }
-        } catch (error) {
-            console.error('SlideShow initialization error:', error);
-        }
-
-        return result;
-    });
-
-    // Also extend oncreate to ensure initialization after DOM creation
+    // Extend oncreate to initialize slideshow (called only once per component lifecycle)
     extend(TagsPage.prototype, 'oncreate', function () {
         try {
             // Initialize slideshow when TagsPage component is created
