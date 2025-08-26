@@ -147,3 +147,14 @@
     }
   }
 }
+
+// =============================================================================
+// HIDE REDUNDANT NAVIGATION ELEMENTS ON MOBILE
+// =============================================================================
+
+// Hide the navigation dropdown on mobile since hamburger menu is present
+@media @phone {
+  .TagsPage-nav .App-titleControl.Dropdown--select {
+    display: none !important;
+  }
+}
