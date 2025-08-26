@@ -91,6 +91,16 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  
+  // Hardware acceleration for smooth performance
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  
+  // Modern aspect-ratio with fallback
+  aspect-ratio: 9 / 10;
+  width: 200px;
+  max-width: calc(100vw - 60px);
 
   // Color theming
   &.colored {
@@ -101,10 +111,25 @@
     }
   }
 
-  // Hover effects
+  // Enhanced hover effects with hardware acceleration
   &:hover {
-    transform: translateY(-2px);
+    transform: translateZ(0) translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  // Fallback for older browsers without aspect-ratio support
+  @supports not (aspect-ratio: 9 / 10) {
+    position: relative;
+    width: 200px;
+    padding-bottom: 111.11%; /* 9/10 = 0.9, so 10/9 = 1.1111 */
+    
+    .tag-slide-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -126,6 +151,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  box-sizing: border-box;
+  
+  // Hardware acceleration for content
+  transform: translateZ(0);
 }
 
 // =============================================================================
@@ -210,18 +240,24 @@
     // Allow overflow for better mobile interaction
     overflow: visible !important;
     
-    // Mobile-specific slide dimensions
+    // Mobile-specific slide dimensions with CSS custom properties
     .swiper-slide {
-      // Use flex-basis instead of fixed width for better Swiper compatibility
-      flex-basis: 200px !important;
-      // Set max-width to prevent oversizing
-      max-width: 200px !important;
+      // Dynamic width based on viewport
+      width: calc(100vw - 60px) !important;
+      max-width: 280px !important;
+      min-width: 200px !important;
+      // Use flex-basis for Swiper compatibility
+      flex-basis: calc(100vw - 60px) !important;
       // Consistent aspect ratio for card display
       aspect-ratio: 9/10;
       // Ensure proper sizing
       flex-shrink: 0;
-      // Allow slide to grow if needed
       flex-grow: 0;
+    }
+    
+    .tag-slide {
+      width: 100% !important;
+      max-width: none !important;
     }
 
     .tag-slide-content {
@@ -236,11 +272,18 @@
       -webkit-line-clamp: 2;
     }
   }
+  
+  // Fallback for aspect-ratio on mobile
+  @supports not (aspect-ratio: 9 / 10) {
+    .tag-swiper .swiper-slide {
+      height: calc((100vw - 60px) * 1.1111) !important;
+      max-height: 311px !important; /* 280 * 1.1111 */
+    }
+  }
 }
 
 @media (min-width: 768px) {
   .tag-swiper {
-
     // Better spacing on larger screens
     .swiper-slide {
       margin-right: 20px;
@@ -249,6 +292,35 @@
         margin-right: 0;
       }
     }
+    
+    // Larger slides on desktop with proper aspect ratio
+    .tag-slide {
+      width: 250px;
+      max-width: none;
+      aspect-ratio: 4 / 5; // Taller aspect ratio for desktop
+    }
+  }
+}
+
+// CSS Custom Properties for dynamic sizing
+:root {
+  --tag-slide-width: 200px;
+  --tag-slide-spacing: 15px;
+  --tag-slide-aspect-ratio: 9 / 10;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --tag-slide-width: 250px;
+    --tag-slide-spacing: 20px;
+    --tag-slide-aspect-ratio: 4 / 5;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --tag-slide-width: 280px;
+    --tag-slide-spacing: 25px;
   }
 }
 

@@ -1,7 +1,11 @@
 // =============================================================================
 // SLIDESHOW COMPONENTS
 // =============================================================================
-// Styles for the main advertisement slideshow and related containers
+// Styles for the main advertisement slideshow with modern CSS features:
+// - Hardware acceleration for smooth performance
+// - CSS aspect-ratio with fallbacks for responsive design  
+// - Lazy loading optimizations
+// - Mobile-first responsive breakpoints
 
 // =============================================================================
 // SLIDESHOW CONTAINERS
@@ -28,20 +32,64 @@
     flex-shrink: 0;
     position: relative;
     transition-property: transform;
-
+    
+    // Hardware acceleration for smooth performance
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    
+    // Modern aspect-ratio with responsive dimensions
+    aspect-ratio: 16 / 9;
+    
     img {
       display: block;
       width: 100%;
       height: 100%;
       border-radius: @border-radius-large;
       .image-cover();
+      
+      // Hardware acceleration for images
+      transform: translateZ(0);
+      
+      // Lazy loading optimization
+      &[loading="lazy"] {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        
+        &.loaded, &.swiper-lazy-loaded {
+          opacity: 1;
+        }
+      }
+    }
+    
+    // Fallback for older browsers without aspect-ratio
+    @supports not (aspect-ratio: 16 / 9) {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
 
     @media @phone {
+      // Mobile-specific aspect ratio (more square)
+      aspect-ratio: 4 / 3;
+      
       img {
         width: 100%;
         height: 100%;
         border-radius: @border-radius-large;
+      }
+      
+      // Mobile fallback for aspect-ratio
+      @supports not (aspect-ratio: 4 / 3) {
+        padding-bottom: 75%; /* 4:3 aspect ratio */
       }
     }
   }
@@ -52,6 +100,10 @@
 
   .swiper-slide-tag {
     .transform-hover-lift();
+    
+    // Hardware acceleration for tag slides
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .swiper-slide-tag-inner {
@@ -140,17 +192,26 @@
 
   @media @phone {
     .swiper {
-      height: 100%;
+      height: auto; // Let aspect-ratio control height
+      overflow: visible; // Allow swiper effects to show
+    }
+    
+    .swiper-slide {
+      // Dynamic width for mobile carousel preview effect
+      width: calc(100vw - 40px) !important;
+      max-width: 320px !important;
+      min-width: 280px !important;
     }
 
     .swiperContainer {
-      // Additional mobile-specific container styles can be added here
+      // Additional mobile-specific container styles
+      padding: 0 @spacing-sm;
     }
 
     // Reset margins for mobile when external arrows are hidden
     .swiperAdContainer .swiper,
     .swiperTagContainer .swiper {
-      margin: 0 @spacing-lg; // Restore standard mobile margins
+      margin: 0 @spacing-sm; // Smaller margins for mobile
     }
   }
 
@@ -163,15 +224,36 @@
   .swiperTagContainer {
     // Provide adequate container spacing for external arrows
     position: relative;
+    
+    // Hardware acceleration for containers
+    transform: translateZ(0);
 
     // Ensure parent containers don't clip external arrows
     &:not(.mobile) {
       padding: 0 @spacing-xxl; // Additional padding for desktop
+      overflow: visible; // Allow 3D effects
     }
 
     @media @phone {
       // Mobile spacing adjustments
-      padding: 0;
+      padding: 0 @spacing-sm;
+      overflow: visible; // Allow touch gestures
+    }
+  }
+  
+  // CSS Custom Properties for slideshow dimensions
+  .client1-slideshow-container {
+    --slideshow-aspect-ratio: 16 / 9;
+    --slideshow-mobile-aspect-ratio: 4 / 3;
+    --slideshow-max-height: 400px;
+    --slideshow-mobile-max-height: 250px;
+    
+    .swiper {
+      max-height: var(--slideshow-max-height);
+      
+      @media @phone {
+        max-height: var(--slideshow-mobile-max-height);
+      }
     }
   }
 }

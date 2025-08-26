@@ -1,5 +1,5 @@
 import { getActiveSlides, getTransitionTime } from './utils/SettingsManager';
-import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper } from './utils/SwiperConfig';
+import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper, validateAndPrepareSlides, cloneSlides } from './utils/SwiperConfig';
 import type { SlideData } from '../common/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -63,6 +63,12 @@ export class SlideShow {
           existingSlideshow.remove();
         }
       }
+      
+      // Clean up any manually cloned slides from previous initializations
+      const clonedSlides = document.querySelectorAll('.swiper-slide-clone-manual');
+      clonedSlides.forEach(slide => {
+        slide.remove();
+      });
     } catch (error) {
       console.error('Error cleaning up existing wrappers:', error);
     }
@@ -123,11 +129,12 @@ export class SlideShow {
   }
 
   /**
-   * Create individual slide element
+   * Create individual slide element with enhanced attributes
    */
   private createSlideElement(slide: SlideData): HTMLElement {
     const slideDiv = document.createElement('div');
     slideDiv.className = 'swiper-slide';
+    slideDiv.setAttribute('data-slide-id', slide.id);
 
     const slideContent = document.createElement('div');
     slideContent.className = 'slide-content';
@@ -137,6 +144,14 @@ export class SlideShow {
       img.src = slide.image;
       img.alt = `Slide ${slide.order}`;
       img.loading = 'lazy';
+      
+      // Add Swiper lazy loading classes
+      img.classList.add('swiper-lazy');
+      
+      // Add loading event listeners
+      img.addEventListener('load', function() {
+        this.classList.add('loaded');
+      });
 
       if (slide.link) {
         const link = document.createElement('a');
@@ -148,6 +163,11 @@ export class SlideShow {
       } else {
         slideContent.appendChild(img);
       }
+      
+      // Add lazy loading placeholder
+      const placeholder = document.createElement('div');
+      placeholder.className = 'swiper-lazy-preloader';
+      slideContent.appendChild(placeholder);
     }
 
     slideDiv.appendChild(slideContent);
@@ -155,7 +175,7 @@ export class SlideShow {
   }
 
   /**
-   * Initialize Swiper using shared configuration
+   * Initialize Swiper using shared configuration with enhanced slide validation
    */
   private async initSwiper(slideCount: number): Promise<void> {
     const container = findContainer([
@@ -169,8 +189,28 @@ export class SlideShow {
       return;
     }
 
+    const wrapper = container.querySelector('.swiper-wrapper') as HTMLElement;
+    if (!wrapper) {
+      console.error('SlideShow: Swiper wrapper not found');
+      return;
+    }
+
     const transitionTime = getTransitionTime();
     const config = getSlideShowConfig(slideCount, transitionTime);
+    
+    // Validate and prepare slides for loop mode
+    const slides = wrapper.querySelectorAll('.swiper-slide:not(.swiper-slide-clone-manual)');
+    const isMobile = window.innerWidth < 768;
+    const requiredSlides = isMobile ? 2 : 4; // Match config calculation
+    const validation = validateAndPrepareSlides(slides, requiredSlides);
+    
+    // Clone slides if needed and loop is desired but we don't have enough slides
+    if (validation.needsCloning && slideCount > 1) {
+      cloneSlides(wrapper, slides, requiredSlides);
+      // Update config to enable loop after cloning
+      config.loop = true;
+      config.loopAddBlankSlides = true;
+    }
 
     try {
       this.swiper = await initializeSwiper(container, {
@@ -179,11 +219,24 @@ export class SlideShow {
           ...config.on,
           init: () => {
             this.isInitialized = true;
-            console.log('SlideShow Swiper initialized');
+            console.log(`SlideShow Swiper initialized (${slideCount} slides, loop: ${config.loop})`);
+            
+            // Force update after initialization to handle cloned slides
+            if (validation.needsCloning) {
+              setTimeout(() => {
+                if (this.swiper && this.swiper.update) {
+                  this.swiper.update();
+                }
+              }, 100);
+            }
           },
           destroy: () => {
             this.isInitialized = false;
             console.log('SlideShow Swiper destroyed');
+          },
+          // Add lazy loading callback
+          lazyImageLoad: (swiper: any, slideEl: HTMLElement, imageEl: HTMLImageElement) => {
+            imageEl.classList.add('loaded');
           }
         }
       }, 'SlideShow');
