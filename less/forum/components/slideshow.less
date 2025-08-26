@@ -37,32 +37,33 @@
     flex-shrink: 0;
     position: relative;
     transition-property: transform;
-    
+
     // Hardware acceleration for smooth performance
     transform: translateZ(0);
     will-change: transform;
     backface-visibility: hidden;
-    
+
     // Fixed dimensions matching original code
     height: 280px;
     width: 600px;
-    
+
     img {
       display: block;
       width: 100%;
       height: 100%;
       border-radius: @border-radius-large;
       .image-cover();
-      
+
       // Hardware acceleration for images
       transform: translateZ(0);
-      
+
       // Lazy loading optimization
       &[loading="lazy"] {
         opacity: 0;
         transition: opacity 0.3s ease;
-        
-        &.loaded, &.swiper-lazy-loaded {
+
+        &.loaded,
+        &.swiper-lazy-loaded {
           opacity: 1;
         }
       }
@@ -70,9 +71,9 @@
 
     @media @phone {
       // Mobile slide dimensions matching original code behavior
-      height: 280px;  // Fixed height like original
-      width: 600px;   // Fixed width like original
-      
+      height: 280px; // Fixed height like original
+      width: 600px; // Fixed width like original
+
       img {
         width: 100%;
         height: 100%;
@@ -87,7 +88,7 @@
 
   .swiper-slide-tag {
     .transform-hover-lift();
-    
+
     // Hardware acceleration for tag slides
     transform: translateZ(0);
     will-change: transform;
@@ -182,13 +183,8 @@
       height: auto; // Let aspect-ratio control height
       overflow: hidden; // Use hidden instead of visible to prevent layout issues
     }
-    
-    .swiper-slide {
-      // Fixed width matching original mobile behavior
-      width: auto !important; // Let Swiper handle width calculation
-      max-width: none !important; // Remove restrictive max-width
-      min-width: none !important; // Remove restrictive min-width
-    }
+
+    .swiper-slide {}
 
     .swiperContainer {
       // Additional mobile-specific container styles
@@ -211,7 +207,7 @@
   .swiperTagContainer {
     // Provide adequate container spacing for external arrows
     position: relative;
-    
+
     // Hardware acceleration for containers
     transform: translateZ(0);
 
@@ -225,29 +221,29 @@
       // Mobile spacing adjustments similar to original code
       padding: 0 @spacing-sm;
       overflow: hidden; // Use hidden to prevent layout issues on mobile
-      
+
       // Additional mobile body adjustments (matching original isMobileView logic)
       .App {
         overflow-x: hidden;
       }
-      
+
       .App-content {
         min-height: auto;
         background: none;
       }
     }
   }
-  
+
   // CSS Custom Properties for slideshow dimensions
   .client1-slideshow-container {
     --slideshow-aspect-ratio: 16 / 9;
     --slideshow-mobile-aspect-ratio: 4 / 3;
     --slideshow-max-height: 400px;
     --slideshow-mobile-max-height: 250px;
-    
+
     .swiper {
       max-height: var(--slideshow-max-height);
-      
+
       @media @phone {
         max-height: var(--slideshow-mobile-max-height);
       }

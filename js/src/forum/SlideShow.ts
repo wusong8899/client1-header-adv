@@ -6,20 +6,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 
-/**
- * Simplified SlideShow Component
- * Handles header advertisement slideshow with shared utilities
- */
 export class SlideShow {
   private swiper: any = null;
   private isInitialized: boolean = false;
 
-  /**
-   * Initialize the slideshow
-   */
   async init(): Promise<void> {
     try {
-      // Complete check: return if already initialized and DOM exists
       if (this.isInitialized && this.swiper && document.getElementById('client1-header-slideshow')) {
         return;
       }
@@ -30,7 +22,6 @@ export class SlideShow {
         return;
       }
 
-      // Clean up any existing wrappers to prevent duplicates
       this.cleanupExistingWrappers();
 
       this.createDOM(activeSlides);
@@ -40,22 +31,15 @@ export class SlideShow {
     }
   }
 
-
-  /**
-   * Clean up existing wrapper elements to prevent duplicates
-   */
   private cleanupExistingWrappers(): void {
     try {
-      // Remove all existing slideshow wrappers
       const existingWrappers = document.querySelectorAll('.client1-header-adv-wrapper.swiperAdContainer');
       existingWrappers.forEach(wrapper => {
         wrapper.remove();
       });
       
-      // Also ensure the main slideshow container is removed
       const existingSlideshow = document.getElementById('client1-header-slideshow');
       if (existingSlideshow) {
-        // Remove the parent wrapper if it exists
         const parentWrapper = existingSlideshow.closest('.client1-header-adv-wrapper');
         if (parentWrapper) {
           parentWrapper.remove();
@@ -64,7 +48,6 @@ export class SlideShow {
         }
       }
       
-      // Clean up any manually cloned slides from previous initializations
       const clonedSlides = document.querySelectorAll('.swiper-slide-clone-manual');
       clonedSlides.forEach(slide => {
         slide.remove();
@@ -74,16 +57,12 @@ export class SlideShow {
     }
   }
 
-  /**
-   * Create DOM structure for slideshow
-   */
   private createDOM(slides: SlideData[]): void {
     const existingContainer = document.getElementById('client1-header-slideshow');
     if (existingContainer) {
       existingContainer.remove();
     }
 
-    // Create main wrapper with proper CSS classes
     const wrapper = document.createElement('div');
     wrapper.className = 'client1-header-adv-wrapper swiperAdContainer';
 
@@ -102,14 +81,12 @@ export class SlideShow {
       swiperWrapper.appendChild(slideElement);
     });
 
-    // Add navigation
     const prevButton = document.createElement('div');
     prevButton.className = 'swiper-button-prev';
 
     const nextButton = document.createElement('div');
     nextButton.className = 'swiper-button-next';
 
-    // Add pagination
     const pagination = document.createElement('div');
     pagination.className = 'swiper-pagination';
 
@@ -121,16 +98,12 @@ export class SlideShow {
     container.appendChild(swiperContainer);
     wrapper.appendChild(container);
 
-    // Find the best insertion point for tags page
     const insertionPoint = this.findBestInsertionPoint();
     if (insertionPoint.element && insertionPoint.method) {
       insertionPoint.method(wrapper, insertionPoint.element);
     }
   }
 
-  /**
-   * Create individual slide element with enhanced attributes
-   */
   private createSlideElement(slide: SlideData): HTMLElement {
     const slideDiv = document.createElement('div');
     slideDiv.className = 'swiper-slide';
@@ -145,10 +118,8 @@ export class SlideShow {
       img.alt = `Slide ${slide.order}`;
       img.loading = 'lazy';
       
-      // Add Swiper lazy loading classes
       img.classList.add('swiper-lazy');
       
-      // Add loading event listeners
       img.addEventListener('load', function() {
         this.classList.add('loaded');
       });
@@ -164,7 +135,6 @@ export class SlideShow {
         slideContent.appendChild(img);
       }
       
-      // Add lazy loading placeholder
       const placeholder = document.createElement('div');
       placeholder.className = 'swiper-lazy-preloader';
       slideContent.appendChild(placeholder);
@@ -174,9 +144,6 @@ export class SlideShow {
     return slideDiv;
   }
 
-  /**
-   * Initialize Swiper using shared configuration with enhanced slide validation
-   */
   private async initSwiper(slideCount: number): Promise<void> {
     const container = findContainer([
       '#client1-header-slideshow .swiper',
@@ -198,16 +165,13 @@ export class SlideShow {
     const transitionTime = getTransitionTime();
     const config = getSlideShowConfig(slideCount, transitionTime);
     
-    // Validate and prepare slides for loop mode
     const slides = wrapper.querySelectorAll('.swiper-slide:not(.swiper-slide-clone-manual)');
     const isMobile = window.innerWidth < 768;
-    const requiredSlides = isMobile ? 2 : 4; // Match config calculation
+    const requiredSlides = isMobile ? 2 : 4;
     const validation = validateAndPrepareSlides(slides, requiredSlides);
     
-    // Clone slides if needed and loop is desired but we don't have enough slides
     if (validation.needsCloning && slideCount > 1) {
       cloneSlides(wrapper, slides, requiredSlides);
-      // Update config to enable loop after cloning
       config.loop = true;
       config.loopAddBlankSlides = true;
     }
@@ -221,7 +185,6 @@ export class SlideShow {
             this.isInitialized = true;
             console.log(`SlideShow Swiper initialized (${slideCount} slides, loop: ${config.loop})`);
             
-            // Force update after initialization to handle cloned slides
             if (validation.needsCloning) {
               setTimeout(() => {
                 if (this.swiper && this.swiper.update) {
@@ -234,7 +197,6 @@ export class SlideShow {
             this.isInitialized = false;
             console.log('SlideShow Swiper destroyed');
           },
-          // Add lazy loading callback
           lazyImageLoad: (swiper: any, slideEl: HTMLElement, imageEl: HTMLImageElement) => {
             imageEl.classList.add('loaded');
           }
@@ -245,28 +207,18 @@ export class SlideShow {
     }
   }
 
-  /**
-   * Destroy the slideshow
-   */
   destroy(): void {
     this.destroySwiper();
     
-    // Use cleanup method to ensure all wrappers are removed
     this.cleanupExistingWrappers();
   }
 
-  /**
-   * Safely destroy Swiper instance using shared utility
-   */
   private destroySwiper(): void {
     destroySwiper(this.swiper, '#client1-header-slideshow .swiper');
     this.swiper = null;
     this.isInitialized = false;
   }
 
-  /**
-   * Find the best insertion point for the slideshow on tags page
-   */
   private findBestInsertionPoint(): {
     element: HTMLElement | null;
     method: ((wrapper: HTMLElement, target: HTMLElement) => void) | null;
@@ -321,9 +273,6 @@ export class SlideShow {
     return { element: null, method: null, location: 'none found' };
   }
 
-  /**
-   * Update slideshow with new settings
-   */
   update(): void {
     this.destroy();
     this.init();

@@ -12,9 +12,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 
-/**
- * Tag slide data structure
- */
 interface TagSlideData {
   id: string;
   name: string;
