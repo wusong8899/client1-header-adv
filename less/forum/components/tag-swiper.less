@@ -205,8 +205,20 @@
 // RESPONSIVE DESIGN
 // =============================================================================
 
-@media (max-width: 767px) {
+@media @phone {
   .tag-swiper {
+    // Allow overflow for better mobile interaction
+    overflow: visible !important;
+    
+    // Mobile-specific slide dimensions
+    .swiper-slide {
+      // Fixed width for mobile slides
+      width: 200px !important;
+      // Consistent aspect ratio for card display
+      aspect-ratio: 9/10;
+      // Ensure proper sizing
+      flex-shrink: 0;
+    }
 
     .tag-slide-content {
       padding: 15px;
