@@ -1,5 +1,6 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import type { SlideData, ExtensionSettings } from '../common/types';
 
 /**
  * Extension configuration constants
@@ -7,35 +8,6 @@ import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
 const SOCIAL_PLATFORMS = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'] as const;
 const _DEFAULT_MAX_SLIDES = 30;
-
-/**
- * Simplified slide data structure
- */
-interface SlideData {
-  id: string;
-  image: string;
-  link: string;
-  active: boolean;
-  order: number;
-}
-
-/**
- * Social media link structure
- */
-interface SocialLink {
-  platform: string;
-  url: string;
-  icon: string;
-}
-
-/**
- * Extension settings structure
- */
-interface ExtensionSettings {
-  slides: SlideData[];
-  transitionTime: number;
-  socialLinks: SocialLink[];
-}
 
 /**
  * Unified Admin Management Component

@@ -1,10 +1,9 @@
 import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
-
+import { hasContent, reloadSettings } from './utils/SettingsManager';
 import { SlideShow } from './SlideShow';
 import TagSwiper from './components/TagSwiper';
-import SocialMediaButtons from './components/SocialMediaButtons';
 
 // Extension constants
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
@@ -16,8 +15,10 @@ let slideShow: SlideShow | null = null;
  * Main extension initializer
  */
 app.initializers.add(EXTENSION_ID, () => {
-    // Initialize slideshow manager
-    slideShow = new SlideShow();
+    // Initialize slideshow manager only if content exists
+    if (hasContent()) {
+        slideShow = new SlideShow();
+    }
 
     // Extend TagsPage view to initialize slideshow
     extend(TagsPage.prototype, 'view', function (vnode) {
@@ -165,6 +166,8 @@ function cleanupExtension(): void {
         if (slideShow) {
             slideShow.destroy();
         }
+        // Clear settings cache for fresh data on next page
+        reloadSettings();
         // TagSwiper components are automatically cleaned up by Mithril lifecycle
     } catch (error) {
         console.error('Extension cleanup error:', error);

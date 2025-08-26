@@ -1,11 +1,12 @@
 import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
-import Swiper from 'swiper/bundle';
 import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
+import { getActiveSocialLinks } from '../utils/SettingsManager';
+import { getTagSwiperConfig, findContainer, initializeSwiper, destroySwiper } from '../utils/SwiperConfig';
+import SocialMediaButtons from './SocialMediaButtons';
 import type Mithril from 'mithril';
-import type { SwiperOptions } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -48,7 +49,7 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Render the component
+   * Render the component with integrated social buttons
    */
   view(vnode: Mithril.Vnode): Mithril.Children {
     const tags = vnode.attrs.tags || [];
@@ -57,20 +58,30 @@ export default class TagSwiper extends Component {
       return null;
     }
 
+    // Get social links for integration
+    const socialLinks = getActiveSocialLinks();
+
     return (
-      <div id="tag-slider-container" className="tag-slider-container TagSwiper-container">
-        <div className="swiper tag-swiper">
-          <div className="swiper-wrapper">
-            {tags.map((tag: any) => this.renderSlide(tag))}
+      <div className="TagSwiper-wrapper">
+        <div id="tag-slider-container" className="tag-slider-container TagSwiper-container">
+          <div className="swiper tag-swiper">
+            <div className="swiper-wrapper">
+              {tags.map((tag: any) => this.renderSlide(tag))}
+            </div>
+            
+            {/* Navigation */}
+            <div className="swiper-button-prev"></div>
+            <div className="swiper-button-next"></div>
+            
+            {/* Pagination */}
+            <div className="swiper-pagination"></div>
           </div>
-          
-          {/* Navigation */}
-          <div className="swiper-button-prev"></div>
-          <div className="swiper-button-next"></div>
-          
-          {/* Pagination */}
-          <div className="swiper-pagination"></div>
         </div>
+        
+        {/* Integrated social media buttons */}
+        {socialLinks.length > 0 && (
+          <SocialMediaButtons socialLinks={socialLinks} />
+        )}
       </div>
     );
   }
@@ -197,185 +208,58 @@ export default class TagSwiper extends Component {
   }
 
   /**
-   * Initialize Swiper with improved container finding
+   * Initialize Swiper using shared configuration
    */
-  private initSwiper(): void {
+  private async initSwiper(): Promise<void> {
     if (this.isInitialized) {
       console.log('TagSwiper: Already initialized, skipping');
       return;
     }
 
-    // Check if Swiper is available
-    if (typeof Swiper === 'undefined') {
-      console.error('TagSwiper: Swiper class not found - check if swiper is loaded');
-      return;
-    }
+    // Find container using shared utility
+    const container = findContainer([
+      '.swiper.tag-swiper',
+      '#tag-slider-container .swiper',
+      '.TagSwiper-container .swiper'
+    ]);
 
-    // Find container with multiple strategies
-    const container = this.findContainer();
     if (!container) {
       console.error('TagSwiper: Container not found');
       return;
     }
 
-    const config = this.getSwiperConfig();
+    const config = getTagSwiperConfig();
     
     try {
-      console.log('TagSwiper: Initializing Swiper with config:', config);
-      this.swiper = new Swiper(container, config);
-      
-      // Store reference for cleanup
-      (container as any).swiperInstance = this.swiper;
-      this.isInitialized = true;
-      
-      console.log('TagSwiper: Swiper initialized successfully:', this.swiper);
+      this.swiper = await initializeSwiper(container, {
+        ...config,
+        on: {
+          ...config.on,
+          init: () => {
+            this.isInitialized = true;
+            console.log('TagSwiper Swiper initialized');
+          },
+          destroy: () => {
+            this.isInitialized = false;
+            console.log('TagSwiper Swiper destroyed');
+          }
+        }
+      }, 'TagSwiper');
     } catch (error) {
       console.error('Failed to initialize TagSwiper:', error);
     }
   }
 
-  /**
-   * Find Swiper container with multiple strategies
-   */
-  private findContainer(): HTMLElement | null {
-    // Strategy 1: Use jQuery selector if available
-    if (this.$) {
-      const jqueryContainer = this.$('.swiper.tag-swiper')[0];
-      if (jqueryContainer) {
-        return jqueryContainer as HTMLElement;
-      }
-    }
-
-    // Strategy 2: Direct DOM query
-    const directContainer = this.element?.querySelector('.swiper.tag-swiper');
-    if (directContainer) {
-      return directContainer as HTMLElement;
-    }
-
-    // Strategy 3: Global query as fallback
-    const globalContainer = document.querySelector('.swiper.tag-swiper');
-    if (globalContainer) {
-      return globalContainer as HTMLElement;
-    }
-
-    return null;
-  }
 
   /**
-   * Safely destroy Swiper instance
+   * Safely destroy Swiper instance using shared utility
    */
   private destroySwiper(): void {
-    if (this.swiper && typeof this.swiper.destroy === 'function') {
-      try {
-        this.swiper.destroy(true, true);
-        this.swiper = null;
-        this.isInitialized = false;
-      } catch (error) {
-        console.error('Error destroying TagSwiper:', error);
-      }
-    }
+    destroySwiper(this.swiper, '.swiper.tag-swiper');
+    this.swiper = null;
+    this.isInitialized = false;
   }
 
-  /**
-   * Get Swiper configuration with SPA-critical settings
-   */
-  private getSwiperConfig(): SwiperOptions {
-    const isMobile = window.innerWidth < 768;
-    const isTablet = window.innerWidth < 1024;
-    
-    return {
-      // Basic configuration
-      slidesPerView: isMobile ? 1 : isTablet ? 2 : 'auto',
-      spaceBetween: 20,
-      centeredSlides: !isMobile,
-      
-      // Effect - use slide on mobile for better performance
-      effect: isMobile ? 'slide' : 'coverflow',
-      coverflowEffect: {
-        rotate: 30,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: true,
-      },
-
-      // Autoplay - enabled on all devices
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-        pauseOnMouseEnter: true,
-      },
-
-      // Navigation
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-
-      // Pagination
-      pagination: {
-        el: '.swiper-pagination',
-        type: 'bullets',
-        clickable: true,
-        dynamicBullets: true,
-      },
-
-      // Loop - disabled to avoid tag duplication
-      loop: false,
-      
-      // SPA-critical settings for Flarum
-      observer: true,
-      observeParents: true,
-      watchSlidesProgress: true,
-      
-      // Responsive breakpoints
-      breakpoints: {
-        320: {
-          slidesPerView: 1,
-          spaceBetween: 10,
-          effect: 'slide',
-        },
-        640: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 15,
-          effect: 'coverflow',
-        },
-        1024: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          effect: 'coverflow',
-        },
-        1440: {
-          slidesPerView: 'auto',
-          spaceBetween: 25,
-          effect: 'coverflow',
-        }
-      },
-
-      // Event callbacks
-      on: {
-        init: () => {
-          this.isInitialized = true;
-          console.log('TagSwiper initialized');
-        },
-        destroy: () => {
-          this.isInitialized = false;
-          console.log('TagSwiper destroyed');
-        }
-      },
-
-      // Accessibility
-      a11y: {
-        enabled: true,
-        prevSlideMessage: app.translator.trans('core.lib.previous'),
-        nextSlideMessage: app.translator.trans('core.lib.next'),
-      }
-    };
-  }
 
   /**
    * Check if Swiper needs to be updated

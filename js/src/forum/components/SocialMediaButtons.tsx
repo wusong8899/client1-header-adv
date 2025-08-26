@@ -1,90 +1,48 @@
-import app from 'flarum/forum/app';
 import Component from 'flarum/common/Component';
 import type Mithril from 'mithril';
-
-/**
- * Social media link structure
- */
-interface SocialLink {
-  platform: string;
-  url: string;
-  icon: string;
-}
-
-/**
- * Extension settings structure for social media
- */
-interface ExtensionSettings {
-  slides: any[];
-  transitionTime: number;
-  socialLinks: SocialLink[];
-}
+import type { SocialLink } from '../../common/types';
 
 /**
  * SocialMediaButtons Component
  * 
- * Renders social media buttons below the TagSwiper on the tags page.
- * Reads social media links from the extension settings and displays them
- * using the existing CSS styling.
+ * Pure component that renders social media buttons.
+ * Now receives social links as props instead of loading settings internally.
  */
 export default class SocialMediaButtons extends Component {
-  private settings: ExtensionSettings | null = null;
+  private socialLinks: SocialLink[] = [];
 
   /**
-   * Initialize component
+   * Initialize component with props
    */
   oninit(vnode: Mithril.Vnode) {
     super.oninit(vnode);
-    this.loadSettings();
+    this.socialLinks = vnode.attrs.socialLinks || [];
   }
 
   /**
-   * Load settings from Flarum
+   * Update social links when props change
    */
-  private loadSettings(): void {
-    try {
-      // Try JSON format first
-      const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      
-      if (settingsJson) {
-        if (typeof settingsJson === 'string') {
-          this.settings = JSON.parse(settingsJson);
-        } else if (typeof settingsJson === 'object') {
-          this.settings = settingsJson;
-        }
-        
-        if (this.settings && this.settings.socialLinks) {
-          return;
-        }
-      }
-
-      // If no settings found, initialize empty
-      this.settings = {
-        slides: [],
-        transitionTime: 5000,
-        socialLinks: []
-      };
-    } catch (error) {
-      console.error('SocialMediaButtons: Failed to load settings:', error);
-      this.settings = {
-        slides: [],
-        transitionTime: 5000,
-        socialLinks: []
-      };
-    }
+  onupdate(vnode: Mithril.VnodeDOM) {
+    super.onupdate(vnode);
+    this.socialLinks = vnode.attrs.socialLinks || [];
   }
 
   /**
-   * Render the component
+   * Render the component with filtered social links
    */
-  view(): Mithril.Children {
-    if (!this.settings || !this.settings.socialLinks || this.settings.socialLinks.length === 0) {
+  view(vnode: Mithril.Vnode): Mithril.Children {
+    // Use current props if available, fallback to instance property
+    const socialLinks = vnode.attrs.socialLinks || this.socialLinks;
+    
+    if (!socialLinks || socialLinks.length === 0) {
       return null;
     }
 
     // Filter social links that have both URL and icon
-    const activeSocialLinks = this.settings.socialLinks.filter(link => 
-      link.url && link.icon && link.url.trim() !== '' && link.icon.trim() !== ''
+    const activeSocialLinks = socialLinks.filter((link: SocialLink) => 
+      link.url && link.icon && 
+      link.url.trim() !== '' && 
+      link.icon.trim() !== ''
     );
 
     if (activeSocialLinks.length === 0) {
@@ -95,7 +53,7 @@ export default class SocialMediaButtons extends Component {
       <div className="social-buttons-container">
         <div className="social-button">
           <div className="Button-label">
-            {activeSocialLinks.map((link) => this.renderSocialIcon(link))}
+            {activeSocialLinks.map((link: SocialLink) => this.renderSocialIcon(link))}
           </div>
         </div>
       </div>

@@ -1,38 +1,17 @@
-import app from 'flarum/forum/app';
-import Swiper from 'swiper/bundle';
+import { getActiveSlides, getTransitionTime } from './utils/SettingsManager';
+import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper } from './utils/SwiperConfig';
+import type { SlideData } from '../common/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 
 /**
- * Simplified slide data structure
- */
-interface SlideData {
-  id: string;
-  image: string;
-  link: string;
-  active: boolean;
-  order: number;
-}
-
-/**
- * Extension settings structure
- */
-interface ExtensionSettings {
-  slides: SlideData[];
-  transitionTime: number;
-  socialLinks: any[];
-}
-
-/**
  * Simplified SlideShow Component
- * Handles core slideshow functionality with Swiper.js
+ * Handles header advertisement slideshow with shared utilities
  */
 export class SlideShow {
-  private swiper: Swiper | null = null;
-  private settings: ExtensionSettings | null = null;
-  private extensionId = 'wusong8899-client1-header-adv';
+  private swiper: any = null;
   private isInitialized: boolean = false;
 
   /**
@@ -45,89 +24,19 @@ export class SlideShow {
         return;
       }
 
-      this.loadSettings();
-
-      if (!this.settings) {
-        return;
-      }
-
-      if (this.settings.slides.length === 0) {
-        return;
-      }
-
-      const activeSlides = this.settings.slides
-        .filter(slide => slide.active && slide.image)
-        .sort((a, b) => a.order - b.order);
-
+      const activeSlides = getActiveSlides();
+      
       if (activeSlides.length === 0) {
         return;
       }
 
       this.createDOM(activeSlides);
-      this.initSwiper(activeSlides.length);
+      await this.initSwiper(activeSlides.length);
     } catch (error) {
       console.error('SlideShow initialization failed:', error);
     }
   }
 
-  /**
-   * Load settings from Flarum
-   */
-  private loadSettings(): void {
-    try {
-      // Try JSON format first
-      const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
-      
-      if (settingsJson) {
-        if (typeof settingsJson === 'string') {
-          this.settings = JSON.parse(settingsJson);
-        } else if (typeof settingsJson === 'object') {
-          this.settings = settingsJson;
-        }
-        
-        if (this.settings && this.settings.slides) {
-          return;
-        }
-      }
-
-      // Fallback to legacy format
-      this.loadLegacySettings();
-    } catch (error) {
-      console.error('SlideShow: Failed to load settings:', error);
-      this.loadLegacySettings();
-    }
-  }
-
-  /**
-   * Load settings from legacy individual keys
-   */
-  private loadLegacySettings(): void {
-    const slides: SlideData[] = [];
-
-    // Load up to 30 slides from legacy format
-    for (let i = 1; i <= 30; i++) {
-      const link = app.forum.attribute(`Client1HeaderAdvLink${i}`) || '';
-      const image = app.forum.attribute(`Client1HeaderAdvImage${i}`) || '';
-
-      if (image || link) {
-        slides.push({
-          id: `legacy-${i}`,
-          image,
-          link,
-          active: true,
-          order: i
-        });
-      }
-    }
-
-    const transitionTime = parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000;
-
-    this.settings = {
-      slides,
-      transitionTime,
-      socialLinks: []
-    };
-  }
 
   /**
    * Create DOM structure for slideshow
@@ -216,88 +125,38 @@ export class SlideShow {
   }
 
   /**
-   * Initialize Swiper with simplified configuration
+   * Initialize Swiper using shared configuration
    */
-  private initSwiper(slideCount: number): void {
-    const container = document.querySelector('#client1-header-slideshow .swiper') as HTMLElement;
+  private async initSwiper(slideCount: number): Promise<void> {
+    const container = findContainer([
+      '#client1-header-slideshow .swiper',
+      '.client1-slideshow-container .swiper',
+      '.header-slideshow .swiper'
+    ]);
+
     if (!container) {
+      console.error('SlideShow: Swiper container not found');
       return;
     }
 
+    const transitionTime = getTransitionTime();
+    const config = getSlideShowConfig(slideCount, transitionTime);
+
     try {
-      // Determine if loop should be enabled based on slide count
-      // Need at least 3 slides for safe loop mode operation
-      const enableLoop = slideCount >= 3;
-      
-      this.swiper = new Swiper(container, {
-        // Basic configuration
-        slidesPerView: 1,
-        spaceBetween: 30,
-        centeredSlides: true,
-
-        // Effect
-        effect: 'coverflow',
-        coverflowEffect: {
-          rotate: 50,
-          stretch: 0,
-          depth: 100,
-          modifier: 1,
-          slideShadows: true,
-        },
-
-        // Autoplay
-        autoplay: {
-          delay: this.settings?.transitionTime || 5000,
-          disableOnInteraction: false,
-        },
-
-        // Navigation
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-
-        // Pagination
-        pagination: {
-          el: '.swiper-pagination',
-          type: 'bullets',
-          clickable: true,
-        },
-
-        // Loop (dynamic based on slide count)
-        loop: enableLoop,
-
-        // SPA-critical settings for Flarum
-        observer: true,
-        observeParents: true,
-        watchSlidesProgress: true,
-
-        // Responsive breakpoints
-        breakpoints: {
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 'auto',
-            spaceBetween: 20,
-          },
-        },
-
-        // Event callbacks
+      this.swiper = await initializeSwiper(container, {
+        ...config,
         on: {
+          ...config.on,
           init: () => {
             this.isInitialized = true;
+            console.log('SlideShow Swiper initialized');
           },
           destroy: () => {
             this.isInitialized = false;
+            console.log('SlideShow Swiper destroyed');
           }
-        },
-      });
-      
-      // Store reference for cleanup
-      (container as any).swiperInstance = this.swiper;
-      
+        }
+      }, 'SlideShow');
     } catch (error) {
       console.error('Failed to initialize SlideShow:', error);
     }
@@ -316,18 +175,12 @@ export class SlideShow {
   }
 
   /**
-   * Safely destroy Swiper instance
+   * Safely destroy Swiper instance using shared utility
    */
   private destroySwiper(): void {
-    if (this.swiper && typeof this.swiper.destroy === 'function') {
-      try {
-        this.swiper.destroy(true, true);
-        this.swiper = null;
-        this.isInitialized = false;
-      } catch (error) {
-        console.error('Error destroying SlideShow:', error);
-      }
-    }
+    destroySwiper(this.swiper, '#client1-header-slideshow .swiper');
+    this.swiper = null;
+    this.isInitialized = false;
   }
 
   /**
@@ -338,92 +191,53 @@ export class SlideShow {
     method: ((wrapper: HTMLElement, target: HTMLElement) => void) | null;
     location: string;
   } {
-    // Strategy 1: Insert before TagSwiper container (best for tags page with TagSwiper)
-    const tagSwiperContainer = document.querySelector('#tag-slider-container, .tag-slider-container') as HTMLElement;
-    if (tagSwiperContainer) {
-      return {
-        element: tagSwiperContainer,
-        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target),
+    const strategies = [
+      {
+        selector: '#tag-slider-container, .tag-slider-container',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target),
         location: 'before TagSwiper container'
-      };
-    }
-
-    // Strategy 2: Insert before TagTiles container (fallback for original layout)
-    const tagTilesContainer = document.querySelector('.TagTiles') as HTMLElement;
-    if (tagTilesContainer) {
-      return {
-        element: tagTilesContainer,
-        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target),
+      },
+      {
+        selector: '.TagTiles',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target),
         location: 'before TagTiles'
-      };
-    }
-
-    // Strategy 3: Insert inside container div before other content
-    const containerDiv = document.querySelector('.container > div:first-child') as HTMLElement;
-    if (containerDiv && containerDiv.children.length > 0) {
-      return {
-        element: containerDiv,
-        method: (wrapper, target) => target.insertBefore(wrapper, target.firstChild),
-        location: 'inside container div'
-      };
-    }
-
-    // Strategy 4: Insert after page header
-    const pageHeader = document.querySelector('.Hero, .IndexPage-hero') as HTMLElement;
-    if (pageHeader) {
-      return {
-        element: pageHeader,
-        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
+      },
+      {
+        selector: '.container > div:first-child',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.insertBefore(wrapper, target.firstChild),
+        location: 'inside container div',
+        condition: (element: HTMLElement) => element.children.length > 0
+      },
+      {
+        selector: '.Hero, .IndexPage-hero',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
         location: 'after page hero'
-      };
-    }
-
-    // Strategy 5: Insert in main content area
-    const mainContent = document.querySelector('.App-content, .IndexPage') as HTMLElement;
-    if (mainContent) {
-      return {
-        element: mainContent,
-        method: (wrapper, target) => target.insertBefore(wrapper, target.firstChild),
+      },
+      {
+        selector: '.App-content, .IndexPage',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.insertBefore(wrapper, target.firstChild),
         location: 'inside main content'
-      };
-    }
+      },
+      {
+        selector: '.Header-primary, .Header',
+        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
+        location: 'after global header',
+        condition: (element: HTMLElement) => !!element.parentNode
+      }
+    ];
 
-    // Strategy 6: Fallback to after global header
-    const header = document.querySelector('.Header-primary, .Header') as HTMLElement;
-    if (header && header.parentNode) {
-      return {
-        element: header,
-        method: (wrapper, target) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
-        location: 'after global header'
-      };
+    for (const strategy of strategies) {
+      const element = document.querySelector(strategy.selector) as HTMLElement;
+      if (element && (!strategy.condition || strategy.condition(element))) {
+        return {
+          element,
+          method: strategy.method,
+          location: strategy.location
+        };
+      }
     }
 
     return { element: null, method: null, location: 'none found' };
-  }
-
-  /**
-   * Find slideshow container with multiple strategies
-   */
-  private findSlideshowContainer(): HTMLElement | null {
-    // Strategy 1: Direct query with specific selector
-    let container = document.querySelector('#client1-header-slideshow .swiper') as HTMLElement;
-    if (container) {
-      return container;
-    }
-
-    // Strategy 2: Broader query as fallback
-    container = document.querySelector('.header-slideshow .swiper') as HTMLElement;
-    if (container) {
-      return container;
-    }
-
-    // Strategy 3: Global query for any swiper in header
-    container = document.querySelector('header .swiper, .Header .swiper') as HTMLElement;
-    if (container) {
-      return container;
-    }
-
-    return null;
   }
 
   /**
