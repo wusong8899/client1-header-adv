@@ -14,20 +14,20 @@ import app from 'flarum/forum/app';
 export function getSlideShowConfig(slideCount: number, transitionTime: number): SwiperOptions {
     const isMobile = window.innerWidth < 768;
     // Enhanced loop validation - require at least slidesPerView * 2 for Swiper 9+
-    const requiredSlides = isMobile ? 2 : 4; // 1.2 * 2 on mobile, 2 * 2 on desktop
+    const requiredSlides = isMobile ? 2 : 4; // 2 * 2 on mobile, 2 * 2 on desktop
     const enableLoop = slideCount >= requiredSlides;
 
   return {
-    // Basic configuration with decimal slidesPerView for preview effect
-    slidesPerView: isMobile ? 1.1 : 1,
-    spaceBetween: isMobile ? 15 : 30,
+    // Basic configuration matching original working code
+    slidesPerView: 2,  // Fixed to 2 like original code
+    spaceBetween: isMobile ? 30 : 30,  // Match original spaceBetween: 30
     centeredSlides: true,
 
-    // Effect
+    // Effect matching original code
     effect: 'coverflow',
     coverflowEffect: {
-      rotate: 50,
-      stretch: 0,
+      rotate: 0,        // Original code used rotate: 0
+      stretch: 0,       
       depth: 100,
       modifier: 1,
       slideShadows: true,
@@ -85,26 +85,26 @@ export function getSlideShowConfig(slideCount: number, transitionTime: number): 
     // SPA-critical settings
     ...getSpaSettings(),
 
-    // Enhanced responsive breakpoints
+    // Enhanced responsive breakpoints matching original code behavior
     breakpoints: {
       320: {
-        slidesPerView: 1.1,
-        spaceBetween: 10
+        slidesPerView: 2,
+        spaceBetween: 30
       },
       480: {
-        slidesPerView: 1.2,
-        spaceBetween: 15  
+        slidesPerView: 2,
+        spaceBetween: 30  
       },
       640: {
-        slidesPerView: 1.3,
-        spaceBetween: 20,
+        slidesPerView: 2,
+        spaceBetween: 30,
       },
       768: {
-        slidesPerView: 2.1,
-        spaceBetween: 25,
+        slidesPerView: 2,
+        spaceBetween: 30,
       },
       1024: {
-        slidesPerView: 2.5,
+        slidesPerView: 2,
         spaceBetween: 30,
       }
     },

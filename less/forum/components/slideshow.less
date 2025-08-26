@@ -15,7 +15,12 @@
   &.swiperAdContainer {
     margin-bottom: 10px;
 
-    @media @phone {}
+    @media @phone {
+      // Mobile-specific width calculation matching original code
+      // styleWidth = screenWidth*2-50, marginLeft = -(styleWidth*0.254)
+      width: calc(100vw * 2 - 50px);
+      margin-left: calc(-1 * (100vw * 2 - 50px) * 0.254);
+    }
   }
 
   .swiperTagContainer {
@@ -38,8 +43,9 @@
     will-change: transform;
     backface-visibility: hidden;
     
-    // Modern aspect-ratio with responsive dimensions
-    aspect-ratio: 16 / 9;
+    // Fixed dimensions matching original code
+    height: 280px;
+    width: 600px;
     
     img {
       display: block;
@@ -61,35 +67,16 @@
         }
       }
     }
-    
-    // Fallback for older browsers without aspect-ratio
-    @supports not (aspect-ratio: 16 / 9) {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
-      
-      img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-    }
 
     @media @phone {
-      // Mobile-specific aspect ratio (more square)
-      aspect-ratio: 4 / 3;
+      // Mobile slide dimensions matching original code behavior
+      height: 280px;  // Fixed height like original
+      width: 600px;   // Fixed width like original
       
       img {
         width: 100%;
         height: 100%;
         border-radius: @border-radius-large;
-      }
-      
-      // Mobile fallback for aspect-ratio
-      @supports not (aspect-ratio: 4 / 3) {
-        padding-bottom: 75%; /* 4:3 aspect ratio */
       }
     }
   }
@@ -193,14 +180,14 @@
   @media @phone {
     .swiper {
       height: auto; // Let aspect-ratio control height
-      overflow: visible; // Allow swiper effects to show
+      overflow: hidden; // Use hidden instead of visible to prevent layout issues
     }
     
     .swiper-slide {
-      // Dynamic width for mobile carousel preview effect
-      width: calc(100vw - 40px) !important;
-      max-width: 320px !important;
-      min-width: 280px !important;
+      // Fixed width matching original mobile behavior
+      width: auto !important; // Let Swiper handle width calculation
+      max-width: none !important; // Remove restrictive max-width
+      min-width: none !important; // Remove restrictive min-width
     }
 
     .swiperContainer {
@@ -231,13 +218,23 @@
     // Ensure parent containers don't clip external arrows
     &:not(.mobile) {
       padding: 0 @spacing-xxl; // Additional padding for desktop
-      overflow: visible; // Allow 3D effects
+      overflow: hidden; // Use hidden for better performance
     }
 
     @media @phone {
-      // Mobile spacing adjustments
+      // Mobile spacing adjustments similar to original code
       padding: 0 @spacing-sm;
-      overflow: visible; // Allow touch gestures
+      overflow: hidden; // Use hidden to prevent layout issues on mobile
+      
+      // Additional mobile body adjustments (matching original isMobileView logic)
+      .App {
+        overflow-x: hidden;
+      }
+      
+      .App-content {
+        min-height: auto;
+        background: none;
+      }
     }
   }
   
