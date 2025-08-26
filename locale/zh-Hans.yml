@@ -16,6 +16,13 @@ wusong8899-client1:
 
     # 核心设置
     TransitionTime: 广告轮换时间
+    
+    # Logo设置
+    HeaderIconTitle: Logo设置
+    HeaderIconUrl: Logo图片地址
+    HeaderIconUrlHelp: 输入Logo图片的URL
+    HeaderIconLink: Logo点击链接
+    HeaderIconLinkHelp: 输入Logo点击后跳转的链接（留空则不跳转）
 
     # 幻灯片管理
     AddSlide: 添加幻灯片

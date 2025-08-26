@@ -16,6 +16,13 @@ wusong8899-client1:
 
     # Core settings
     TransitionTime: Speed of transitions between slides
+    
+    # Logo settings
+    HeaderIconTitle: Logo Settings
+    HeaderIconUrl: Logo Image URL
+    HeaderIconUrlHelp: Enter the URL for the logo image
+    HeaderIconLink: Logo Click Link
+    HeaderIconLinkHelp: Enter the URL to redirect when logo is clicked (leave empty for no link)
 
     # Slide management
     AddSlide: Add Slide

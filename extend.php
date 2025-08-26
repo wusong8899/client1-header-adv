@@ -36,4 +36,14 @@ return [
         'Client1HeaderAdvTransitionTime',
         'wusong8899-client1-header-adv.TransitionTime'
     ),
+    
+    // Header icon settings
+    (new Extend\Settings)->serializeToForum(
+        'Client1HeaderAdvHeaderIconUrl',
+        'wusong8899-client1-header-adv.headerIconUrl'
+    ),
+    (new Extend\Settings)->serializeToForum(
+        'Client1HeaderAdvHeaderIconLink',
+        'wusong8899-client1-header-adv.headerIconLink'
+    ),
 ];

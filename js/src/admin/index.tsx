@@ -41,14 +41,22 @@ class UnifiedAdminComponent extends ExtensionPage {
       return {
         slides: parsed.slides || [],
         transitionTime: parsed.transitionTime || 5000,
-        socialLinks: parsed.socialLinks || []
+        socialLinks: parsed.socialLinks || [],
+        headerIcon: parsed.headerIcon || {
+          url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
+          link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
+        }
       };
     } catch (error) {
       console.error('Failed to parse settings JSON:', error);
       return {
         slides: [],
         transitionTime: 5000,
-        socialLinks: []
+        socialLinks: [],
+        headerIcon: {
+          url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
+          link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
+        }
       };
     }
   }
@@ -62,6 +70,12 @@ class UnifiedAdminComponent extends ExtensionPage {
       this.setting(`${EXTENSION_ID}.settings`)(json);
       // Also update transition time in separate setting for legacy compatibility
       this.setting(`${EXTENSION_ID}.TransitionTime`)(settings.transitionTime.toString());
+      
+      // Update headerIcon settings individually for forum access
+      if (settings.headerIcon) {
+        this.setting(`${EXTENSION_ID}.headerIconUrl`)(settings.headerIcon.url || '');
+        this.setting(`${EXTENSION_ID}.headerIconLink`)(settings.headerIcon.link || '');
+      }
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
@@ -75,7 +89,11 @@ class UnifiedAdminComponent extends ExtensionPage {
     const settings: ExtensionSettings = {
       slides: [],
       transitionTime: parseInt(app.data.settings[`${EXTENSION_ID}.TransitionTime`]) || 5000,
-      socialLinks: []
+      socialLinks: [],
+      headerIcon: {
+        url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
+        link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
+      }
     };
     
     // Migrate old slideshow data (up to 30 slides)
@@ -194,6 +212,18 @@ class UnifiedAdminComponent extends ExtensionPage {
     this.updateSettings(settings);
   }
 
+  /**
+   * Update header icon configuration
+   */
+  updateHeaderIcon(field: 'url' | 'link', value: string): void {
+    const settings = this.getSettings();
+    if (!settings.headerIcon) {
+      settings.headerIcon = { url: '', link: '' };
+    }
+    settings.headerIcon[field] = value;
+    this.updateSettings(settings);
+  }
+
   content() {
     const settings = this.getSettings(); // Get current settings on each render
     
@@ -217,6 +247,36 @@ class UnifiedAdminComponent extends ExtensionPage {
               const newSettings = this.getSettings();
               newSettings.transitionTime = parseInt((e.target as HTMLInputElement).value);
               this.updateSettings(newSettings);
+            }}
+          />
+        </div>
+
+        <div className="Form-group">
+          <h3>{app.translator.trans('wusong8899-client1.admin.HeaderIconTitle')}</h3>
+          
+          <label className="FormLabel">
+            {app.translator.trans('wusong8899-client1.admin.HeaderIconUrl')}
+          </label>
+          <input
+            className="FormControl"
+            type="url"
+            value={settings.headerIcon?.url || ''}
+            placeholder={app.translator.trans('wusong8899-client1.admin.HeaderIconUrlHelp')}
+            oninput={(e: Event) => {
+              this.updateHeaderIcon('url', (e.target as HTMLInputElement).value);
+            }}
+          />
+          
+          <label className="FormLabel">
+            {app.translator.trans('wusong8899-client1.admin.HeaderIconLink')}
+          </label>
+          <input
+            className="FormControl"
+            type="url"
+            value={settings.headerIcon?.link || ''}
+            placeholder={app.translator.trans('wusong8899-client1.admin.HeaderIconLinkHelp')}
+            oninput={(e: Event) => {
+              this.updateHeaderIcon('link', (e.target as HTMLInputElement).value);
             }}
           />
         </div>

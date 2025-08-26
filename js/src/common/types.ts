@@ -28,12 +28,21 @@ export interface SocialLink {
 }
 
 /**
+ * Header icon configuration
+ */
+export interface HeaderIcon {
+  url: string;    // Logo图片URL
+  link: string;   // Logo点击链接
+}
+
+/**
  * Extension settings structure
  */
 export interface ExtensionSettings {
   slides: SlideData[];
   transitionTime: number;
   socialLinks: SocialLink[];
+  headerIcon?: HeaderIcon;
 }
 
 // =============================================================================

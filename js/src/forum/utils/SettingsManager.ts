@@ -53,7 +53,11 @@ function loadSettings(): ExtensionSettings {
         return {
           slides: parsed.slides || [],
           transitionTime: parsed.transitionTime || 5000,
-          socialLinks: parsed.socialLinks || []
+          socialLinks: parsed.socialLinks || [],
+          headerIcon: parsed.headerIcon || {
+            url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
+            link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
+          }
         };
       }
     }
@@ -79,7 +83,11 @@ function loadLegacySettings(): ExtensionSettings {
   const settings: ExtensionSettings = {
     slides: [],
     transitionTime: parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000,
-    socialLinks: []
+    socialLinks: [],
+    headerIcon: {
+      url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
+      link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
+    }
   };
 
   // Load up to 30 slides from legacy format
@@ -123,7 +131,11 @@ function getEmptySettings(): ExtensionSettings {
   return {
     slides: [],
     transitionTime: 5000,
-    socialLinks: []
+    socialLinks: [],
+    headerIcon: {
+      url: '',
+      link: ''
+    }
   };
 }
 
@@ -154,6 +166,17 @@ export function getActiveSocialLinks() {
  */
 export function getTransitionTime(): number {
   return getSettings().transitionTime;
+}
+
+/**
+ * Get header icon configuration
+ */
+export function getHeaderIcon() {
+  const settings = getSettings();
+  return settings.headerIcon || {
+    url: '',
+    link: ''
+  };
 }
 
 /**
