@@ -212,12 +212,16 @@
     
     // Mobile-specific slide dimensions
     .swiper-slide {
-      // Fixed width for mobile slides
-      width: 200px !important;
+      // Use flex-basis instead of fixed width for better Swiper compatibility
+      flex-basis: 200px !important;
+      // Set max-width to prevent oversizing
+      max-width: 200px !important;
       // Consistent aspect ratio for card display
       aspect-ratio: 9/10;
       // Ensure proper sizing
       flex-shrink: 0;
+      // Allow slide to grow if needed
+      flex-grow: 0;
     }
 
     .tag-slide-content {

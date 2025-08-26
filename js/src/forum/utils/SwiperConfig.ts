@@ -78,9 +78,9 @@ export function getTagSwiperConfig(): SwiperOptions {
 
   return {
     // Basic configuration - responsive
-    slidesPerView: isMobile ? 1 : isTablet ? 2 : 'auto',
+    slidesPerView: isMobile ? 'auto' : isTablet ? 2 : 'auto',
     spaceBetween: 20,
-    centeredSlides: !isMobile,
+    centeredSlides: false,
 
     // Effect - slide on mobile for better performance
     effect: isMobile ? 'slide' : 'coverflow',
@@ -122,13 +122,15 @@ export function getTagSwiperConfig(): SwiperOptions {
     // Responsive breakpoints for tags
     breakpoints: {
       320: {
-        slidesPerView: 1,
+        slidesPerView: 'auto',
         spaceBetween: 10,
         effect: 'slide',
+        centeredSlides: false,
       },
       640: {
-        slidesPerView: 1,
+        slidesPerView: 'auto',
         spaceBetween: 20,
+        centeredSlides: false,
       },
       768: {
         slidesPerView: 2,
