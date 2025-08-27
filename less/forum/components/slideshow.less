@@ -47,9 +47,6 @@
       object-fit: cover;
       object-position: center;
 
-      // Hardware acceleration for images
-      transform: translateZ(0);
-
       // Lazy loading optimization
       &[loading="lazy"] {
         opacity: 0;
@@ -75,19 +72,6 @@
   // =============================================================================
   // GLIDE SLIDE VARIANTS
   // =============================================================================
-
-  .glide__slide-tag {
-    // Transform hover effect with hardware acceleration
-    transition: transform 0.23s linear;
-    transform: translateZ(0);
-    will-change: transform;
-
-    @media (min-width: 1440px) {
-      &:hover {
-        transform: translateY(-6px);
-      }
-    }
-  }
 
   .glide__slide-tag-inner {
     border-radius: 12px; // Direct numeric value
@@ -213,9 +197,6 @@
   .glideTagContainer {
     // Provide adequate container spacing for external arrows
     position: relative;
-
-    // Hardware acceleration for containers
-    transform: translateZ(0);
 
     // Ensure parent containers don't clip external arrows
     &:not(.mobile) {
