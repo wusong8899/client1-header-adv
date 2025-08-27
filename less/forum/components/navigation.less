@@ -1,7 +1,7 @@
 // =============================================================================
 // NAVIGATION COMPONENTS
 // =============================================================================
-// Styles for slideshow navigation buttons and pagination
+// Styles for Glide.js slideshow navigation buttons and pagination
 
 // =============================================================================
 // APP NAVIGATION LAYOUT FIXES
@@ -20,9 +20,8 @@
   }
 }
 
-
 // =============================================================================
-// NAVIGATION BUTTONS
+// GLIDE NAVIGATION BUTTONS
 // =============================================================================
 
 // =============================================================================
@@ -32,31 +31,37 @@
 // Requires parent container to have overflow: visible
 
 .client1-header-adv-wrapper {
-  .swiper-button-prev {
+  .glide__arrow--left {
     left: -50px !important; // Position outside left edge
     background: url(@nav-prev-icon);
-    width: @nav-button-size !important;
-    height: @nav-button-size !important;
+    width: 16px !important;
+    height: 16px !important;
     top: 50% !important;
     transform: translateY(-50%) !important; // Center vertically only
     background-size: 100% 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
 
     &:after {
-      display: none; // Hide default Swiper arrow
+      display: none; // Hide default Glide arrow
     }
   }
 
-  .swiper-button-next {
+  .glide__arrow--right {
     right: -50px !important; // Position outside right edge
     background: url(@nav-next-icon);
-    width: @nav-button-size !important;
-    height: @nav-button-size !important;
+    width: 16px !important;
+    height: 16px !important;
     top: 50% !important;
     transform: translateY(-50%) rotateY(180deg) !important; // Center vertically + flip
     background-size: 100% 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
 
     &:after {
-      display: none; // Hide default Swiper arrow
+      display: none; // Hide default Glide arrow
     }
   }
 
@@ -65,8 +70,8 @@
   // =============================================================================
   // Ensure arrows are visible when positioned outside container
 
-  .swiperAdContainer .swiper,
-  .swiperTagContainer .swiper {
+  .glideAdContainer .glide,
+  .glideTagContainer .glide {
     overflow: visible !important; // Allow arrows to show outside bounds
 
     // Add padding to prevent content clipping
@@ -81,21 +86,21 @@
   // PAGINATION
   // =============================================================================
 
-  .swiper-pagination {
+  .glide__bullets {
     transform: translateY(100%) !important;
     line-height: 0;
     position: absolute;
     text-align: center;
     transition: 300ms opacity;
     transform: translate3d(0, 0, 0);
-    z-index: @z-pagination;
+    z-index: 10;
 
-    &.swiper-pagination-hidden {
+    &.glide__bullets--hidden {
       opacity: 0;
     }
 
-    .swiper-pagination-disabled &,
-    &.swiper-pagination-disabled {
+    .glide-pagination-disabled &,
+    &.glide-pagination-disabled {
       display: none !important;
     }
   }
@@ -104,124 +109,86 @@
   // PAGINATION BULLETS
   // =============================================================================
 
-  .swiper-pagination-bullet {
+  .glide__bullet {
     display: inline-block;
     border-radius: 50%;
-    height: @swiper-pagination-bullet-size;
-    width: @swiper-pagination-bullet-size;
+    height: 8px; // Direct numeric value instead of variable
+    width: 8px;  // Direct numeric value instead of variable
     opacity: 0.5;
-    background: @text-primary;
+    background: #f3f3f3; // Direct color value
     border: none;
     margin: 0;
     padding: 0;
     box-shadow: none;
-    .appearance(none);
-
-    .swiper-pagination-clickable & {
-      cursor: pointer;
-    }
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
 
     &:only-child {
       display: none !important;
     }
   }
 
-  .swiper-pagination-bullet-active {
+  .glide__bullet--active {
     opacity: 1;
-    width: @swiper-pagination-bullet-active-width;
-    border-radius: @swiper-pagination-bullet-active-radius;
+    width: 22px; // Direct numeric value for active width
+    border-radius: 2.5px; // Direct numeric value for active radius
   }
 
   // =============================================================================
   // PAGINATION LAYOUTS
   // =============================================================================
 
-  // Common styles for horizontal and bullets pagination
-  .swiper-pagination-fraction,
-  .swiper-pagination-custom,
-  .swiper-horizontal>.swiper-pagination-bullets,
-  .swiper-pagination-bullets.swiper-pagination-horizontal {
-    bottom: @spacing-lg;
+  // Common styles for horizontal bullets pagination
+  .glide__bullets {
+    bottom: 10px; // Direct spacing value
     left: 0;
     width: 100%;
-  }
+    display: flex;
+    justify-content: center;
+    gap: 4px; // Direct spacing between bullets
 
-  // Horizontal bullet spacing
-  .swiper-horizontal>.swiper-pagination-bullets,
-  .swiper-pagination-horizontal.swiper-pagination-bullets {
-    .swiper-pagination-bullet {
-      margin: 0 @spacing-xs;
-    }
-
-    &.swiper-pagination-bullets-dynamic {
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-
-      .swiper-pagination-bullet {
-        transition: 200ms transform, 200ms left;
-      }
-    }
-  }
-
-  // Vertical bullet spacing
-  .swiper-vertical>.swiper-pagination-bullets,
-  .swiper-pagination-vertical.swiper-pagination-bullets {
-    right: @spacing-lg;
-    top: 50%;
-    transform: translate3d(0px, -50%, 0);
-
-    .swiper-pagination-bullet {
-      margin: @spacing-sm 0;
-      display: block;
-    }
-
-    &.swiper-pagination-bullets-dynamic {
-      top: 50%;
-      transform: translateY(-50%);
-      width: @spacing-md;
-
-      .swiper-pagination-bullet {
-        display: inline-block;
-        transition: 200ms transform, 200ms top;
-      }
+    .glide__bullet {
+      margin: 0; // Reset margin since we use gap
     }
   }
 
   // =============================================================================
-  // DYNAMIC BULLETS
+  // DYNAMIC BULLETS (if needed)
   // =============================================================================
 
-  .swiper-pagination-bullets-dynamic {
+  .glide__bullets--dynamic {
     overflow: hidden;
     font-size: 0;
 
-    .swiper-pagination-bullet {
+    .glide__bullet {
       transform: scale(0.33);
       position: relative;
+      transition: 200ms transform;
     }
 
-    .swiper-pagination-bullet-active {
+    .glide__bullet--active {
       transform: scale(1);
     }
 
-    .swiper-pagination-bullet-active-main {
+    .glide__bullet--active-main {
       transform: scale(1);
     }
 
-    .swiper-pagination-bullet-active-prev {
+    .glide__bullet--active-prev {
       transform: scale(0.66);
     }
 
-    .swiper-pagination-bullet-active-prev-prev {
+    .glide__bullet--active-prev-prev {
       transform: scale(0.33);
     }
 
-    .swiper-pagination-bullet-active-next {
+    .glide__bullet--active-next {
       transform: scale(0.66);
     }
 
-    .swiper-pagination-bullet-active-next-next {
+    .glide__bullet--active-next-next {
       transform: scale(0.33);
     }
   }
@@ -230,11 +197,50 @@
   // DISABLED STATES
   // =============================================================================
 
-  .swiper-button-lock {
+  .glide__arrow[disabled] {
+    opacity: 0.33;
+    cursor: not-allowed;
+  }
+
+  .glide__bullets--disabled {
     display: none;
   }
 
-  .swiper-pagination-lock {
-    display: none;
+  // =============================================================================
+  // RESPONSIVE DESIGN
+  // =============================================================================
+
+  @media @phone {
+    .glide__arrow--left,
+    .glide__arrow--right {
+      display: none; // Hide arrows on mobile
+    }
+
+    .glide__bullets {
+      bottom: 5px; // Closer to content on mobile
+      
+      .glide__bullet {
+        height: 6px; // Smaller bullets on mobile
+        width: 6px;
+      }
+
+      .glide__bullet--active {
+        width: 18px; // Smaller active width on mobile
+      }
+    }
+  }
+
+  // =============================================================================
+  // DARK THEME SUPPORT
+  // =============================================================================
+
+  .App--dark & {
+    .glide__bullet {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .glide__bullet--active {
+      background: #FACA46; // Accent color for dark theme
+    }
   }
 }

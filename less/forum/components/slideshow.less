@@ -6,13 +6,14 @@
 // - CSS aspect-ratio with fallbacks for responsive design  
 // - Lazy loading optimizations
 // - Mobile-first responsive breakpoints
+// - Converted from Swiper.js to Glide.js
 
 // =============================================================================
 // SLIDESHOW CONTAINERS
 // =============================================================================
 
 .client1-header-adv-wrapper {
-  &.swiperAdContainer {
+  &.glideAdContainer {
     margin-bottom: 10px;
 
     @media @phone {
@@ -23,17 +24,17 @@
     }
   }
 
-  .swiperTagContainer {
-    margin-top: @spacing-lg;
-    margin-bottom: -@spacing-lg;
-    padding-bottom: @spacing-lg;
+  .glideTagContainer {
+    margin-top: 10px; // Direct numeric value
+    margin-bottom: -10px; // Direct numeric value
+    padding-bottom: 10px; // Direct numeric value
   }
 
   // =============================================================================
-  // SWIPER SLIDES
+  // GLIDE SLIDES
   // =============================================================================
 
-  .swiper-slide {
+  .glide__slide {
     flex-shrink: 0;
     position: relative;
     transition-property: transform;
@@ -51,8 +52,9 @@
       display: block;
       width: 100%;
       height: 100%;
-      border-radius: @border-radius-large;
-      .image-cover();
+      border-radius: 12px; // Direct numeric value instead of @border-radius-large
+      object-fit: cover;
+      object-position: center;
 
       // Hardware acceleration for images
       transform: translateZ(0);
@@ -63,7 +65,7 @@
         transition: opacity 0.3s ease;
 
         &.loaded,
-        &.swiper-lazy-loaded {
+        &.glide-lazy-loaded {
           opacity: 1;
         }
       }
@@ -77,30 +79,37 @@
       img {
         width: 100%;
         height: 100%;
-        border-radius: @border-radius-large;
+        border-radius: 12px; // Direct numeric value
       }
     }
   }
 
   // =============================================================================
-  // SWIPER SLIDE VARIANTS
+  // GLIDE SLIDE VARIANTS
   // =============================================================================
 
-  .swiper-slide-tag {
-    .transform-hover-lift();
-
-    // Hardware acceleration for tag slides
+  .glide__slide-tag {
+    // Transform hover effect with hardware acceleration
+    transition: transform 0.23s linear;
     transform: translateZ(0);
     will-change: transform;
+
+    @media (min-width: 1440px) {
+      &:hover {
+        transform: translateY(-6px);
+      }
+    }
   }
 
-  .swiper-slide-tag-inner {
-    border-radius: @border-radius-large;
-    width: @slide-tag-width;
-    height: @slide-tag-height;
+  .glide__slide-tag-inner {
+    border-radius: 12px; // Direct numeric value
+    width: 146px; // Direct numeric value instead of @slide-tag-width
+    height: 196px; // Direct numeric value instead of @slide-tag-height
     text-align: center;
-    padding: @spacing-xxl;
-    .flex-center();
+    padding: 15px; // Direct numeric value
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     // Ensure background image covers the entire area when no text
     &:empty {
@@ -108,13 +117,15 @@
     }
   }
 
-  .swiper-slide-tag-inner-mobile {
-    border-radius: @border-radius-large;
-    width: @slide-tag-mobile-width;
-    height: @slide-tag-mobile-height;
+  .glide__slide-tag-inner-mobile {
+    border-radius: 12px; // Direct numeric value
+    width: 200px; // Direct numeric value instead of @slide-tag-mobile-width
+    height: 240px; // Direct numeric value instead of @slide-tag-mobile-height
     text-align: center;
-    padding: @spacing-lg;
-    .flex-center();
+    padding: 10px; // Direct numeric value
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     // Ensure background image covers the entire area when no text
     &:empty {
@@ -123,18 +134,18 @@
   }
 
   // =============================================================================
-  // SWIPER SHADOWS
+  // GLIDE SHADOWS
   // =============================================================================
 
-  .swiper-slide-shadow-right {
-    border-radius: @border-radius-large;
+  .glide__slide-shadow-right {
+    border-radius: 12px; // Direct numeric value
   }
 
-  .swiper-slide-shadow-left {
-    border-radius: @border-radius-large;
+  .glide__slide-shadow-left {
+    border-radius: 12px; // Direct numeric value
   }
 
-  .swiper-slide-invisible-blank {
+  .glide__slide-invisible-blank {
     visibility: hidden;
   }
 
@@ -143,15 +154,15 @@
   // =============================================================================
 
   .TagTextOuterContainer {
-    background: @bg-dark;
-    padding: @spacing-lg;
+    background: #141623; // Direct color value instead of @bg-dark
+    padding: 10px; // Direct numeric value
     border-radius: 1rem;
   }
 
   .TagTextContainer {
-    font-size: @font-size-sm;
-    padding: 0 0 @spacing-lg 0;
-    font-weight: @font-weight-bold;
+    font-size: 14px; // Direct numeric value instead of @font-size-sm
+    padding: 0 0 10px 0; // Direct numeric value
+    font-weight: 700; // Direct numeric value instead of @font-weight-bold
   }
 
   .TagTextIcon {
@@ -162,16 +173,25 @@
     width: 24px;
     height: 24px;
     line-height: 26px;
-    .background-cover();
-    margin-right: @spacing-sm;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 6px; // Direct numeric value
   }
 
   // =============================================================================
   // LINK BEHAVIOR
   // =============================================================================
 
-  .swiper-wrapper a {
-    .text-no-decoration();
+  .glide__slides a {
+    text-decoration: none;
+
+    &:hover,
+    &:visited,
+    &:link,
+    &:active {
+      text-decoration: none;
+    }
   }
 
   // =============================================================================
@@ -179,22 +199,22 @@
   // =============================================================================
 
   @media @phone {
-    .swiper {
+    .glide {
       height: auto; // Let aspect-ratio control height
       overflow: hidden; // Use hidden instead of visible to prevent layout issues
     }
 
-    .swiper-slide {}
+    .glide__slide {}
 
-    .swiperContainer {
+    .glideContainer {
       // Additional mobile-specific container styles
-      padding: 0 @spacing-sm;
+      padding: 0 8px; // Direct numeric value
     }
 
     // Reset margins for mobile when external arrows are hidden
-    .swiperAdContainer .swiper,
-    .swiperTagContainer .swiper {
-      margin: 0 @spacing-sm; // Smaller margins for mobile
+    .glideAdContainer .glide,
+    .glideTagContainer .glide {
+      margin: 0 8px; // Direct numeric value - smaller margins for mobile
     }
   }
 
@@ -203,8 +223,8 @@
   // =============================================================================
   // Ensures arrows display properly when positioned outside container
 
-  .swiperAdContainer,
-  .swiperTagContainer {
+  .glideAdContainer,
+  .glideTagContainer {
     // Provide adequate container spacing for external arrows
     position: relative;
 
@@ -213,13 +233,13 @@
 
     // Ensure parent containers don't clip external arrows
     &:not(.mobile) {
-      padding: 0 @spacing-xxl; // Additional padding for desktop
+      padding: 0 15px; // Direct numeric value - additional padding for desktop
       overflow: hidden; // Use hidden for better performance
     }
 
     @media @phone {
       // Mobile spacing adjustments similar to original code
-      padding: 0 @spacing-sm;
+      padding: 0 8px; // Direct numeric value
       overflow: hidden; // Use hidden to prevent layout issues on mobile
 
       // Additional mobile body adjustments (matching original isMobileView logic)
@@ -241,7 +261,7 @@
     --slideshow-max-height: 400px;
     --slideshow-mobile-max-height: 250px;
 
-    .swiper {
+    .glide {
       max-height: var(--slideshow-max-height);
 
       @media @phone {
