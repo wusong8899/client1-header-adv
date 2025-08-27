@@ -93,7 +93,7 @@
   transition: background-color @transition-fast @transition-easing;
 }
 
-.button-rounded(@bg-color: @button-primary-bg, @text-color: @text-primary, @radius: @border-radius-medium) {
+.button-rounded(@bg-color: #313952, @text-color: #f3f3f3, @radius: 8px) {
   .button-base();
   background: @bg-color;
   color: @text-color;
@@ -125,11 +125,11 @@
 // =============================================================================
 
 .slide-shadow(@side: right) when (@side =right) {
-  background-image: @shadow-gradient-right;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
 }
 
 .slide-shadow(@side: left) when (@side =left) {
-  background-image: @shadow-gradient-left;
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
 }
 
 .glow-effect(@color: @accent-color, @intensity: 65%) {
@@ -182,7 +182,7 @@
 
   &:focus {
     outline: none;
-    border-color: darken(@border-light, 20%);
+    border-color: #b8b8b8;
   }
 }
 
