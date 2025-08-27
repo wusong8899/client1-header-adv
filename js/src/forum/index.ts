@@ -2,8 +2,8 @@ import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
 import Navigation from 'flarum/forum/components/Navigation';
-import { hasContent, reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
-import { GlideShow } from './GlideShow';
+import { reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
+import GlideShowComponent from './components/GlideShowComponent';
 import TagGlide from './components/TagGlide';
 import SocialMediaButtons from './components/SocialMediaButtons';
 import MobileRegisterButton from './components/MobileRegisterButton';
@@ -14,52 +14,32 @@ import m from 'mithril';
 // Extension constants
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
 
-// Global managers
-let glideShow: GlideShow | null = null;
-
 /**
  * Main extension initializer
  */
 app.initializers.add(EXTENSION_ID, () => {
-    // Defer slideshow initialization until first use
-    // This avoids accessing app.forum before it's initialized
-
-    // Note: SlideShow initialization moved to oncreate to prevent duplicate calls
-    // The view method is called on every render, causing multiple slideshow containers
-
-    // Extend oncreate to initialize slideshow (called only once per component lifecycle)
-    extend(TagsPage.prototype, 'oncreate', function () {
+    // Override TagsPage view to add slideshow component at the beginning
+    override(TagsPage.prototype, 'view', function (original) {
         try {
-            // Initialize slideshow when TagsPage component is created
-            if (isTagsPage()) {
-                // Initialize slideshow only when needed and if content exists
-                if (!glideShow && hasContent()) {
-                    glideShow = new GlideShow();
-                }
+            const result = original();
+            
+            // Only add slideshow on tags page and if content exists
+            if (isTagsPage() && GlideShowComponent.shouldDisplay()) {
+                const slideshow = m(GlideShowComponent);
                 
-                // Initialize glide show after DOM is fully ready
-                if (glideShow) {
-                    requestAnimationFrame(() => {
-                        setTimeout(() => {
-                            glideShow.init();
-                        }, 150);
-                    });
+                // Insert slideshow before the main content
+                if (Array.isArray(result)) {
+                    return [slideshow, ...result];
+                } else {
+                    return [slideshow, result];
                 }
             }
+            
+            return result;
         } catch (error) {
-            console.error('SlideShow oncreate initialization error:', error);
-        }
-    });
-
-    // Extend onremove to properly clean up when leaving the page
-    extend(TagsPage.prototype, 'onremove', function () {
-        try {
-            if (glideShow) {
-                glideShow.destroy();
-                glideShow = null;
-            }
-        } catch (error) {
-            console.error('SlideShow cleanup error:', error);
+            console.error('GlideShowComponent integration error:', error);
+            // Always fall back to original on error
+            return original();
         }
     });
 
@@ -233,12 +213,9 @@ function isMobileDevice(): boolean {
  */
 function cleanupExtension(): void {
     try {
-        if (glideShow) {
-            glideShow.destroy();
-        }
         // Clear settings cache for fresh data on next page
         reloadSettings();
-        // TagGlide components are automatically cleaned up by Mithril lifecycle
+        // All Mithril components (GlideShowComponent, TagGlide, etc.) are automatically cleaned up by Mithril lifecycle
     } catch (error) {
         console.error('Extension cleanup error:', error);
     }
