@@ -51,7 +51,7 @@ export function getTagGlideConfig(): GlideOptions {
 
   return {
     type: 'carousel',
-    perView: isMobile ? 1.1 : isTablet ? 2.1 : 3.5,
+    perView: isMobile ? 1.1 : isTablet ? 1.8 : 2.8,
     focusAt: 0,
     gap: isMobile ? 15 : 20,
     autoplay: 5000,
@@ -62,11 +62,11 @@ export function getTagGlideConfig(): GlideOptions {
     animationDuration: 600,
 
     breakpoints: {
-      1440: { perView: 3.5, gap: 25 },
-      1024: { perView: 2.8, gap: 20 },
-      768: { perView: 2.1, gap: 15 },
-      640: { perView: 1.8, gap: 20 },
-      480: { perView: 1.3, gap: 15 },
+      1440: { perView: 3.0, gap: 25 },
+      1024: { perView: 2.3, gap: 20 },
+      768: { perView: 1.8, gap: 15 },
+      640: { perView: 1.5, gap: 20 },
+      480: { perView: 1.2, gap: 15 },
       320: { perView: 1.1, gap: 10 }
     }
   };
