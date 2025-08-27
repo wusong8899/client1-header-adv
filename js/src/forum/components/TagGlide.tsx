@@ -54,8 +54,6 @@ export default class TagGlide extends Component {
               </ul>
             </div>
             
-            {/* Arrows will be created automatically by Glide.js with default configuration */}
-            
             <div className="glide__bullets" data-glide-el="controls[nav]">
               {tags.map((_: any, index: number) => (
                 <button className="glide__bullet" data-glide-dir={`=${index}`}></button>
