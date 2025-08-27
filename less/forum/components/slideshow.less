@@ -122,11 +122,6 @@
       overflow: hidden; // Use hidden instead of visible to prevent layout issues
     }
 
-    .glideContainer {
-      // Additional mobile-specific container styles
-      padding: 0 8px; // Direct numeric value
-    }
-
     // Reset margins for mobile when external arrows are hidden
     .glideAdContainer .glide,
     .glideTagContainer .glide {
@@ -144,15 +139,7 @@
     // Provide adequate container spacing for external arrows
     position: relative;
 
-    // Ensure parent containers don't clip external arrows
-    &:not(.mobile) {
-      padding: 0 15px; // Direct numeric value - additional padding for desktop
-      overflow: hidden; // Use hidden for better performance
-    }
-
     @media @phone {
-      // Mobile spacing adjustments similar to original code
-      padding: 0 8px; // Direct numeric value
       overflow: hidden; // Use hidden to prevent layout issues on mobile
 
       // Additional mobile body adjustments (matching original isMobileView logic)
