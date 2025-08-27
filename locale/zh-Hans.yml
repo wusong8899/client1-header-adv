@@ -22,6 +22,9 @@ wusong8899-client1:
     TagGlideTitleLabel: 标题文字
     TagGlideTitlePlaceholder: 例如：热门话题
     TagGlideTitleHelp: 在Tag轮播区域左上角显示的标题文字（留空则不显示）
+    TagGlideTitleIconLabel: 标题图标
+    TagGlideTitleIconPlaceholder: https://example.com/icon.png
+    TagGlideTitleIconHelp: 显示在标题文字前面的图标图片URL（留空则不显示图标）
     
     # Logo设置
     HeaderIconTitle: Logo设置

@@ -44,6 +44,7 @@ export interface ExtensionSettings {
   socialLinks: SocialLink[];
   headerIcon?: HeaderIcon;
   tagGlideTitle?: string;  // Tag轮播区域的标题文字
+  tagGlideTitleIcon?: string;  // Tag轮播标题的图标URL
 }
 
 // =============================================================================

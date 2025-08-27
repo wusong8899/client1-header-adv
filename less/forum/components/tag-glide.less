@@ -10,22 +10,25 @@
 .TagGlide-wrapper {
   // Tag Glide Title Styling (moved outside container)
   .tag-glide-title {
-    display: block;
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
     font-size: 16px;
     font-weight: 600;
     color: var(--body-color);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(4px);
     padding: 6px 12px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: fit-content; // Only as wide as content
     
-    // Dark mode support
-    @media (prefers-color-scheme: dark) {
-      background: rgba(0, 0, 0, 0.8);
-      color: rgba(255, 255, 255, 0.9);
+    .tag-glide-title-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+    
+    .tag-glide-title-text {
+      flex: 1;
     }
   }
 }

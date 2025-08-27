@@ -22,6 +22,9 @@ wusong8899-client1:
     TagGlideTitleLabel: Title Text
     TagGlideTitlePlaceholder: e.g. Hot Topics
     TagGlideTitleHelp: Title text to display in the top-left corner of the tag carousel area (leave empty to hide)
+    TagGlideTitleIconLabel: Title Icon
+    TagGlideTitleIconPlaceholder: https://example.com/icon.png
+    TagGlideTitleIconHelp: Icon image URL to display before the title text (leave empty to hide icon)
     
     # Logo settings
     HeaderIconTitle: Logo Settings

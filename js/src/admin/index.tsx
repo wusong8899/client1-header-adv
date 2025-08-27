@@ -18,6 +18,7 @@ class UnifiedAdminComponent extends ExtensionPage {
   // Stream instances for reactive form handling
   transitionTimeStream: Stream<number>;
   tagGlideTitleStream: Stream<string>;
+  tagGlideTitleIconStream: Stream<string>;
   headerIconUrlStream: Stream<string>;
   headerIconLinkStream: Stream<string>;
   
@@ -55,7 +56,8 @@ class UnifiedAdminComponent extends ExtensionPage {
           url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
           link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
         },
-        tagGlideTitle: parsed.tagGlideTitle || ''
+        tagGlideTitle: parsed.tagGlideTitle || '',
+        tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
       };
     } catch (error) {
       console.error('Failed to parse settings JSON:', error);
@@ -67,7 +69,8 @@ class UnifiedAdminComponent extends ExtensionPage {
           url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
           link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
         },
-        tagGlideTitle: ''
+        tagGlideTitle: '',
+        tagGlideTitleIcon: ''
       };
     }
   }
@@ -81,6 +84,7 @@ class UnifiedAdminComponent extends ExtensionPage {
     // Initialize streams with current values
     this.transitionTimeStream = Stream(settings.transitionTime);
     this.tagGlideTitleStream = Stream(settings.tagGlideTitle || '');
+    this.tagGlideTitleIconStream = Stream(settings.tagGlideTitleIcon || '');
     this.headerIconUrlStream = Stream(settings.headerIcon?.url || '');
     this.headerIconLinkStream = Stream(settings.headerIcon?.link || '');
     
@@ -94,6 +98,12 @@ class UnifiedAdminComponent extends ExtensionPage {
     this.tagGlideTitleStream.map((value: string) => {
       const currentSettings = this.getSettings();
       currentSettings.tagGlideTitle = value;
+      this.updateSettings(currentSettings);
+    });
+    
+    this.tagGlideTitleIconStream.map((value: string) => {
+      const currentSettings = this.getSettings();
+      currentSettings.tagGlideTitleIcon = value;
       this.updateSettings(currentSettings);
     });
     
@@ -306,6 +316,29 @@ class UnifiedAdminComponent extends ExtensionPage {
           <div className="helpText">
             {app.translator.trans('wusong8899-client1.admin.TagGlideTitleHelp')}
           </div>
+          
+          <label className="FormLabel">
+            {app.translator.trans('wusong8899-client1.admin.TagGlideTitleIconLabel')}
+          </label>
+          <input
+            className="FormControl"
+            type="url"
+            placeholder={app.translator.trans('wusong8899-client1.admin.TagGlideTitleIconPlaceholder')}
+            bidi={this.tagGlideTitleIconStream}
+          />
+          <div className="helpText">
+            {app.translator.trans('wusong8899-client1.admin.TagGlideTitleIconHelp')}
+          </div>
+          
+          {this.tagGlideTitleIconStream() && (
+            <div className="IconPreview">
+              <img 
+                src={this.tagGlideTitleIconStream()} 
+                alt="Tag title icon preview" 
+                style="max-width: 18px; max-height: 18px; margin-top: 5px;" 
+              />
+            </div>
+          )}
         </div>
 
         <div className="Form-group">

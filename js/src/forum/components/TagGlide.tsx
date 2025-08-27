@@ -48,11 +48,21 @@ export default class TagGlide extends Component {
     const socialLinks = getActiveSocialLinks();
     const settings = getSettings();
     const tagGlideTitle = settings.tagGlideTitle;
+    const tagGlideTitleIcon = settings.tagGlideTitleIcon;
 
     return (
       <div className="TagGlide-wrapper">
         {tagGlideTitle && (
-          <div className="tag-glide-title">{tagGlideTitle}</div>
+          <div className="tag-glide-title">
+            {tagGlideTitleIcon && (
+              <img 
+                src={tagGlideTitleIcon} 
+                alt="" 
+                className="tag-glide-title-icon"
+              />
+            )}
+            <span className="tag-glide-title-text">{tagGlideTitle}</span>
+          </div>
         )}
         <div id="tag-glide-container" className="tag-glide-container TagGlide-container">
           <div className="glide tag-glide">
