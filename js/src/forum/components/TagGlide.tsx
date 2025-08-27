@@ -149,12 +149,8 @@ export default class TagGlide extends Component {
         <a href={tagData.url} className="tag-slide-link">
           <div className="tag-slide-content">
             {hasBackgroundImage ? (
-              // Background image mode: minimal content, image is the focus
-              <div className="tag-header">
-                {!tagData.hideName && (
-                  <h3 className="tag-title">{tagData.name}</h3>
-                )}
-              </div>
+              // Background image mode: pure image, no content overlay
+              null
             ) : (
               // Normal mode: full content display
               <>

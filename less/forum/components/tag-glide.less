@@ -53,31 +53,15 @@
     }
   }
 
-  // Background image support
+  // Background image support - pure image mode
   &.has-background-image {
-    color: var(--contrast-color, #ffffff);
-
     .tag-slide-link {
-      color: inherit;
+      color: transparent; // Hide any potential text
     }
 
     .tag-slide-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    // Enhanced title styling for background images
-    .tag-title {
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-      font-weight: 700;
-      font-size: 20px;
-      margin: 0;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 8px;
-      backdrop-filter: blur(2px);
+      // Empty content area - image is the only visual element
+      min-height: 100%;
     }
   }
 }
