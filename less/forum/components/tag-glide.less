@@ -24,12 +24,10 @@
 // =============================================================================
 
 .tag-glide {
-  width: 100%;
-  overflow: visible; // Allow 3D effects to show
-  position: relative;
 
   // Default Glide.js arrows with minimal overrides
   .glide__arrow {
+
     // Hide on mobile to avoid clutter
     @media (max-width: 767px) {
       display: none;
@@ -244,8 +242,6 @@
 
 @media @phone {
   .tag-glide {
-    // Allow overflow for better mobile interaction
-    overflow: visible !important;
 
     // Mobile-specific slide dimensions with CSS custom properties
     .glide__slide {
@@ -272,19 +268,8 @@
       font-size: 16px;
     }
 
-    .tag-description {
-      -webkit-line-clamp: 2;
-    }
   }
 
-  // Fallback for aspect-ratio on mobile
-  @supports not (aspect-ratio: 9 / 10) {
-    .tag-glide .glide__slide {
-      height: calc((100vw - 60px) * 1.1111) !important;
-      max-height: 311px !important;
-      /* 280 * 1.1111 */
-    }
-  }
 }
 
 @media (min-width: 768px) {
