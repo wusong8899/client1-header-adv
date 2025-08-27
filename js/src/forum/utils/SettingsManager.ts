@@ -58,7 +58,8 @@ function loadSettings(): ExtensionSettings {
             url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
             link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
           },
-          tagGlideTitle: parsed.tagGlideTitle || ''
+          tagGlideTitle: parsed.tagGlideTitle || '',
+          tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
         };
       }
     }
@@ -88,7 +89,9 @@ function loadLegacySettings(): ExtensionSettings {
     headerIcon: {
       url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
       link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
-    }
+    },
+    tagGlideTitle: '',
+    tagGlideTitleIcon: ''
   };
 
   // Load up to 30 slides from legacy format
@@ -137,7 +140,8 @@ function getEmptySettings(): ExtensionSettings {
       url: '',
       link: ''
     },
-    tagGlideTitle: ''
+    tagGlideTitle: '',
+    tagGlideTitleIcon: ''
   };
 }
 
