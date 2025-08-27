@@ -1,7 +1,8 @@
 // =============================================================================
-// GLIDE.JS OVERRIDES
+// GLIDE.JS CUSTOM OVERRIDES
 // =============================================================================
 // Custom overrides for Glide.js to match our design system
+// These styles build upon the official Glide core and theme styles
 
 :root {
   --glide-theme-color: #007aff;
@@ -9,45 +10,74 @@
   --glide-bullet-size: 8px;
 }
 
+// =============================================================================
+// SLIDESHOW SPECIFIC OVERRIDES
+// =============================================================================
+
 .client1-header-adv-wrapper {
   .glide {
     margin-left: auto;
     margin-right: auto;
-    position: relative;
     z-index: 1;
   }
 
   .glide__track {
     width: 100%;
-    position: relative;
   }
 
-  .glide__slides {
-    position: relative;
-    list-style: none;
-    transform-style: preserve-3d;
-    white-space: nowrap;
-    display: flex;
-    flex-wrap: nowrap;
-  }
-
-  .glide__slide {
-    flex-shrink: 0;
-    white-space: normal;
-  }
-}
-
-// Global Glide modifications for better touch support
-.glide {
-
-  // Enhanced touch support
+  // Enhanced touch support for better mobile experience
   .glide__slides {
     touch-action: pan-x pinch-zoom;
   }
 
-  // Better performance
+  // Performance optimization
   .glide__slide {
     will-change: transform;
     contain: layout;
+  }
+}
+
+// =============================================================================
+// TAG CAROUSEL SPECIFIC OVERRIDES  
+// =============================================================================
+
+.tag-glide-container {
+  .glide {
+    position: relative;
+  }
+
+  // Enhanced mobile touch handling for tag carousel
+  .glide__slides {
+    touch-action: pan-x pinch-zoom;
+  }
+
+  // Better performance for tag slides
+  .glide__slide {
+    will-change: transform;
+    contain: layout style;
+  }
+}
+
+// =============================================================================
+// GLOBAL ACCESSIBILITY IMPROVEMENTS
+// =============================================================================
+
+.glide {
+  // Better keyboard navigation
+  &:focus-within {
+    outline: 2px solid var(--glide-theme-color);
+    outline-offset: 2px;
+  }
+
+  // Enhanced focus states for arrows
+  .glide__arrow:focus {
+    outline: 2px solid var(--glide-theme-color);
+    outline-offset: 2px;
+  }
+
+  // Enhanced focus states for bullets
+  .glide__bullet:focus {
+    outline: 2px solid var(--glide-theme-color);
+    outline-offset: 2px;
   }
 }
