@@ -50,10 +50,10 @@ export default class TagGlide extends Component {
 
     return (
       <div className="TagGlide-wrapper">
+        {tagGlideTitle && (
+          <div className="tag-glide-title">{tagGlideTitle}</div>
+        )}
         <div id="tag-glide-container" className="tag-glide-container TagGlide-container">
-          {tagGlideTitle && (
-            <div className="tag-glide-title">{tagGlideTitle}</div>
-          )}
           <div className="glide tag-glide">
             <div className="glide__track" data-glide-el="track">
               <ul className="glide__slides">
