@@ -81,15 +81,7 @@ export class GlideShow {
       glideSlides.appendChild(slideElement);
     });
 
-    const prevButton = document.createElement('div');
-    prevButton.className = 'glide__arrow glide__arrow--left';
-    prevButton.setAttribute('data-glide-dir', '<');
-    prevButton.innerHTML = '‹';
-
-    const nextButton = document.createElement('div');
-    nextButton.className = 'glide__arrow glide__arrow--right';
-    nextButton.setAttribute('data-glide-dir', '>');
-    nextButton.innerHTML = '›';
+    // Arrows will be created automatically by Glide.js with default configuration
 
     const bullets = document.createElement('div');
     bullets.className = 'glide__bullets';
@@ -104,8 +96,6 @@ export class GlideShow {
 
     glideTrack.appendChild(glideSlides);
     glideContainer.appendChild(glideTrack);
-    glideContainer.appendChild(prevButton);
-    glideContainer.appendChild(nextButton);
     glideContainer.appendChild(bullets);
 
     container.appendChild(glideContainer);

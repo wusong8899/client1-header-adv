@@ -58,54 +58,14 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  // Arrow controls
+  // Default Glide.js arrows - minimal overrides only
   .glide__arrow {
-    position: absolute;
-    display: block;
-    top: 50%;
-    z-index: 10;
-    color: var(--glide-theme-color);
-    text-transform: none;
-    font-weight: 400;
-    font-family: inherit;
-    line-height: 1;
-    cursor: pointer;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    width: var(--glide-arrow-size);
-    height: var(--glide-arrow-size);
-    .flex-center();
-    font-size: 18px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: all 0.2s ease;
+    // Keep only essential overrides, let Glide handle defaults
     
-    &:hover {
-      background: rgba(255, 255, 255, 1);
-      transform: translateY(-50%) scale(1.1);
-    }
-
-    &:focus {
-      outline: 2px solid var(--glide-theme-color);
-      outline-offset: 2px;
-    }
-
     &[disabled] {
       opacity: 0.33;
       cursor: not-allowed;
     }
-  }
-
-  .glide__arrow--left {
-    left: 20px;
-    transform: translateY(-50%);
-  }
-
-  .glide__arrow--right {
-    right: 20px;
-    transform: translateY(-50%);
   }
 
   // Bullet controls
@@ -148,21 +108,9 @@
     }
   }
 
-  // Container-specific overrides
-  .glideAdContainer .glide__arrow--left,
-  .glideAdContainer .glide__arrow--right,
-  .glideTagContainer .glide__arrow--left,
-  .glideTagContainer .glide__arrow--right {
-    z-index: 11;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    pointer-events: auto;
-
+  // Container-specific overrides - minimal styling
+  .glideAdContainer .glide__arrow,
+  .glideTagContainer .glide__arrow {
     @media @phone {
       display: none !important;
     }
@@ -189,10 +137,6 @@
 
   // Responsive behavior
   @media @phone {
-    .glide__arrow {
-      display: none;
-    }
-
     .glide__bullets {
       bottom: -25px;
     }
@@ -229,14 +173,7 @@
 // Dark theme support
 .App--dark {
   .client1-header-adv-wrapper {
-    .glide__arrow {
-      background: rgba(41, 50, 73, 0.9);
-      color: @text-primary;
-      
-      &:hover {
-        background: rgba(41, 50, 73, 1);
-      }
-    }
+    // Use default arrow styling in dark theme
     
     .glide__bullet {
       background-color: rgba(255, 255, 255, 0.3);

@@ -25,60 +25,21 @@
 // =============================================================================
 
 // =============================================================================
-// NAVIGATION BUTTON POSITIONING - EXTERNAL PLACEMENT
+// DEFAULT ARROW CONFIGURATION
 // =============================================================================
-// Position arrows outside the slideshow container for better UX
-// Requires parent container to have overflow: visible
+// Using Glide.js default arrows with minimal overrides
 
 .client1-header-adv-wrapper {
-  .glide__arrow--left {
-    left: -50px !important; // Position outside left edge
-    background: url(@nav-prev-icon);
-    width: 16px !important;
-    height: 16px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important; // Center vertically only
-    background-size: 100% 100%;
-    border: none;
-    padding: 0;
-    margin: 0;
-
-    &:after {
-      display: none; // Hide default Glide arrow
-    }
-  }
-
-  .glide__arrow--right {
-    right: -50px !important; // Position outside right edge
-    background: url(@nav-next-icon);
-    width: 16px !important;
-    height: 16px !important;
-    top: 50% !important;
-    transform: translateY(-50%) rotateY(180deg) !important; // Center vertically + flip
-    background-size: 100% 100%;
-    border: none;
-    padding: 0;
-    margin: 0;
-
-    &:after {
-      display: none; // Hide default Glide arrow
-    }
-  }
-
-  // =============================================================================
-  // CONTAINER OVERFLOW CONFIGURATION
-  // =============================================================================
-  // Ensure arrows are visible when positioned outside container
-
+  // Default arrows - no custom positioning or styling needed
+  
+  // Ensure proper visibility for default arrows
   .glideAdContainer .glide,
   .glideTagContainer .glide {
-    overflow: visible !important; // Allow arrows to show outside bounds
-
-    // Add padding to prevent content clipping
-    margin: 0 60px; // Provide space for external arrows
-
+    // Allow default arrow positioning within container
+    overflow: hidden; // Standard overflow behavior
+    
     @media @phone {
-      margin: 0 20px; // Reduced margin for mobile
+      margin: 0; // No special margin needed for default arrows
     }
   }
 
@@ -211,11 +172,7 @@
   // =============================================================================
 
   @media @phone {
-    .glide__arrow--left,
-    .glide__arrow--right {
-      display: none; // Hide arrows on mobile
-    }
-
+    // Arrow hiding is handled in other files - keep pagination responsive
     .glide__bullets {
       bottom: 5px; // Closer to content on mobile
       
