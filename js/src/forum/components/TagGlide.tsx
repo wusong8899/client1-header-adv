@@ -16,6 +16,8 @@ interface TagSlideData {
   icon?: string;
   color?: string;
   url: string;
+  backgroundUrl?: string;
+  hideName?: boolean;
   lastPostedDiscussion?: {
     title: string;
     url: string;
@@ -103,6 +105,8 @@ export default class TagGlide extends Component {
       icon: tag.icon?.() || undefined,
       color: tag.color?.() || undefined,
       url: app.route.tag(tag),
+      backgroundUrl: tag.attribute?.('wusong8899BackgroundURL') || undefined,
+      hideName: tag.attribute?.('wusong8899BackgroundHideName') || false,
       lastPostedDiscussion: lastPostedDiscussion ? {
         title: lastPostedDiscussion.title?.() || '',
         url: app.route.discussion(
@@ -117,16 +121,30 @@ export default class TagGlide extends Component {
   private renderSlide(tag: any): Mithril.Children {
     const tagData = this.extractTagData(tag);
     
+    // Determine background style
+    const hasBackgroundImage = tagData.backgroundUrl;
+    const slideStyle: Record<string, string> = {};
+    
+    if (hasBackgroundImage) {
+      slideStyle.background = `url(${tagData.backgroundUrl})`;
+      slideStyle.backgroundSize = 'cover';
+      slideStyle.backgroundPosition = 'center';
+      slideStyle.backgroundRepeat = 'no-repeat';
+      // Use white contrast color for better readability on images
+      slideStyle['--contrast-color'] = '#ffffff';
+    } else {
+      slideStyle['--tag-bg'] = tagData.color || 'var(--body-bg)';
+      slideStyle['--contrast-color'] = tagData.color ? 'var(--body-bg)' : 'var(--body-color)';
+    }
+    
     return (
       <li 
         key={tagData.id}
         className={classList('glide__slide', 'tag-slide', {
-          'colored': tagData.color
+          'colored': tagData.color && !hasBackgroundImage,
+          'has-background-image': hasBackgroundImage
         })}
-        style={{ 
-          '--tag-bg': tagData.color || 'var(--body-bg)',
-          '--contrast-color': tagData.color ? 'var(--body-bg)' : 'var(--body-color)'
-        }}
+        style={slideStyle}
       >
         <a href={tagData.url} className="tag-slide-link">
           <div className="tag-slide-content">
@@ -136,15 +154,17 @@ export default class TagGlide extends Component {
                   {tagIcon(tag, {}, { useColor: false })}
                 </div>
               )}
-              <h3 className="tag-title">{tagData.name}</h3>
+              {!tagData.hideName && (
+                <h3 className="tag-title">{tagData.name}</h3>
+              )}
             </div>
             
-            {tagData.description && (
+            {tagData.description && !tagData.hideName && (
               <p className="tag-description">{tagData.description}</p>
             )}
             
             <div className="tag-spacer"></div>
-            {tagData.lastPostedDiscussion && (
+            {tagData.lastPostedDiscussion && !tagData.hideName && (
               <div className="tag-last-post">
                 <div className="last-post-title">
                   {tagData.lastPostedDiscussion.title}
