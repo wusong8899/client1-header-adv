@@ -60,59 +60,35 @@ app.initializers.add(EXTENSION_ID, () => {
         }
     });
 
-    // Extend TagsPage view to add social media buttons
-    extend(TagsPage.prototype, 'view', function (vnode) {
-        const result = vnode;
-
+    // Add social media buttons to TagsPage view using pure Mithril components
+    override(TagsPage.prototype, 'view', function (original) {
         try {
-            // Only add social buttons on tags page
+            const result = original();
+            
+            // Only add social buttons on tags page and if we have active social links
             if (isTagsPage()) {
-                // Add social media buttons to the page content
-                setTimeout(() => {
-                    this.addSocialMediaButtons();
-                }, 200);
+                const socialLinks = getActiveSocialLinks();
+                
+                if (socialLinks && socialLinks.length > 0) {
+                    // Add social media buttons after the main content using pure Mithril
+                    const socialComponent = m(SocialMediaButtons, { socialLinks });
+                    
+                    if (Array.isArray(result)) {
+                        return [...result, m('div', { className: 'social-media-wrapper' }, socialComponent)];
+                    } else {
+                        return [result, m('div', { className: 'social-media-wrapper' }, socialComponent)];
+                    }
+                }
             }
+            
+            return result;
         } catch (error) {
             console.error('SocialMediaButtons integration error:', error);
+            // Always fall back to original on error
+            return original();
         }
-
-        return result;
     });
 
-    // Add method to TagsPage for social media buttons
-    TagsPage.prototype.addSocialMediaButtons = function () {
-        try {
-            // Get active social links
-            const socialLinks = getActiveSocialLinks();
-            
-            if (!socialLinks || socialLinks.length === 0) {
-                return; // No social links to display
-            }
-
-            // Find the container where we want to add social buttons
-            const container = document.querySelector('.TagTiles') ||
-                document.querySelector('.tag-glide-container') ||
-                document.querySelector('.container');
-
-            if (!container || document.querySelector('.social-buttons-container')) {
-                return; // Container not found or buttons already exist
-            }
-
-            // Create a wrapper div for social buttons
-            const socialWrapper = document.createElement('div');
-            socialWrapper.className = 'social-media-wrapper';
-
-            // Insert after the main content
-            if (container.parentNode) {
-                container.parentNode.insertBefore(socialWrapper, container.nextSibling);
-
-                // Render social media buttons using Mithril with social links as props
-                m.render(socialWrapper, m(SocialMediaButtons, { socialLinks }));
-            }
-        } catch (error) {
-            console.error('SocialMediaButtons addSocialMediaButtons error:', error);
-        }
-    };
 
     // Add mobile navigation components (register button for logged out users + brand logo)
     extend(Navigation.prototype, 'view', function (vnode) {
