@@ -1,5 +1,5 @@
 import { getActiveSlides, getTransitionTime } from './utils/SettingsManager';
-import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper, validateAndPrepareSlides, cloneSlides } from './utils/SwiperConfig';
+import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper } from './utils/SwiperConfig';
 import type { SlideData } from '../common/types';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -47,11 +47,6 @@ export class SlideShow {
           existingSlideshow.remove();
         }
       }
-      
-      const clonedSlides = document.querySelectorAll('.swiper-slide-clone-manual');
-      clonedSlides.forEach(slide => {
-        slide.remove();
-      });
     } catch (error) {
       console.error('Error cleaning up existing wrappers:', error);
     }
@@ -164,17 +159,6 @@ export class SlideShow {
 
     const transitionTime = getTransitionTime();
     const config = getSlideShowConfig(slideCount, transitionTime);
-    
-    const slides = wrapper.querySelectorAll('.swiper-slide:not(.swiper-slide-clone-manual)');
-    const isMobile = window.innerWidth < 768;
-    const requiredSlides = isMobile ? 2 : 4;
-    const validation = validateAndPrepareSlides(slides, requiredSlides);
-    
-    if (validation.needsCloning && slideCount > 1) {
-      cloneSlides(wrapper, slides, requiredSlides);
-      config.loop = true;
-      config.loopAddBlankSlides = true;
-    }
 
     try {
       this.swiper = await initializeSwiper(container, {
@@ -184,14 +168,6 @@ export class SlideShow {
           init: () => {
             this.isInitialized = true;
             console.log(`SlideShow Swiper initialized (${slideCount} slides, loop: ${config.loop})`);
-            
-            if (validation.needsCloning) {
-              setTimeout(() => {
-                if (this.swiper && this.swiper.update) {
-                  this.swiper.update();
-                }
-              }, 100);
-            }
           },
           destroy: () => {
             this.isInitialized = false;

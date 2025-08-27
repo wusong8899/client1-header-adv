@@ -187,46 +187,6 @@ function getSpaSettings(): Partial<SwiperOptions> {
     watchSlidesProgress: true,
   };
 }
-export function validateAndPrepareSlides(
-  slides: NodeListOf<Element> | Element[], 
-  requiredSlides: number
-): { shouldUseLoop: boolean; needsCloning: boolean } {
-  const slideCount = slides.length;
-  const shouldUseLoop = slideCount >= requiredSlides;
-  const needsCloning = !shouldUseLoop && slideCount > 1;
-  
-  return {
-    shouldUseLoop,
-    needsCloning
-  };
-}
-
-export function cloneSlides(
-  wrapper: HTMLElement, 
-  slides: NodeListOf<Element> | Element[], 
-  requiredSlides: number
-): void {
-  const slideArray = Array.from(slides);
-  const originalCount = slideArray.length;
-  
-  if (originalCount === 0) return;
-  
-  let clonesNeeded = Math.max(requiredSlides - originalCount, originalCount);
-  let cloneIndex = 0;
-  
-  for (let i = 0; i < clonesNeeded; i++) {
-    const originalSlide = slideArray[cloneIndex % originalCount];
-    const clone = originalSlide.cloneNode(true) as HTMLElement;
-    
-    clone.classList.add('swiper-slide-clone-manual');
-    clone.setAttribute('data-cloned-from', cloneIndex.toString());
-    
-    wrapper.appendChild(clone);
-    cloneIndex++;
-  }
-  
-  console.log(`Cloned ${clonesNeeded} slides for loop compatibility (${originalCount} -> ${originalCount + clonesNeeded})`);
-}
 
 export function getEventCallbacks(componentName: string) {
   return {
