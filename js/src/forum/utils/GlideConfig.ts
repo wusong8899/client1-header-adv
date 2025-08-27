@@ -14,7 +14,6 @@ export interface GlideOptions {
   rewindDuration?: number;
   animationDuration?: number;
   breakpoints?: Record<string, Partial<GlideOptions>>;
-  classes?: Record<string, string>;
 }
 
 export function getSlideShowGlideConfig(slideCount: number, transitionTime: number): GlideOptions {
@@ -42,13 +41,6 @@ export function getSlideShowGlideConfig(slideCount: number, transitionTime: numb
       640: { perView: 2, gap: 20 },
       480: { perView: 2, gap: 15 },
       320: { perView: 2, gap: 10 }
-    },
-
-    classes: {
-      direction: {
-        ltr: 'glide--ltr',
-        rtl: 'glide--rtl'
-      }
     }
   };
 }
