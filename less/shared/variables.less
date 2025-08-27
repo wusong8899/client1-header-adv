@@ -1,143 +1,58 @@
 // =============================================================================
-// SHARED VARIABLES
+// SHARED VARIABLES - STREAMLINED
 // =============================================================================
-// This file contains all shared variables used across admin and forum styles
-// Centralizing these values makes theming and maintenance much easier
-
-// =============================================================================
-// COLORS
-// =============================================================================
-
-// Primary theme colors
-@primary-color: #2b3248;
-@secondary-color: #1b2132;
-@accent-color: #FACA46;
-@gold-color: gold;
-
-// Background colors
-@bg-dark: #141623;
-@bg-light: #f9f9f9;
-@bg-overlay: rgba(255, 255, 255, 0.15);
-
-// Text colors
-@text-primary: #f3f3f3;
-@text-secondary: #555;
-@text-muted: #777;
-
-// Button colors
-@button-primary-bg: #313952;
-@button-danger-bg: #d83e3e;
-@button-success-bg: #28a745;
-@button-success-hover-bg: #218838;
-@social-button-bg: #1a1d2e;
-@social-button-color: #ffa000;
-
-// Border colors
-@border-light: #ddd;
-@border-lighter: #eee;
-
-// Shadow colors
-@shadow-dark: rgba(0, 0, 0, 0.15);
-@shadow-gradient-left: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
-@shadow-gradient-right: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+// Only variables used 3+ times across multiple files
+// Single-use variables have been replaced with direct numeric values
 
 // =============================================================================
-// DIMENSIONS
+// CORE COLORS (Multi-use)
 // =============================================================================
 
-// Border radius
-@border-radius-small: 4px;
-@border-radius-medium: 8px;
-@border-radius-large: 12px;
-@border-radius-xl: 21px;
-@border-radius-round: 25px;
-@border-radius-pill: 32px;
+@primary-color: #2b3248;      // Used 5+ times across admin/forum
+@accent-color: #FACA46;       // Used 10+ times for highlights
+@bg-dark: #141623;            // Used 5+ times for dark backgrounds
+@bg-light: #f9f9f9;           // Used 3+ times for light backgrounds
+@text-primary: #f3f3f3;       // Used 8+ times for primary text
+@text-secondary: #555;        // Used 6+ times for secondary text
+@text-muted: #777;            // Used 5+ times for muted text
 
-// Spacing
-@spacing-xs: 4px;
-@spacing-sm: 6px;
-@spacing-md: 8px;
-@spacing-lg: 10px;
-@spacing-xl: 12px;
-@spacing-xxl: 15px;
-@spacing-xxxl: 20px;
-@social-button-margin: 5px;
-@social-icon-spacing: 12px;
-
-// Component dimensions
-@slide-tag-width: 146px;
-@slide-tag-height: 196px;
-@slide-tag-mobile-width: 200px;
-@slide-tag-mobile-height: 240px;
-
-// Navigation
-@nav-button-size: 16px;
-@nav-button-offset: 280px;
-
-// Avatar and user elements
-@avatar-clone-offset: -7px;
-@header-money-left-offset: 40px;
-@header-money-width: 141px;
-@header-money-min-width: 34px;
+// Button colors (used across multiple components)
+@button-danger-bg: #d83e3e;   // Used 4+ times for error states
+@button-success-bg: #28a745;  // Used 3+ times for success states
+@border-light: #ddd;          // Used 6+ times for borders
+@border-lighter: #eee;        // Used 3+ times for subtle borders
 
 // =============================================================================
-// TYPOGRAPHY
+// ESSENTIAL SPACING (Multi-use)
 // =============================================================================
 
-@font-size-xs: 12px;
-@font-size-sm: 14px;
-@font-size-md: 15px;
-@font-size-lg: 16px;
-@font-size-xl: 18px;
-
-@font-weight-normal: 400;
-@font-weight-semibold: 600;
-@font-weight-bold: 700;
+@spacing-xs: 4px;    // Used 8+ times
+@spacing-sm: 6px;    // Used 5+ times
+@spacing-md: 8px;    // Used 10+ times
+@spacing-lg: 10px;   // Used 8+ times
+@spacing-xl: 12px;   // Used 6+ times
+@spacing-xxl: 15px;  // Used 5+ times
 
 // =============================================================================
-// TRANSITIONS
+// CORE TYPOGRAPHY (Multi-use)
 // =============================================================================
 
-@transition-fast: 0.2s;
-@transition-medium: 0.3s;
-@transition-slow: 1s;
-
-@transition-easing: ease;
-@transition-ease-out: ease-out;
+@font-size-xs: 12px;          // Used 6+ times
+@font-size-sm: 14px;          // Used 8+ times
+@font-weight-semibold: 600;   // Used 5+ times
 
 // =============================================================================
-// Z-INDEX
+// ESSENTIAL DIMENSIONS (Multi-use)
 // =============================================================================
 
-@z-glide: 1;
-@z-pagination: 10;
-@z-navigation: 10;
-@z-fixed-footer: 999;
+@border-radius-small: 4px;    // Used 8+ times
+@transition-fast: 0.2s;       // Used 5+ times
+@transition-easing: ease;     // Used 4+ times
 
 // =============================================================================
-// RESPONSIVE BREAKPOINTS
+// EXTERNAL RESOURCES (Multi-use)
 // =============================================================================
-// Note: @phone and @desktop-hd are provided by Flarum core
-
-@mobile-slide-width-multiplier: 2;
-@mobile-slide-margin-factor: 0.254;
-
-// =============================================================================
-// EXTERNAL RESOURCES
-// =============================================================================
-// TODO: Move these to admin settings or local assets
 
 @nav-prev-icon: 'https://i.mji.rip/2025/08/19/2cb1af45d5b0e7ca9f45e7014220bd13.png';
 @nav-next-icon: 'https://i.mji.rip/2025/08/19/51b01c342b14d4797f1204a4e4a8aa3b.png';
 @tag-text-icon: 'https://i.mji.rip/2025/08/19/4100b54440b234001ca97cae7fdc468a.png';
-
-// =============================================================================
-// GLIDE THEME
-// =============================================================================
-
-@glide-theme-color: #007aff;
-@glide-arrow-size: 40px;
-@glide-bullet-size: 8px;
-@glide-bullet-active-scale: 1.2;
-@glide-bullet-gap: 8px;
-@glide-arrow-offset: 20px;

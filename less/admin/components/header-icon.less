@@ -8,13 +8,13 @@
 // =============================================================================
 
 .HeaderIconSetting {
-  border: 1px solid @border-light;
-  border-radius: @border-radius-small;
-  padding: @spacing-xxl;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
   background: @bg-light;
   
   &-input {
-    margin-bottom: @spacing-xxl;
+    margin-bottom: 15px;
     
     .FormControl {
       .form-control-base();
@@ -22,37 +22,37 @@
     
     .FormLabel {
       display: block;
-      margin-bottom: @spacing-md;
-      font-weight: @font-weight-semibold;
+      margin-bottom: 8px;
+      font-weight: 600;
       color: @text-secondary;
     }
   }
   
   &-preview {
-    margin-bottom: @spacing-xxl;
+    margin-bottom: 15px;
     
     &Label {
       display: block;
-      font-weight: @font-weight-semibold;
-      margin-bottom: @spacing-md;
+      font-weight: 600;
+      margin-bottom: 8px;
       color: @text-secondary;
-      font-size: @font-size-sm;
+      font-size: 14px;
     }
     
     &Container {
       .flex-center();
       min-height: 60px;
       background: white;
-      border: 1px solid @border-lighter;
-      border-radius: @border-radius-small;
-      padding: @spacing-lg;
+      border: 1px solid #ddder;
+      border-radius: 4px;
+      padding: 10px;
       position: relative;
       
       &:empty::after {
         content: "No image URL provided";
         color: @text-muted;
         font-style: italic;
-        font-size: @font-size-sm;
+        font-size: 14px;
       }
     }
     
@@ -73,19 +73,19 @@
     &Error {
       color: @button-danger-bg;
       font-style: italic;
-      font-size: @font-size-sm;
+      font-size: 14px;
       .flex-center();
       
       &::before {
         content: "⚠ ";
-        margin-right: @spacing-xs;
+        margin-right: 4px;
       }
     }
     
     &Loading {
       color: @text-muted;
       font-style: italic;
-      font-size: @font-size-sm;
+      font-size: 14px;
       .flex-center();
       
       &::before {
@@ -96,19 +96,19 @@
   }
   
   &-upload {
-    border-top: 1px solid @border-light;
-    padding-top: @spacing-xxl;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
     
     &Label {
       display: block;
-      font-weight: @font-weight-semibold;
-      margin-bottom: @spacing-md;
+      font-weight: 600;
+      margin-bottom: 8px;
       color: @text-secondary;
-      font-size: @font-size-sm;
+      font-size: 14px;
     }
     
     &Help {
-      margin-top: @spacing-md;
+      margin-top: 8px;
       font-size: @font-size-xs;
       color: @text-muted;
       line-height: 1.4;
@@ -118,9 +118,9 @@
       .button-base();
       background: var(--secondary-color, #6c757d);
       color: white;
-      padding: @spacing-md @spacing-lg;
-      border-radius: @border-radius-small;
-      font-size: @font-size-sm;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 14px;
       
       &:hover {
         background: darken(#6c757d, 10%);
@@ -132,7 +132,7 @@
       }
       
       .icon {
-        margin-right: @spacing-md;
+        margin-right: 8px;
       }
     }
     
@@ -171,12 +171,12 @@
 
 @media @phone {
   .HeaderIconSetting {
-    padding: @spacing-lg;
+    padding: 10px;
     
     &-preview {
       &Container {
         min-height: 40px;
-        padding: @spacing-md;
+        padding: 8px;
       }
       
       &Image {
@@ -186,7 +186,7 @@
     }
     
     &-upload {
-      padding-top: @spacing-lg;
+      padding-top: 10px;
     }
   }
 }

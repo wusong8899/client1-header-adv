@@ -36,11 +36,11 @@
 @keyframes shockwave {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 2px fade(@accent-color, 65%), inset 0 0 2px fade(@accent-color, 65%);
+    box-shadow: 0 0 2px rgba(250, 202, 70, 0.65), inset 0 0 2px rgba(250, 202, 70, 0.65);
   }
   
   95% {
-    box-shadow: 0 0 16px fade(@accent-color, 15%), inset 0 0 16px fade(@accent-color, 15%);
+    box-shadow: 0 0 16px rgba(250, 202, 70, 0.15), inset 0 0 16px rgba(250, 202, 70, 0.15);
   }
   
   100% {
@@ -103,8 +103,8 @@
 // =============================================================================
 
 .shockwave-animation(@duration: 1s, @delay: 0s) {
-  animation: shockwaveJump @duration @delay @transition-ease-out infinite;
-  -webkit-animation: shockwaveJump @duration @delay @transition-ease-out infinite;
+  animation: shockwaveJump @duration @delay ease-out infinite;
+  -webkit-animation: shockwaveJump @duration @delay ease-out infinite;
 }
 
 .shockwave-pseudo-element(@delay: 0.5s) {
@@ -114,7 +114,7 @@
   left: 0;
   bottom: 0;
   right: 0;
-  border-radius: @border-radius-large;
-  animation: shockwave @transition-slow @delay @transition-ease-out infinite;
-  -webkit-animation: shockwave @transition-slow @delay @transition-ease-out infinite;
+  border-radius: 12px;
+  animation: shockwave 1s @delay ease-out infinite;
+  -webkit-animation: shockwave 1s @delay ease-out infinite;
 }

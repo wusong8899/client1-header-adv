@@ -4,9 +4,9 @@
 // Custom overrides for Glide.js to match our design system
 
 :root {
-  --glide-theme-color: @glide-theme-color;
-  --glide-arrow-size: @glide-arrow-size;
-  --glide-bullet-size: @glide-bullet-size;
+  --glide-theme-color: #007aff;
+  --glide-arrow-size: 40px;
+  --glide-bullet-size: 8px;
 }
 
 .client1-header-adv-wrapper {
@@ -63,7 +63,7 @@
     position: absolute;
     display: block;
     top: 50%;
-    z-index: @z-navigation;
+    z-index: 10;
     color: var(--glide-theme-color);
     text-transform: none;
     font-weight: 400;
@@ -80,7 +80,7 @@
     .flex-center();
     font-size: 18px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    .transition(all, @transition-fast, @transition-easing);
+    transition: all 0.2s ease;
     
     &:hover {
       background: rgba(255, 255, 255, 1);
@@ -99,25 +99,25 @@
   }
 
   .glide__arrow--left {
-    left: @glide-arrow-offset;
+    left: 20px;
     transform: translateY(-50%);
   }
 
   .glide__arrow--right {
-    right: @glide-arrow-offset;
+    right: 20px;
     transform: translateY(-50%);
   }
 
   // Bullet controls
   .glide__bullets {
     position: absolute;
-    z-index: @z-pagination;
+    z-index: 10;
     bottom: -30px;
     left: 50%;
     display: flex;
     list-style: none;
     transform: translateX(-50%);
-    gap: @glide-bullet-gap;
+    gap: 8px;
     margin: 0;
     padding: 0;
   }
@@ -131,7 +131,7 @@
     cursor: pointer;
     line-height: 0;
     box-shadow: 0 0.25em 0.5em 0 rgba(0, 0, 0, 0.1);
-    .transition(all, @transition-fast, @transition-easing);
+    transition: all 0.2s ease;
 
     &:focus {
       outline: 2px solid var(--glide-theme-color);
@@ -144,7 +144,7 @@
 
     &--active {
       background-color: var(--glide-theme-color);
-      transform: scale(@glide-bullet-active-scale);
+      transform: scale(1.2);
     }
   }
 
@@ -153,9 +153,9 @@
   .glideAdContainer .glide__arrow--right,
   .glideTagContainer .glide__arrow--left,
   .glideTagContainer .glide__arrow--right {
-    z-index: @z-navigation + 1;
+    z-index: 11;
     opacity: 0.8;
-    .transition(opacity, @transition-fast, @transition-easing);
+    transition: opacity 0.2s ease;
 
     &:hover {
       opacity: 1;
