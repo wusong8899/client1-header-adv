@@ -10,6 +10,7 @@
 .TagGlide-container {
   margin-bottom: 20px;
   border-radius: 8px;
+  touch-action: auto;
 
   // Match original TagTiles positioning
   .TagsPage-content & {
@@ -22,21 +23,6 @@
 // =============================================================================
 
 .tag-glide {
-
-  // Default Glide.js arrows with minimal overrides
-  .glide__arrow {
-
-    // Hide on mobile to avoid clutter
-    @media (max-width: 767px) {
-      display: none;
-    }
-  }
-
-
-  // Glide track and slides
-  .glide__track {
-    overflow: hidden;
-  }
 
   .glide__slides {
     display: flex;
@@ -202,32 +188,5 @@
       width: 250px;
       aspect-ratio: 4 / 5; // Taller aspect ratio for desktop
     }
-  }
-}
-
-
-// =============================================================================
-// LOADING STATE
-// =============================================================================
-
-.TagGlide-container.loading {
-  .tag-glide {
-    opacity: 0.6;
-    pointer-events: none;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #2b3248;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    transform: translate(-50%, -50%);
-    z-index: 10;
   }
 }
