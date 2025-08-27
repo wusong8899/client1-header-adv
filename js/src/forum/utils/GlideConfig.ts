@@ -160,8 +160,15 @@ class CarouselManager {
   unregister(instanceId: string): void {
     const instance = this.instances.get(instanceId);
     if (instance) {
-      instance.glide.destroy();
-      this.instances.delete(instanceId);
+      try {
+        if (instance.glide && typeof instance.glide.destroy === 'function') {
+          instance.glide.destroy();
+        }
+      } catch (error) {
+        console.error('Error destroying Glide instance during unregister:', error);
+      } finally {
+        this.instances.delete(instanceId);
+      }
     }
   }
 

@@ -30,6 +30,7 @@ export default class TagGlide extends Component {
   private tags: any[] = [];
   private isInitialized: boolean = false;
   private instanceId: string;
+  private isDestroying: boolean = false;
 
   oninit(vnode: Mithril.Vnode) {
     super.oninit(vnode);
@@ -92,12 +93,17 @@ export default class TagGlide extends Component {
 
   onbeforeremove(vnode: Mithril.VnodeDOM) {
     super.onbeforeremove(vnode);
+    // Set flag to prevent double cleanup
+    this.isDestroying = true;
     this.destroyGlide();
   }
   
   onremove(vnode: Mithril.VnodeDOM) {
     super.onremove(vnode);
-    this.destroyGlide();
+    // Only destroy if not already destroyed
+    if (!this.isDestroying) {
+      this.destroyGlide();
+    }
   }
 
   private extractTagData(tag: any): TagSlideData {
@@ -239,9 +245,26 @@ export default class TagGlide extends Component {
   }
 
   private destroyGlide(): void {
-    if (this.glideInstance) {
-      destroyGlide(this.glideInstance, '.glide.tag-glide');
+    // Prevent multiple simultaneous destroy operations
+    if (!this.glideInstance || this.isDestroying) {
+      return;
+    }
+    
+    this.isDestroying = true;
+    
+    try {
+      // Safely destroy Glide instance
+      if (this.glideInstance && typeof this.glideInstance.destroy === 'function') {
+        destroyGlide(this.glideInstance, '.glide.tag-glide');
+      }
+      
+      // Unregister from carousel manager
       carouselManager.unregister(this.instanceId);
+      
+    } catch (error) {
+      console.error('Error destroying TagGlide:', error);
+    } finally {
+      // Clean up instance references
       this.glideInstance = null;
       this.isInitialized = false;
     }

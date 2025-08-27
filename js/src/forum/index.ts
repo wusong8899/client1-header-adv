@@ -51,6 +51,18 @@ app.initializers.add(EXTENSION_ID, () => {
         }
     });
 
+    // Extend onremove to properly clean up when leaving the page
+    extend(TagsPage.prototype, 'onremove', function () {
+        try {
+            if (glideShow) {
+                glideShow.destroy();
+                glideShow = null;
+            }
+        } catch (error) {
+            console.error('SlideShow cleanup error:', error);
+        }
+    });
+
     // Override TagsPage tagTileListView to use our TagGlide component
     override(TagsPage.prototype, 'tagTileListView', function (original, pinned) {
         try {
