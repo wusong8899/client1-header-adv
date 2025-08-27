@@ -37,10 +37,10 @@ export function getSlideShowGlideConfig(slideCount: number, transitionTime: numb
     breakpoints: {
       1440: { perView: 2, gap: 25 },
       1024: { perView: 2, gap: 20 },
-      768: { perView: 2, gap: 15 },
-      640: { perView: 2, gap: 20 },
-      480: { perView: 2, gap: 15 },
-      320: { perView: 2, gap: 10 }
+      768: { perView: 1, gap: 15 },
+      640: { perView: 1, gap: 20 },
+      480: { perView: 1, gap: 15 },
+      320: { perView: 1, gap: 10 }
     }
   };
 }
@@ -97,7 +97,7 @@ export function destroyGlide(glide: GlideInstance | null, containerSelector?: st
   if (glide && typeof glide.destroy === 'function') {
     try {
       glide.destroy();
-      
+
       if (containerSelector) {
         const container = document.querySelector(containerSelector) as any;
         if (container) {
@@ -117,7 +117,7 @@ export async function initializeGlide(
 ): Promise<GlideInstance | null> {
   try {
     const { default: Glide } = await import('@glidejs/glide');
-    
+
     if (!Glide) {
       throw new Error(`${componentName}: Glide class not found`);
     }
@@ -134,7 +134,7 @@ export async function initializeGlide(
 
     const instance = glide.mount() as GlideInstance;
     (container as any).glideInstance = instance;
-    
+
     return instance;
   } catch (error) {
     console.error(`Failed to initialize ${componentName}:`, error);
