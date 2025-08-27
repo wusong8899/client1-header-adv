@@ -26,28 +26,16 @@ interface TagSlideData {
   };
 }
 
-/**
- * TagSwiper - A Mithril component that renders tag tiles as a Swiper carousel
- * 
- * This component replaces the original TagTiles with a modern carousel interface
- * while preserving all original functionality and data.
- */
 export default class TagSwiper extends Component {
   private swiper: Swiper | null = null;
   private tags: any[] = [];
   private isInitialized: boolean = false;
 
-  /**
-   * Initialize component
-   */
   oninit(vnode: Mithril.Vnode) {
     super.oninit(vnode);
     this.tags = vnode.attrs.tags || [];
   }
 
-  /**
-   * Render the component with integrated social buttons
-   */
   view(vnode: Mithril.Vnode): Mithril.Children {
     const tags = vnode.attrs.tags || [];
     
@@ -55,7 +43,6 @@ export default class TagSwiper extends Component {
       return null;
     }
 
-    // Get social links for integration
     const socialLinks = getActiveSocialLinks();
 
     return (
@@ -66,16 +53,13 @@ export default class TagSwiper extends Component {
               {tags.map((tag: any) => this.renderSlide(tag))}
             </div>
             
-            {/* Navigation */}
             <div className="swiper-button-prev"></div>
             <div className="swiper-button-next"></div>
             
-            {/* Pagination */}
             <div className="swiper-pagination"></div>
           </div>
         </div>
         
-        {/* Integrated social media buttons */}
         {socialLinks.length > 0 && (
           <SocialMediaButtons socialLinks={socialLinks} />
         )}
@@ -83,21 +67,14 @@ export default class TagSwiper extends Component {
     );
   }
 
-  /**
-   * Initialize Swiper after DOM creation with delay to ensure DOM is ready
-   */
   oncreate(vnode: Mithril.VnodeDOM) {
     super.oncreate(vnode);
     
-    // Use requestAnimationFrame to ensure DOM is fully ready
     requestAnimationFrame(() => {
       this.initSwiper();
     });
   }
 
-  /**
-   * Update Swiper when tags change
-   */
   onupdate(vnode: Mithril.VnodeDOM) {
     super.onupdate(vnode);
     
@@ -110,25 +87,16 @@ export default class TagSwiper extends Component {
     }
   }
 
-  /**
-   * Clean up Swiper instance before removal
-   */
   onbeforeremove(vnode: Mithril.VnodeDOM) {
     super.onbeforeremove(vnode);
     this.destroySwiper();
   }
   
-  /**
-   * Final cleanup on removal
-   */
   onremove(vnode: Mithril.VnodeDOM) {
     super.onremove(vnode);
     this.destroySwiper();
   }
 
-  /**
-   * Extract tag data for slide rendering
-   */
   private extractTagData(tag: any): TagSlideData {
     const lastPostedDiscussion = tag.lastPostedDiscussion?.();
     
@@ -150,9 +118,6 @@ export default class TagSwiper extends Component {
     };
   }
 
-  /**
-   * Render individual slide
-   */
   private renderSlide(tag: any): Mithril.Children {
     const tagData = this.extractTagData(tag);
     
@@ -169,7 +134,6 @@ export default class TagSwiper extends Component {
       >
         <a href={tagData.url} className="tag-slide-link">
           <div className="tag-slide-content">
-            {/* Header section with icon and title */}
             <div className="tag-header">
               {tagData.icon && (
                 <div className="tag-icon">
@@ -179,15 +143,11 @@ export default class TagSwiper extends Component {
               <h3 className="tag-title">{tagData.name}</h3>
             </div>
             
-            {/* Description */}
             {tagData.description && (
               <p className="tag-description">{tagData.description}</p>
             )}
             
-            {/* Spacer to push last post info to bottom */}
             <div className="tag-spacer"></div>
-            
-            {/* Last posted discussion */}
             {tagData.lastPostedDiscussion && (
               <div className="tag-last-post">
                 <div className="last-post-title">
@@ -204,16 +164,12 @@ export default class TagSwiper extends Component {
     );
   }
 
-  /**
-   * Initialize Swiper using shared configuration
-   */
   private async initSwiper(): Promise<void> {
     if (this.isInitialized) {
       console.log('TagSwiper: Already initialized, skipping');
       return;
     }
 
-    // Find container using shared utility
     const container = findContainer([
       '.swiper.tag-swiper',
       '#tag-slider-container .swiper',
@@ -248,19 +204,12 @@ export default class TagSwiper extends Component {
   }
 
 
-  /**
-   * Safely destroy Swiper instance using shared utility
-   */
   private destroySwiper(): void {
     destroySwiper(this.swiper, '.swiper.tag-swiper');
     this.swiper = null;
     this.isInitialized = false;
   }
 
-
-  /**
-   * Check if Swiper needs to be updated
-   */
   private shouldUpdateSwiper(oldTags: any[], newTags: any[]): boolean {
     if (!oldTags || !newTags) return true;
     if (oldTags.length !== newTags.length) return true;

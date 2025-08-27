@@ -4,14 +4,8 @@ import type Mithril from 'mithril';
 import { defaultConfig } from '../../common/config';
 import { getHeaderIcon } from '../utils/SettingsManager';
 
-/**
- * MobileBrandLogo component for mobile navigation bar
- * Shows brand logo for all users on mobile devices
- * Supports clickable links when configured
- */
 export default class MobileBrandLogo extends Component<ComponentAttrs> {
   view(): Mithril.Children {
-    // Get header icon configuration from settings
     const headerIcon = getHeaderIcon();
     const logoUrl = headerIcon.url || 
                     app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || 
