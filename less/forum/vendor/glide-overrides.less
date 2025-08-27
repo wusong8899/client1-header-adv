@@ -35,26 +35,10 @@
     flex-shrink: 0;
     white-space: normal;
   }
-
-
-  // Container-specific overrides - minimal styling
-  .glideAdContainer .glide__arrow,
-  .glideTagContainer .glide__arrow {
-    @media @phone {
-      display: none !important;
-    }
-  }
 }
 
 // Global Glide modifications for better touch support
 .glide {
-  .glide__track[data-glide-el="track"] {
-    cursor: grab;
-
-    &:active {
-      cursor: grabbing;
-    }
-  }
 
   // Enhanced touch support
   .glide__slides {
