@@ -135,7 +135,8 @@ function getEmptySettings(): ExtensionSettings {
     headerIcon: {
       url: '',
       link: ''
-    }
+    },
+    tagGlideTitle: ''
   };
 }
 

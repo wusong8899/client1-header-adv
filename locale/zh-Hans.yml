@@ -17,6 +17,12 @@ wusong8899-client1:
     # 核心设置
     TransitionTime: 广告轮换时间
     
+    # Tag轮播标题设置
+    TagGlideTitle: Tag轮播标题设置
+    TagGlideTitleLabel: 标题文字
+    TagGlideTitlePlaceholder: 例如：热门话题
+    TagGlideTitleHelp: 在Tag轮播区域左上角显示的标题文字（留空则不显示）
+    
     # Logo设置
     HeaderIconTitle: Logo设置
     HeaderIconUrl: Logo图片地址

@@ -3,7 +3,7 @@ import Component from 'flarum/common/Component';
 import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
-import { getActiveSocialLinks } from '../utils/SettingsManager';
+import { getActiveSocialLinks, getSettings } from '../utils/SettingsManager';
 import { getTagGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from '../utils/GlideConfig';
 import SocialMediaButtons from './SocialMediaButtons';
 import type Mithril from 'mithril';
@@ -45,10 +45,15 @@ export default class TagGlide extends Component {
     }
 
     const socialLinks = getActiveSocialLinks();
+    const settings = getSettings();
+    const tagGlideTitle = settings.tagGlideTitle;
 
     return (
       <div className="TagGlide-wrapper">
         <div id="tag-glide-container" className="tag-glide-container TagGlide-container">
+          {tagGlideTitle && (
+            <div className="tag-glide-title">{tagGlideTitle}</div>
+          )}
           <div className="glide tag-glide">
             <div className="glide__track" data-glide-el="track">
               <ul className="glide__slides">

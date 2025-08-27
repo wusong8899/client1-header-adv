@@ -45,7 +45,8 @@ class UnifiedAdminComponent extends ExtensionPage {
         headerIcon: parsed.headerIcon || {
           url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
           link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
-        }
+        },
+        tagGlideTitle: parsed.tagGlideTitle || ''
       };
     } catch (error) {
       console.error('Failed to parse settings JSON:', error);
@@ -56,7 +57,8 @@ class UnifiedAdminComponent extends ExtensionPage {
         headerIcon: {
           url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
           link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
-        }
+        },
+        tagGlideTitle: ''
       };
     }
   }
@@ -249,6 +251,28 @@ class UnifiedAdminComponent extends ExtensionPage {
               this.updateSettings(newSettings);
             }}
           />
+        </div>
+
+        <div className="Form-group">
+          <h3>{app.translator.trans('wusong8899-client1.admin.TagGlideTitle')}</h3>
+          
+          <label className="FormLabel">
+            {app.translator.trans('wusong8899-client1.admin.TagGlideTitleLabel')}
+          </label>
+          <input
+            className="FormControl"
+            type="text"
+            value={settings.tagGlideTitle || ''}
+            placeholder={app.translator.trans('wusong8899-client1.admin.TagGlideTitlePlaceholder')}
+            oninput={(e: Event) => {
+              const newSettings = this.getSettings();
+              newSettings.tagGlideTitle = (e.target as HTMLInputElement).value;
+              this.updateSettings(newSettings);
+            }}
+          />
+          <div className="helpText">
+            {app.translator.trans('wusong8899-client1.admin.TagGlideTitleHelp')}
+          </div>
         </div>
 
         <div className="Form-group">

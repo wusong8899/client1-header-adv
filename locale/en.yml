@@ -17,6 +17,12 @@ wusong8899-client1:
     # Core settings
     TransitionTime: Speed of transitions between slides
     
+    # Tag Glide Title Settings
+    TagGlideTitle: Tag Glide Title Settings
+    TagGlideTitleLabel: Title Text
+    TagGlideTitlePlaceholder: e.g. Hot Topics
+    TagGlideTitleHelp: Title text to display in the top-left corner of the tag carousel area (leave empty to hide)
+    
     # Logo settings
     HeaderIconTitle: Logo Settings
     HeaderIconUrl: Logo Image URL
