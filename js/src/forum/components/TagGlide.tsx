@@ -148,31 +148,43 @@ export default class TagGlide extends Component {
       >
         <a href={tagData.url} className="tag-slide-link">
           <div className="tag-slide-content">
-            <div className="tag-header">
-              {tagData.icon && (
-                <div className="tag-icon">
-                  {tagIcon(tag, {}, { useColor: false })}
-                </div>
-              )}
-              {!tagData.hideName && (
-                <h3 className="tag-title">{tagData.name}</h3>
-              )}
-            </div>
-            
-            {tagData.description && !tagData.hideName && (
-              <p className="tag-description">{tagData.description}</p>
-            )}
-            
-            <div className="tag-spacer"></div>
-            {tagData.lastPostedDiscussion && !tagData.hideName && (
-              <div className="tag-last-post">
-                <div className="last-post-title">
-                  {tagData.lastPostedDiscussion.title}
-                </div>
-                <time>
-                  {humanTime(tagData.lastPostedDiscussion.postedAt)}
-                </time>
+            {hasBackgroundImage ? (
+              // Background image mode: minimal content, image is the focus
+              <div className="tag-header">
+                {!tagData.hideName && (
+                  <h3 className="tag-title">{tagData.name}</h3>
+                )}
               </div>
+            ) : (
+              // Normal mode: full content display
+              <>
+                <div className="tag-header">
+                  {tagData.icon && (
+                    <div className="tag-icon">
+                      {tagIcon(tag, {}, { useColor: false })}
+                    </div>
+                  )}
+                  {!tagData.hideName && (
+                    <h3 className="tag-title">{tagData.name}</h3>
+                  )}
+                </div>
+                
+                {tagData.description && !tagData.hideName && (
+                  <p className="tag-description">{tagData.description}</p>
+                )}
+                
+                <div className="tag-spacer"></div>
+                {tagData.lastPostedDiscussion && !tagData.hideName && (
+                  <div className="tag-last-post">
+                    <div className="last-post-title">
+                      {tagData.lastPostedDiscussion.title}
+                    </div>
+                    <time>
+                      {humanTime(tagData.lastPostedDiscussion.postedAt)}
+                    </time>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </a>

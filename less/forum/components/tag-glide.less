@@ -61,28 +61,23 @@
       color: inherit;
     }
 
-    // Add subtle text shadow for better readability on images
-    .tag-title,
-    .tag-description,
-    .tag-last-post {
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    .tag-slide-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
-    // Enhance contrast for better readability on images
-    .tag-last-post {
+    // Enhanced title styling for background images
+    .tag-title {
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      font-weight: 700;
+      font-size: 20px;
+      margin: 0;
+      padding: 20px;
       background: rgba(0, 0, 0, 0.3);
-      border-radius: 4px;
-      padding: 8px;
-      margin-top: 8px;
-
-      time {
-        color: rgba(255, 255, 255, 0.9);
-      }
-    }
-
-    // Icon styling for background images
-    .tag-icon .icon {
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+      border-radius: 8px;
+      backdrop-filter: blur(2px);
     }
   }
 }
