@@ -1,13 +1,13 @@
 // =============================================================================
-// TAG SWIPER COMPONENT
+// TAG GLIDE COMPONENT
 // =============================================================================
-// Styles for the TagSwiper carousel component
+// Styles for the TagGlide carousel component using Glide.js
 
 // =============================================================================
 // CONTAINER
 // =============================================================================
 
-.TagSwiper-container {
+.TagGlide-container {
   margin-bottom: 20px;
   border-radius: 8px;
 
@@ -20,33 +20,40 @@
 }
 
 // =============================================================================
-// SWIPER CORE
+// GLIDE CORE
 // =============================================================================
 
-.tag-swiper {
+.tag-glide {
   width: 100%;
   overflow: visible; // Allow 3D effects to show
+  position: relative;
 
   // Custom navigation positioning
-  .swiper-button-prev,
-  .swiper-button-next {
+  .glide__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     color: #2b3248;
     background: rgba(255, 255, 255, 0.9);
+    border: none;
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    margin-top: -20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
-
-    &:after {
-      font-size: 16px;
-      font-weight: bold;
-    }
-
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 10;
+    
     &:hover {
       background: rgba(255, 255, 255, 1);
-      transform: scale(1.1);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:focus {
+      outline: 2px solid #2b3248;
+      outline-offset: 2px;
     }
 
     // Hide on mobile to avoid clutter
@@ -55,29 +62,58 @@
     }
   }
 
-  .swiper-button-prev {
+  .glide__arrow--left {
     left: -20px;
   }
 
-  .swiper-button-next {
+  .glide__arrow--right {
     right: -20px;
   }
 
   // Custom pagination
-  .swiper-pagination {
+  .glide__bullets {
+    position: absolute;
     bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
 
-    .swiper-pagination-bullet {
+    .glide__bullet {
+      width: 8px;
+      height: 8px;
+      border: none;
+      border-radius: 50%;
       background: #777;
       opacity: 0.5;
       transition: all 0.2s ease;
+      cursor: pointer;
 
-      &.swiper-pagination-bullet-active {
+      &:focus {
+        outline: 2px solid #2b3248;
+        outline-offset: 2px;
+      }
+
+      &--active {
         background: #2b3248;
         opacity: 1;
         transform: scale(1.2);
       }
     }
+  }
+
+  // Glide track and slides
+  .glide__track {
+    overflow: hidden;
+  }
+
+  .glide__slides {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
   }
 }
 
@@ -85,7 +121,7 @@
 // SLIDE STYLES
 // =============================================================================
 
-.tag-slide {
+.glide__slide.tag-slide {
   background: var(--tag-bg, #f9f9f9);
   border-radius: 8px;
   overflow: hidden;
@@ -142,6 +178,11 @@
   &:hover {
     text-decoration: none;
     color: inherit;
+  }
+
+  &:focus {
+    outline: 2px solid #2b3248;
+    outline-offset: 2px;
   }
 }
 
@@ -236,23 +277,20 @@
 // =============================================================================
 
 @media @phone {
-  .tag-swiper {
+  .tag-glide {
     // Allow overflow for better mobile interaction
     overflow: visible !important;
     
     // Mobile-specific slide dimensions with CSS custom properties
-    .swiper-slide {
+    .glide__slide {
       // Dynamic width based on viewport
       width: calc(100vw - 60px) !important;
       max-width: 280px !important;
       min-width: 200px !important;
-      // Use flex-basis for Swiper compatibility
-      flex-basis: calc(100vw - 60px) !important;
+      // Use flex-basis for Glide compatibility
+      flex: 0 0 calc(100vw - 60px) !important;
       // Consistent aspect ratio for card display
       aspect-ratio: 9/10;
-      // Ensure proper sizing
-      flex-shrink: 0;
-      flex-grow: 0;
     }
     
     .tag-slide {
@@ -275,7 +313,7 @@
   
   // Fallback for aspect-ratio on mobile
   @supports not (aspect-ratio: 9 / 10) {
-    .tag-swiper .swiper-slide {
+    .tag-glide .glide__slide {
       height: calc((100vw - 60px) * 1.1111) !important;
       max-height: 311px !important; /* 280 * 1.1111 */
     }
@@ -283,18 +321,9 @@
 }
 
 @media (min-width: 768px) {
-  .tag-swiper {
-    // Better spacing on larger screens
-    .swiper-slide {
-      margin-right: 20px;
-
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-    
+  .tag-glide {    
     // Larger slides on desktop with proper aspect ratio
-    .tag-slide {
+    .glide__slide.tag-slide {
       width: 250px;
       max-width: none;
       aspect-ratio: 4 / 5; // Taller aspect ratio for desktop
@@ -325,41 +354,11 @@
 }
 
 // =============================================================================
-// ACCESSIBILITY
-// =============================================================================
-
-// Focus states for better keyboard navigation
-.tag-slide-link {
-  &:focus {
-    outline: 2px solid #2b3248;
-    outline-offset: 2px;
-  }
-}
-
-.tag-swiper {
-
-  .swiper-button-prev,
-  .swiper-button-next {
-    &:focus {
-      outline: 2px solid #2b3248;
-      outline-offset: 2px;
-    }
-  }
-
-  .swiper-pagination-bullet {
-    &:focus {
-      outline: 2px solid #2b3248;
-      outline-offset: 2px;
-    }
-  }
-}
-
-// =============================================================================
 // LOADING STATE
 // =============================================================================
 
-.TagSwiper-container.loading {
-  .tag-swiper {
+.TagGlide-container.loading {
+  .tag-glide {
     opacity: 0.6;
     pointer-events: none;
   }
@@ -384,4 +383,30 @@
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
+}
+
+// =============================================================================
+// GLIDE OVERRIDES FOR CUSTOM STYLING
+// =============================================================================
+
+// Override default Glide styles to match our design
+.glide {
+  .glide__track {
+    cursor: grab;
+    
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .glide__slide {
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// Enhanced gap support using CSS transforms
+.tag-glide .glide__slides {
+  gap: var(--tag-slide-spacing, 20px);
 }

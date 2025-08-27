@@ -11,7 +11,7 @@
     "header"
   ],
   "dependencies": {
-    "swiper": "^11.2.10"
+    "@glidejs/glide": "^3.6.2"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",

@@ -1,18 +1,20 @@
 import { getActiveSlides, getTransitionTime } from './utils/SettingsManager';
-import { getSlideShowConfig, findContainer, initializeSwiper, destroySwiper } from './utils/SwiperConfig';
+import { getSlideShowGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from './utils/GlideConfig';
 import type { SlideData } from '../common/types';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-coverflow';
+import type { GlideInstance } from '../common/types';
 
-export class SlideShow {
-  private swiper: any = null;
+export class GlideShow {
+  private glideInstance: GlideInstance | null = null;
   private isInitialized: boolean = false;
+  private instanceId: string;
+
+  constructor() {
+    this.instanceId = `slideshow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
 
   async init(): Promise<void> {
     try {
-      if (this.isInitialized && this.swiper && document.getElementById('client1-header-slideshow')) {
+      if (this.isInitialized && this.glideInstance && document.getElementById('client1-header-slideshow')) {
         return;
       }
 
@@ -23,17 +25,16 @@ export class SlideShow {
       }
 
       this.cleanupExistingWrappers();
-
       this.createDOM(activeSlides);
-      await this.initSwiper(activeSlides.length);
+      await this.initGlide(activeSlides.length);
     } catch (error) {
-      console.error('SlideShow initialization failed:', error);
+      console.error('GlideShow initialization failed:', error);
     }
   }
 
   private cleanupExistingWrappers(): void {
     try {
-      const existingWrappers = document.querySelectorAll('.client1-header-adv-wrapper.swiperAdContainer');
+      const existingWrappers = document.querySelectorAll('.client1-header-adv-wrapper.glideAdContainer');
       existingWrappers.forEach(wrapper => {
         wrapper.remove();
       });
@@ -59,38 +60,55 @@ export class SlideShow {
     }
 
     const wrapper = document.createElement('div');
-    wrapper.className = 'client1-header-adv-wrapper swiperAdContainer';
+    wrapper.className = 'client1-header-adv-wrapper glideAdContainer';
 
     const container = document.createElement('div');
     container.id = 'client1-header-slideshow';
     container.className = 'client1-slideshow-container';
 
-    const swiperContainer = document.createElement('div');
-    swiperContainer.className = 'swiper';
+    const glideContainer = document.createElement('div');
+    glideContainer.className = 'glide';
 
-    const swiperWrapper = document.createElement('div');
-    swiperWrapper.className = 'swiper-wrapper';
+    const glideTrack = document.createElement('div');
+    glideTrack.className = 'glide__track';
+    glideTrack.setAttribute('data-glide-el', 'track');
+
+    const glideSlides = document.createElement('ul');
+    glideSlides.className = 'glide__slides';
 
     slides.forEach((slide) => {
       const slideElement = this.createSlideElement(slide);
-      swiperWrapper.appendChild(slideElement);
+      glideSlides.appendChild(slideElement);
     });
 
     const prevButton = document.createElement('div');
-    prevButton.className = 'swiper-button-prev';
+    prevButton.className = 'glide__arrow glide__arrow--left';
+    prevButton.setAttribute('data-glide-dir', '<');
+    prevButton.innerHTML = '‹';
 
     const nextButton = document.createElement('div');
-    nextButton.className = 'swiper-button-next';
+    nextButton.className = 'glide__arrow glide__arrow--right';
+    nextButton.setAttribute('data-glide-dir', '>');
+    nextButton.innerHTML = '›';
 
-    const pagination = document.createElement('div');
-    pagination.className = 'swiper-pagination';
+    const bullets = document.createElement('div');
+    bullets.className = 'glide__bullets';
+    bullets.setAttribute('data-glide-el', 'controls[nav]');
 
-    swiperContainer.appendChild(swiperWrapper);
-    swiperContainer.appendChild(prevButton);
-    swiperContainer.appendChild(nextButton);
-    swiperContainer.appendChild(pagination);
+    for (let i = 0; i < slides.length; i++) {
+      const bullet = document.createElement('button');
+      bullet.className = 'glide__bullet';
+      bullet.setAttribute('data-glide-dir', `=${i}`);
+      bullets.appendChild(bullet);
+    }
 
-    container.appendChild(swiperContainer);
+    glideTrack.appendChild(glideSlides);
+    glideContainer.appendChild(glideTrack);
+    glideContainer.appendChild(prevButton);
+    glideContainer.appendChild(nextButton);
+    glideContainer.appendChild(bullets);
+
+    container.appendChild(glideContainer);
     wrapper.appendChild(container);
 
     const insertionPoint = this.findBestInsertionPoint();
@@ -100,9 +118,9 @@ export class SlideShow {
   }
 
   private createSlideElement(slide: SlideData): HTMLElement {
-    const slideDiv = document.createElement('div');
-    slideDiv.className = 'swiper-slide';
-    slideDiv.setAttribute('data-slide-id', slide.id);
+    const slideItem = document.createElement('li');
+    slideItem.className = 'glide__slide';
+    slideItem.setAttribute('data-slide-id', slide.id);
 
     const slideContent = document.createElement('div');
     slideContent.className = 'slide-content';
@@ -112,8 +130,6 @@ export class SlideShow {
       img.src = slide.image;
       img.alt = `Slide ${slide.order}`;
       img.loading = 'lazy';
-      
-      img.classList.add('swiper-lazy');
       
       img.addEventListener('load', function() {
         this.classList.add('loaded');
@@ -129,70 +145,71 @@ export class SlideShow {
       } else {
         slideContent.appendChild(img);
       }
-      
-      const placeholder = document.createElement('div');
-      placeholder.className = 'swiper-lazy-preloader';
-      slideContent.appendChild(placeholder);
     }
 
-    slideDiv.appendChild(slideContent);
-    return slideDiv;
+    slideItem.appendChild(slideContent);
+    return slideItem;
   }
 
-  private async initSwiper(slideCount: number): Promise<void> {
+  private async initGlide(slideCount: number): Promise<void> {
     const container = findContainer([
-      '#client1-header-slideshow .swiper',
-      '.client1-slideshow-container .swiper',
-      '.header-slideshow .swiper'
+      '#client1-header-slideshow .glide',
+      '.client1-slideshow-container .glide',
+      '.header-slideshow .glide'
     ]);
 
     if (!container) {
-      console.error('SlideShow: Swiper container not found');
+      console.error('GlideShow: Glide container not found');
       return;
     }
 
-    const wrapper = container.querySelector('.swiper-wrapper') as HTMLElement;
-    if (!wrapper) {
-      console.error('SlideShow: Swiper wrapper not found');
+    const track = container.querySelector('.glide__track') as HTMLElement;
+    if (!track) {
+      console.error('GlideShow: Glide track not found');
       return;
     }
 
     const transitionTime = getTransitionTime();
-    const config = getSlideShowConfig(slideCount, transitionTime);
+    const config = getSlideShowGlideConfig(slideCount, transitionTime);
 
     try {
-      this.swiper = await initializeSwiper(container, {
-        ...config,
-        on: {
-          ...config.on,
-          init: () => {
-            this.isInitialized = true;
-            console.log(`SlideShow Swiper initialized (${slideCount} slides, loop: ${config.loop})`);
-          },
-          destroy: () => {
-            this.isInitialized = false;
-            console.log('SlideShow Swiper destroyed');
-          },
-          lazyImageLoad: (swiper: any, slideEl: HTMLElement, imageEl: HTMLImageElement) => {
-            imageEl.classList.add('loaded');
-          }
-        }
-      }, 'SlideShow');
+      this.glideInstance = await initializeGlide(container, config, 'GlideShow');
+      
+      if (this.glideInstance) {
+        carouselManager.register(this.instanceId, this.glideInstance, config);
+
+        this.glideInstance.on('mount.after', () => {
+          this.isInitialized = true;
+          console.log(`GlideShow initialized (${slideCount} slides, type: ${config.type})`);
+        });
+
+        this.glideInstance.on('destroy', () => {
+          this.isInitialized = false;
+          carouselManager.unregister(this.instanceId);
+          console.log('GlideShow destroyed');
+        });
+
+        this.glideInstance.on('move.start', () => {
+          carouselManager.pauseOthers(this.instanceId);
+        });
+      }
     } catch (error) {
-      console.error('Failed to initialize SlideShow:', error);
+      console.error('Failed to initialize GlideShow:', error);
     }
   }
 
   destroy(): void {
-    this.destroySwiper();
-    
+    this.destroyGlide();
     this.cleanupExistingWrappers();
   }
 
-  private destroySwiper(): void {
-    destroySwiper(this.swiper, '#client1-header-slideshow .swiper');
-    this.swiper = null;
-    this.isInitialized = false;
+  private destroyGlide(): void {
+    if (this.glideInstance) {
+      destroyGlide(this.glideInstance, '#client1-header-slideshow .glide');
+      carouselManager.unregister(this.instanceId);
+      this.glideInstance = null;
+      this.isInitialized = false;
+    }
   }
 
   private findBestInsertionPoint(): {
@@ -202,9 +219,9 @@ export class SlideShow {
   } {
     const strategies = [
       {
-        selector: '#tag-slider-container, .tag-slider-container',
+        selector: '#tag-glide-container, .tag-glide-container',
         method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target),
-        location: 'before TagSwiper container'
+        location: 'before TagGlide container'
       },
       {
         selector: '.TagTiles',

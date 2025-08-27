@@ -3,8 +3,8 @@ import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
 import Navigation from 'flarum/forum/components/Navigation';
 import { hasContent, reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
-import { SlideShow } from './SlideShow';
-import TagSwiper from './components/TagSwiper';
+import { GlideShow } from './GlideShow';
+import TagGlide from './components/TagGlide';
 import SocialMediaButtons from './components/SocialMediaButtons';
 import MobileRegisterButton from './components/MobileRegisterButton';
 import MobileBrandLogo from './components/MobileBrandLogo';
@@ -15,7 +15,7 @@ import m from 'mithril';
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
 
 // Global managers
-let slideShow: SlideShow | null = null;
+let glideShow: GlideShow | null = null;
 
 /**
  * Main extension initializer
@@ -33,15 +33,15 @@ app.initializers.add(EXTENSION_ID, () => {
             // Initialize slideshow when TagsPage component is created
             if (isTagsPage()) {
                 // Initialize slideshow only when needed and if content exists
-                if (!slideShow && hasContent()) {
-                    slideShow = new SlideShow();
+                if (!glideShow && hasContent()) {
+                    glideShow = new GlideShow();
                 }
                 
-                // Initialize slideshow after DOM is fully ready
-                if (slideShow) {
+                // Initialize glide show after DOM is fully ready
+                if (glideShow) {
                     requestAnimationFrame(() => {
                         setTimeout(() => {
-                            slideShow.init();
+                            glideShow.init();
                         }, 150);
                     });
                 }
@@ -51,18 +51,18 @@ app.initializers.add(EXTENSION_ID, () => {
         }
     });
 
-    // Override TagsPage tagTileListView to use our TagSwiper component
+    // Override TagsPage tagTileListView to use our TagGlide component
     override(TagsPage.prototype, 'tagTileListView', function (original, pinned) {
         try {
-            // Use TagSwiper if we have pinned tags and conditions are met
-            if (shouldUseTagSwiper(pinned)) {
-                return m(TagSwiper, { tags: pinned });
+            // Use TagGlide if we have pinned tags and conditions are met
+            if (shouldUseTagGlide(pinned)) {
+                return m(TagGlide, { tags: pinned });
             }
 
             // Fall back to original rendering
             return original(pinned);
         } catch (error) {
-            console.error('TagSwiper override error:', error);
+            console.error('TagGlide override error:', error);
             // Always fall back to original on error
             return original(pinned);
         }
@@ -99,7 +99,7 @@ app.initializers.add(EXTENSION_ID, () => {
 
             // Find the container where we want to add social buttons
             const container = document.querySelector('.TagTiles') ||
-                document.querySelector('.tag-slider-container') ||
+                document.querySelector('.tag-glide-container') ||
                 document.querySelector('.container');
 
             if (!container || document.querySelector('.social-buttons-container')) {
@@ -176,10 +176,10 @@ app.initializers.add(EXTENSION_ID, () => {
 });
 
 /**
- * Determine whether to use TagSwiper for the given tags
+ * Determine whether to use TagGlide for the given tags
  */
-function shouldUseTagSwiper(tags: any[]): boolean {
-    // Only use TagSwiper if:
+function shouldUseTagGlide(tags: any[]): boolean {
+    // Only use TagGlide if:
     // 1. We have tags to display
     // 2. Not too many tags (performance consideration)
     // 3. Not on mobile (optional - can be adjusted)
@@ -193,7 +193,7 @@ function shouldUseTagSwiper(tags: any[]): boolean {
         return false;
     }
 
-    // Always use TagSwiper for now (can add more conditions later)
+    // Always use TagGlide for now (can add more conditions later)
     return true;
 }
 
@@ -221,12 +221,12 @@ function isMobileDevice(): boolean {
  */
 function cleanupExtension(): void {
     try {
-        if (slideShow) {
-            slideShow.destroy();
+        if (glideShow) {
+            glideShow.destroy();
         }
         // Clear settings cache for fresh data on next page
         reloadSettings();
-        // TagSwiper components are automatically cleaned up by Mithril lifecycle
+        // TagGlide components are automatically cleaned up by Mithril lifecycle
     } catch (error) {
         console.error('Extension cleanup error:', error);
     }

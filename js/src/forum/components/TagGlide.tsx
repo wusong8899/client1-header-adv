@@ -4,13 +4,10 @@ import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
 import { getActiveSocialLinks } from '../utils/SettingsManager';
-import { getTagSwiperConfig, findContainer, initializeSwiper, destroySwiper } from '../utils/SwiperConfig';
+import { getTagGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from '../utils/GlideConfig';
 import SocialMediaButtons from './SocialMediaButtons';
 import type Mithril from 'mithril';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-coverflow';
+import type { GlideInstance } from '../../common/types';
 
 interface TagSlideData {
   id: string;
@@ -26,14 +23,16 @@ interface TagSlideData {
   };
 }
 
-export default class TagSwiper extends Component {
-  private swiper: Swiper | null = null;
+export default class TagGlide extends Component {
+  private glideInstance: GlideInstance | null = null;
   private tags: any[] = [];
   private isInitialized: boolean = false;
+  private instanceId: string;
 
   oninit(vnode: Mithril.Vnode) {
     super.oninit(vnode);
     this.tags = vnode.attrs.tags || [];
+    this.instanceId = `tag-glide-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
   view(vnode: Mithril.Vnode): Mithril.Children {
@@ -46,17 +45,29 @@ export default class TagSwiper extends Component {
     const socialLinks = getActiveSocialLinks();
 
     return (
-      <div className="TagSwiper-wrapper">
-        <div id="tag-slider-container" className="tag-slider-container TagSwiper-container">
-          <div className="swiper tag-swiper">
-            <div className="swiper-wrapper">
-              {tags.map((tag: any) => this.renderSlide(tag))}
+      <div className="TagGlide-wrapper">
+        <div id="tag-glide-container" className="tag-glide-container TagGlide-container">
+          <div className="glide tag-glide">
+            <div className="glide__track" data-glide-el="track">
+              <ul className="glide__slides">
+                {tags.map((tag: any) => this.renderSlide(tag))}
+              </ul>
             </div>
             
-            <div className="swiper-button-prev"></div>
-            <div className="swiper-button-next"></div>
+            <div className="glide__arrows" data-glide-el="controls">
+              <button className="glide__arrow glide__arrow--left" data-glide-dir="<">
+                ‹
+              </button>
+              <button className="glide__arrow glide__arrow--right" data-glide-dir=">">
+                ›
+              </button>
+            </div>
             
-            <div className="swiper-pagination"></div>
+            <div className="glide__bullets" data-glide-el="controls[nav]">
+              {tags.map((_: any, index: number) => (
+                <button className="glide__bullet" data-glide-dir={`=${index}`}></button>
+              ))}
+            </div>
           </div>
         </div>
         
@@ -71,7 +82,7 @@ export default class TagSwiper extends Component {
     super.oncreate(vnode);
     
     requestAnimationFrame(() => {
-      this.initSwiper();
+      this.initGlide();
     });
   }
 
@@ -79,22 +90,22 @@ export default class TagSwiper extends Component {
     super.onupdate(vnode);
     
     const newTags = vnode.attrs.tags || [];
-    if (this.shouldUpdateSwiper(this.tags, newTags)) {
+    if (this.shouldUpdateGlide(this.tags, newTags)) {
       this.tags = newTags;
-      if (this.swiper) {
-        this.swiper.update();
+      if (this.glideInstance) {
+        this.glideInstance.update();
       }
     }
   }
 
   onbeforeremove(vnode: Mithril.VnodeDOM) {
     super.onbeforeremove(vnode);
-    this.destroySwiper();
+    this.destroyGlide();
   }
   
   onremove(vnode: Mithril.VnodeDOM) {
     super.onremove(vnode);
-    this.destroySwiper();
+    this.destroyGlide();
   }
 
   private extractTagData(tag: any): TagSlideData {
@@ -122,9 +133,9 @@ export default class TagSwiper extends Component {
     const tagData = this.extractTagData(tag);
     
     return (
-      <div 
+      <li 
         key={tagData.id}
-        className={classList('swiper-slide', 'tag-slide', {
+        className={classList('glide__slide', 'tag-slide', {
           'colored': tagData.color
         })}
         style={{ 
@@ -160,64 +171,72 @@ export default class TagSwiper extends Component {
             )}
           </div>
         </a>
-      </div>
+      </li>
     );
   }
 
-  private async initSwiper(): Promise<void> {
+  private async initGlide(): Promise<void> {
     if (this.isInitialized) {
-      console.log('TagSwiper: Already initialized, skipping');
+      console.log('TagGlide: Already initialized, skipping');
       return;
     }
 
     const container = findContainer([
-      '.swiper.tag-swiper',
-      '#tag-slider-container .swiper',
-      '.TagSwiper-container .swiper'
+      '.glide.tag-glide',
+      '#tag-glide-container .glide',
+      '.TagGlide-container .glide'
     ]);
 
     if (!container) {
-      console.error('TagSwiper: Container not found');
+      console.error('TagGlide: Container not found');
       return;
     }
 
-    const config = getTagSwiperConfig();
+    const config = getTagGlideConfig();
     
     try {
-      this.swiper = await initializeSwiper(container, {
-        ...config,
-        on: {
-          ...config.on,
-          init: () => {
-            this.isInitialized = true;
-            console.log('TagSwiper Swiper initialized');
-          },
-          destroy: () => {
-            this.isInitialized = false;
-            console.log('TagSwiper Swiper destroyed');
-          }
-        }
-      }, 'TagSwiper');
+      this.glideInstance = await initializeGlide(container, config, 'TagGlide');
+      
+      if (this.glideInstance) {
+        carouselManager.register(this.instanceId, this.glideInstance, config);
+
+        this.glideInstance.on('mount.after', () => {
+          this.isInitialized = true;
+          console.log('TagGlide initialized');
+        });
+
+        this.glideInstance.on('destroy', () => {
+          this.isInitialized = false;
+          carouselManager.unregister(this.instanceId);
+          console.log('TagGlide destroyed');
+        });
+
+        this.glideInstance.on('move.start', () => {
+          carouselManager.pauseOthers(this.instanceId);
+        });
+      }
     } catch (error) {
-      console.error('Failed to initialize TagSwiper:', error);
+      console.error('Failed to initialize TagGlide:', error);
     }
   }
 
-
-  private destroySwiper(): void {
-    destroySwiper(this.swiper, '.swiper.tag-swiper');
-    this.swiper = null;
-    this.isInitialized = false;
+  private destroyGlide(): void {
+    if (this.glideInstance) {
+      destroyGlide(this.glideInstance, '.glide.tag-glide');
+      carouselManager.unregister(this.instanceId);
+      this.glideInstance = null;
+      this.isInitialized = false;
+    }
   }
 
-  private shouldUpdateSwiper(oldTags: any[], newTags: any[]): boolean {
+  private shouldUpdateGlide(oldTags: any[], newTags: any[]): boolean {
     if (!oldTags || !newTags) return true;
     if (oldTags.length !== newTags.length) return true;
     
     return oldTags.some((oldTag: any, index: number) => {
       const newTag = newTags[index];
       return oldTag?.id?.() !== newTag?.id?.() || 
-             oldTag?.freshness !== newTag?.freshness;
+            oldTag?.freshness !== newTag?.freshness;
     });
   }
 }

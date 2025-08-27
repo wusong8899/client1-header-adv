@@ -59,16 +59,20 @@ export interface SocialPlatform {
 }
 
 // =============================================================================
-// SWIPER TYPES
+// GLIDE TYPES
 // =============================================================================
 
 /**
- * Basic Swiper instance interface
+ * Basic Glide instance interface
  */
-export interface SwiperInstance {
-  destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void;
+export interface GlideInstance {
+  destroy: () => void;
   update: () => void;
-  slideTo: (index: number, speed?: number, runCallbacks?: boolean) => void;
+  go: (pattern: string | number) => void;
+  mount: () => GlideInstance;
+  on: (events: string | string[], handler: Function) => void;
+  play: () => void;
+  pause: () => void;
 }
 
 // =============================================================================
