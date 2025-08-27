@@ -74,8 +74,6 @@
   .glide__slides {
     display: flex;
     list-style: none;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
   }
 }
 
@@ -89,11 +87,6 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-
-  // Hardware acceleration for smooth performance
-  transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
 
   // Modern aspect-ratio with fallback
   aspect-ratio: 9 / 10;
@@ -113,22 +106,6 @@
   &:hover {
     transform: translateZ(0) translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  // Fallback for older browsers without aspect-ratio support
-  @supports not (aspect-ratio: 9 / 10) {
-    position: relative;
-    width: 200px;
-    padding-bottom: 111.11%;
-    /* 9/10 = 0.9, so 10/9 = 1.1111 */
-
-    .tag-slide-content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
   }
 }
 

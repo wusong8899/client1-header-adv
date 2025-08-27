@@ -27,7 +27,6 @@
   }
 
   .glide__track {
-    overflow: hidden;
     width: 100%;
     position: relative;
   }
@@ -35,14 +34,10 @@
   .glide__slides {
     position: relative;
     list-style: none;
-    backface-visibility: hidden;
     transform-style: preserve-3d;
-    touch-action: pan-Y;
-    overflow: hidden;
     white-space: nowrap;
     display: flex;
     flex-wrap: nowrap;
-    will-change: transform;
   }
 
   .glide__slide {
@@ -113,24 +108,6 @@
     }
   }
 
-  // Smooth hardware acceleration
-  .glide__track,
-  .glide__slides,
-  .glide__slide {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  // 3D transformations support
-  .glide--3d {
-    perspective: 1200px;
-
-    .glide__track,
-    .glide__slides,
-    .glide__slide {
-      transform-style: preserve-3d;
-    }
-  }
 
   // Responsive behavior
   @media @phone {
