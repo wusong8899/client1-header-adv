@@ -2,10 +2,9 @@ import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
 import Navigation from 'flarum/forum/components/Navigation';
-import { reloadSettings, getActiveSocialLinks } from './utils/SettingsManager';
+import { reloadSettings } from './utils/SettingsManager';
 import GlideShowComponent from './components/GlideShowComponent';
 import TagGlide from './components/TagGlide';
-import SocialMediaButtons from './components/SocialMediaButtons';
 import MobileRegisterButton from './components/MobileRegisterButton';
 import MobileBrandLogo from './components/MobileBrandLogo';
 import { errorHandler } from './utils/ErrorHandler';
@@ -60,34 +59,8 @@ app.initializers.add(EXTENSION_ID, () => {
         }
     });
 
-    // Add social media buttons to TagsPage view using pure Mithril components
-    override(TagsPage.prototype, 'view', function (original) {
-        try {
-            const result = original();
-            
-            // Only add social buttons on tags page and if we have active social links
-            if (isTagsPage()) {
-                const socialLinks = getActiveSocialLinks();
-                
-                if (socialLinks && socialLinks.length > 0) {
-                    // Add social media buttons after the main content using pure Mithril
-                    const socialComponent = m(SocialMediaButtons, { socialLinks });
-                    
-                    if (Array.isArray(result)) {
-                        return [...result, m('div', { className: 'social-media-wrapper' }, socialComponent)];
-                    } else {
-                        return [result, m('div', { className: 'social-media-wrapper' }, socialComponent)];
-                    }
-                }
-            }
-            
-            return result;
-        } catch (error) {
-            console.error('SocialMediaButtons integration error:', error);
-            // Always fall back to original on error
-            return original();
-        }
-    });
+    // Note: Social media buttons are now handled directly within TagGlide component
+    // No need for separate TagsPage view override since TagGlide includes social buttons
 
 
     // Add mobile navigation components (register button for logged out users + brand logo)
