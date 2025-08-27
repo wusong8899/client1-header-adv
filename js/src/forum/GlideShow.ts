@@ -19,7 +19,7 @@ export class GlideShow {
       }
 
       const activeSlides = getActiveSlides();
-      
+
       if (activeSlides.length === 0) {
         return;
       }
@@ -38,7 +38,7 @@ export class GlideShow {
       existingWrappers.forEach(wrapper => {
         wrapper.remove();
       });
-      
+
       const existingSlideshow = document.getElementById('client1-header-slideshow');
       if (existingSlideshow) {
         const parentWrapper = existingSlideshow.closest('.client1-header-adv-wrapper');
@@ -81,22 +81,8 @@ export class GlideShow {
       glideSlides.appendChild(slideElement);
     });
 
-    // Arrows will be created automatically by Glide.js with default configuration
-
-    const bullets = document.createElement('div');
-    bullets.className = 'glide__bullets';
-    bullets.setAttribute('data-glide-el', 'controls[nav]');
-
-    for (let i = 0; i < slides.length; i++) {
-      const bullet = document.createElement('button');
-      bullet.className = 'glide__bullet';
-      bullet.setAttribute('data-glide-dir', `=${i}`);
-      bullets.appendChild(bullet);
-    }
-
     glideTrack.appendChild(glideSlides);
     glideContainer.appendChild(glideTrack);
-    glideContainer.appendChild(bullets);
 
     container.appendChild(glideContainer);
     wrapper.appendChild(container);
@@ -120,8 +106,8 @@ export class GlideShow {
       img.src = slide.image;
       img.alt = `Slide ${slide.order}`;
       img.loading = 'lazy';
-      
-      img.addEventListener('load', function() {
+
+      img.addEventListener('load', function () {
         this.classList.add('loaded');
       });
 
@@ -164,7 +150,7 @@ export class GlideShow {
 
     try {
       this.glideInstance = await initializeGlide(container, config, 'GlideShow');
-      
+
       if (this.glideInstance) {
         carouselManager.register(this.instanceId, this.glideInstance, config);
 

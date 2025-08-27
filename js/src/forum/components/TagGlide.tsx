@@ -53,12 +53,6 @@ export default class TagGlide extends Component {
                 {tags.map((tag: any) => this.renderSlide(tag))}
               </ul>
             </div>
-            
-            <div className="glide__bullets" data-glide-el="controls[nav]">
-              {tags.map((_: any, index: number) => (
-                <button className="glide__bullet" data-glide-dir={`=${index}`}></button>
-              ))}
-            </div>
           </div>
         </div>
         
