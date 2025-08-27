@@ -1,5 +1,6 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import Stream from 'flarum/common/utils/Stream';
 import type { SlideData, ExtensionSettings } from '../common/types';
 
 /**
@@ -14,6 +15,11 @@ const _DEFAULT_MAX_SLIDES = 30;
  * Consolidates slideshow management, social media settings, and global configuration
  */
 class UnifiedAdminComponent extends ExtensionPage {
+  // Stream instances for reactive form handling
+  transitionTimeStream: Stream<number>;
+  tagGlideTitleStream: Stream<string>;
+  headerIconUrlStream: Stream<string>;
+  headerIconLinkStream: Stream<string>;
   
   oninit(vnode) {
     super.oninit(vnode);
@@ -29,6 +35,9 @@ class UnifiedAdminComponent extends ExtensionPage {
     if (settings.slides.length === 0) {
       this.addDefaultSlides();
     }
+    
+    // Initialize streams with current settings
+    this.initializeStreams();
   }
   
   /**
@@ -61,6 +70,40 @@ class UnifiedAdminComponent extends ExtensionPage {
         tagGlideTitle: ''
       };
     }
+  }
+  
+  /**
+   * Initialize reactive streams with current settings
+   */
+  initializeStreams(): void {
+    const settings = this.getSettings();
+    
+    // Initialize streams with current values
+    this.transitionTimeStream = Stream(settings.transitionTime);
+    this.tagGlideTitleStream = Stream(settings.tagGlideTitle || '');
+    this.headerIconUrlStream = Stream(settings.headerIcon?.url || '');
+    this.headerIconLinkStream = Stream(settings.headerIcon?.link || '');
+    
+    // Set up auto-save listeners
+    this.transitionTimeStream.map((value: number) => {
+      const currentSettings = this.getSettings();
+      currentSettings.transitionTime = value;
+      this.updateSettings(currentSettings);
+    });
+    
+    this.tagGlideTitleStream.map((value: string) => {
+      const currentSettings = this.getSettings();
+      currentSettings.tagGlideTitle = value;
+      this.updateSettings(currentSettings);
+    });
+    
+    this.headerIconUrlStream.map((value: string) => {
+      this.updateHeaderIcon('url', value);
+    });
+    
+    this.headerIconLinkStream.map((value: string) => {
+      this.updateHeaderIcon('link', value);
+    });
   }
   
   /**
@@ -244,12 +287,7 @@ class UnifiedAdminComponent extends ExtensionPage {
             type="number"
             min="1000"
             max="30000"
-            value={settings.transitionTime}
-            oninput={(e: Event) => {
-              const newSettings = this.getSettings();
-              newSettings.transitionTime = parseInt((e.target as HTMLInputElement).value);
-              this.updateSettings(newSettings);
-            }}
+            bidi={this.transitionTimeStream}
           />
         </div>
 
@@ -262,13 +300,8 @@ class UnifiedAdminComponent extends ExtensionPage {
           <input
             className="FormControl"
             type="text"
-            value={settings.tagGlideTitle || ''}
             placeholder={app.translator.trans('wusong8899-client1.admin.TagGlideTitlePlaceholder')}
-            oninput={(e: Event) => {
-              const newSettings = this.getSettings();
-              newSettings.tagGlideTitle = (e.target as HTMLInputElement).value;
-              this.updateSettings(newSettings);
-            }}
+            bidi={this.tagGlideTitleStream}
           />
           <div className="helpText">
             {app.translator.trans('wusong8899-client1.admin.TagGlideTitleHelp')}
@@ -284,11 +317,8 @@ class UnifiedAdminComponent extends ExtensionPage {
           <input
             className="FormControl"
             type="url"
-            value={settings.headerIcon?.url || ''}
             placeholder={app.translator.trans('wusong8899-client1.admin.HeaderIconUrlHelp')}
-            oninput={(e: Event) => {
-              this.updateHeaderIcon('url', (e.target as HTMLInputElement).value);
-            }}
+            bidi={this.headerIconUrlStream}
           />
           
           <label className="FormLabel">
@@ -297,11 +327,8 @@ class UnifiedAdminComponent extends ExtensionPage {
           <input
             className="FormControl"
             type="url"
-            value={settings.headerIcon?.link || ''}
             placeholder={app.translator.trans('wusong8899-client1.admin.HeaderIconLinkHelp')}
-            oninput={(e: Event) => {
-              this.updateHeaderIcon('link', (e.target as HTMLInputElement).value);
-            }}
+            bidi={this.headerIconLinkStream}
           />
         </div>
 
