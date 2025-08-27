@@ -62,12 +62,12 @@ export function getTagGlideConfig(): GlideOptions {
     animationDuration: 600,
 
     breakpoints: {
-      1440: { perView: 3.0, gap: 25 },
-      1024: { perView: 2.3, gap: 20 },
-      768: { perView: 1.8, gap: 15 },
-      640: { perView: 1.5, gap: 20 },
-      480: { perView: 1.2, gap: 15 },
-      320: { perView: 1.1, gap: 10 }
+      1440: { perView: 3, gap: 25 },
+      1024: { perView: 2, gap: 20 },
+      768: { perView: 2, gap: 15 },
+      640: { perView: 1, gap: 20 },
+      480: { perView: 1, gap: 15 },
+      320: { perView: 1, gap: 10 }
     }
   };
 }
