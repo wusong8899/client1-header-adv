@@ -15,13 +15,6 @@
 .client1-header-adv-wrapper {
   &.glideAdContainer {
     margin-bottom: 10px;
-
-    @media @phone {
-      // Mobile-specific width calculation matching original code
-      // styleWidth = screenWidth*2-50, marginLeft = -(styleWidth*0.254)
-      width: calc(100vw * 2 - 50px);
-      margin-left: calc(-1 * (100vw * 2 - 50px) * 0.254);
-    }
   }
 
   .glideTagContainer {
@@ -65,42 +58,6 @@
         height: 100%;
         border-radius: 12px; // Direct numeric value
       }
-    }
-  }
-
-  // =============================================================================
-  // GLIDE SLIDE VARIANTS
-  // =============================================================================
-
-  .glide__slide-tag-inner {
-    border-radius: 12px; // Direct numeric value
-    width: 146px; // Direct numeric value instead of @slide-tag-width
-    height: 196px; // Direct numeric value instead of @slide-tag-height
-    text-align: center;
-    padding: 15px; // Direct numeric value
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    // Ensure background image covers the entire area when no text
-    &:empty {
-      padding: 0;
-    }
-  }
-
-  .glide__slide-tag-inner-mobile {
-    border-radius: 12px; // Direct numeric value
-    width: 200px; // Direct numeric value instead of @slide-tag-mobile-width
-    height: 240px; // Direct numeric value instead of @slide-tag-mobile-height
-    text-align: center;
-    padding: 10px; // Direct numeric value
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    // Ensure background image covers the entire area when no text
-    &:empty {
-      padding: 0;
     }
   }
 
