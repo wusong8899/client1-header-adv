@@ -67,7 +67,7 @@ export function getTagGlideConfig(): GlideOptions {
       768: { perView: 2, gap: 15 },
       640: { perView: 2, gap: 20 },
       480: { perView: 2, gap: 15 },
-      320: { perView: 1, gap: 10 }
+      320: { perView: 2, gap: 10 }
     }
   };
 }
