@@ -29,12 +29,6 @@
   .glide__slides {
     touch-action: manipulation;
   }
-
-  // Performance optimization
-  .glide__slide {
-    will-change: transform;
-    contain: layout;
-  }
 }
 
 // =============================================================================
@@ -50,12 +44,6 @@
   .glide__slides {
     touch-action: manipulation;
   }
-
-  // Better performance for tag slides
-  .glide__slide {
-    will-change: transform;
-    contain: layout style;
-  }
 }
 
 // =============================================================================
@@ -63,6 +51,7 @@
 // =============================================================================
 
 .glide {
+
   // Better keyboard navigation
   &:focus-within {
     outline: 2px solid var(--glide-theme-color);
