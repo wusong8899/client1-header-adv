@@ -5,7 +5,7 @@
 // These styles build upon the official Glide core and theme styles
 
 :root {
-  --glide-theme-color: #007aff;
+  --glide-theme-color: rgba(43, 50, 72, 0.6);
   --glide-arrow-size: 40px;
   --glide-bullet-size: 8px;
 }
@@ -52,21 +52,32 @@
 
 .glide {
 
-  // Better keyboard navigation
-  &:focus-within {
+  // Better keyboard navigation - only show for keyboard users
+  &:focus-within:focus-visible {
     outline: 2px solid var(--glide-theme-color);
     outline-offset: 2px;
+    border-radius: 8px;
   }
 
-  // Enhanced focus states for arrows
-  .glide__arrow:focus {
+  // Enhanced focus states for arrows - keyboard only
+  .glide__arrow:focus-visible {
     outline: 2px solid var(--glide-theme-color);
     outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  .glide__arrow:focus:not(:focus-visible) {
+    outline: none;
   }
 
-  // Enhanced focus states for bullets
-  .glide__bullet:focus {
+  // Enhanced focus states for bullets - keyboard only
+  .glide__bullet:focus-visible {
     outline: 2px solid var(--glide-theme-color);
     outline-offset: 2px;
+    border-radius: 50%;
+  }
+  
+  .glide__bullet:focus:not(:focus-visible) {
+    outline: none;
   }
 }
