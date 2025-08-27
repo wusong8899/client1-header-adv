@@ -147,20 +147,4 @@
       }
     }
   }
-
-  // CSS Custom Properties for slideshow dimensions
-  .client1-slideshow-container {
-    --slideshow-aspect-ratio: 16 / 9;
-    --slideshow-mobile-aspect-ratio: 4 / 3;
-    --slideshow-max-height: 400px;
-    --slideshow-mobile-max-height: 250px;
-
-    .glide {
-      max-height: var(--slideshow-max-height);
-
-      @media @phone {
-        max-height: var(--slideshow-mobile-max-height);
-      }
-    }
-  }
 }
