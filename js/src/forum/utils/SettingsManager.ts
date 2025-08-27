@@ -57,7 +57,8 @@ function loadSettings(): ExtensionSettings {
           headerIcon: parsed.headerIcon || {
             url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
             link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
-          }
+          },
+          tagGlideTitle: parsed.tagGlideTitle || ''
         };
       }
     }
