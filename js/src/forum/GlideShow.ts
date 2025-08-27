@@ -204,28 +204,6 @@ export class GlideShow {
         method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target),
         location: 'before TagTiles'
       },
-      {
-        selector: '.container > div:first-child',
-        method: (wrapper: HTMLElement, target: HTMLElement) => target.insertBefore(wrapper, target.firstChild),
-        location: 'inside container div',
-        condition: (element: HTMLElement) => element.children.length > 0
-      },
-      {
-        selector: '.Hero, .IndexPage-hero',
-        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
-        location: 'after page hero'
-      },
-      {
-        selector: '.App-content, .IndexPage',
-        method: (wrapper: HTMLElement, target: HTMLElement) => target.insertBefore(wrapper, target.firstChild),
-        location: 'inside main content'
-      },
-      {
-        selector: '.Header-primary, .Header',
-        method: (wrapper: HTMLElement, target: HTMLElement) => target.parentNode?.insertBefore(wrapper, target.nextSibling),
-        location: 'after global header',
-        condition: (element: HTMLElement) => !!element.parentNode
-      }
     ];
 
     for (const strategy of strategies) {
