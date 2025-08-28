@@ -25,7 +25,7 @@ export function getSlideShowGlideConfig(slideCount: number, transitionTime: numb
     type: enableLoop ? 'carousel' : 'slider',
     perView: 2,
     focusAt: 0,
-    gap: 20,
+    gap: 30,
     autoplay: transitionTime,
     hoverpause: true,
     keyboard: true,
@@ -37,8 +37,8 @@ export function getSlideShowGlideConfig(slideCount: number, transitionTime: numb
     breakpoints: {
       1440: { perView: 2, gap: 25 },
       1024: { perView: 2, gap: 20 },
-      768: { perView: 1, gap: 15 },
-      640: { perView: 1, gap: 15 },
+      768: { perView: 1, gap: 20 },
+      640: { perView: 1, gap: 20 },
       480: { perView: 1, gap: 15 },
       320: { perView: 1, gap: 10 }
     }
