@@ -24,7 +24,7 @@ export function getSlideShowGlideConfig(slideCount: number, transitionTime: numb
   return {
     type: enableLoop ? 'carousel' : 'slider',
     perView: 2,
-    focusAt: 'center',
+    focusAt: 0,
     gap: 30,
     autoplay: transitionTime,
     hoverpause: true,
