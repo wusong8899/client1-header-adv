@@ -30,61 +30,58 @@
   .glide__slide {
     flex-shrink: 0;
     position: relative;
+    border-radius: 12px;
+    overflow: hidden; // Essential for clipping images to border-radius
 
-    // Background image slide container
-    .slide-background {
-      background-size: contain;
-      background-repeat: no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    // Modern aspect-ratio for slides
+    aspect-ratio: 16 / 9;
+
+    // Subtle background for letterboxing
+    background-color: rgba(0, 0, 0, 0.05);
+
+    // Slide image styles
+    .slide-image {
       width: 100%;
       height: 100%;
+      object-fit: contain; // Shows full image without cropping
+      object-position: center;
       border-radius: 12px;
-      position: relative;
-
-      // Modern aspect-ratio with fallback for slides
-      aspect-ratio: 16 / 9;
-
-      // Subtle background for letterboxing when using contain
-      background-color: rgba(0, 0, 0, 0.05);
-
+      
       // GPU-accelerated transitions
-      will-change: transform, opacity;
-      transition: all 0.3s ease;
+      will-change: transform;
+      transition: transform 0.3s ease;
+    }
 
-      // Smooth loading animation
-      opacity: 1;
-      transform: scale(1);
+    // Slide link wrapper
+    .slide-link {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      border-radius: 12px;
 
-      // Overlay link for clickable slides
-      .slide-overlay-link {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-        display: block;
-        text-decoration: none;
+      // Accessibility focus styling
+      &:focus-visible {
+        outline: 2px solid rgba(43, 50, 72, 0.8);
+        outline-offset: 2px;
+        border-radius: 12px;
+      }
 
-        // Accessibility focus styling
-        &:focus-visible {
-          outline: 2px solid rgba(43, 50, 72, 0.8);
-          outline-offset: 2px;
-          border-radius: 12px;
-        }
-
-        &:focus:not(:focus-visible) {
-          outline: none;
-        }
+      &:focus:not(:focus-visible) {
+        outline: none;
       }
 
       // Hover effects for interactive slides
-      &:hover {
+      &:hover .slide-image {
         transform: scale(1.02);
         transition: transform 0.2s ease;
       }
+    }
+
+    // Direct hover for non-linked images
+    &:hover .slide-image:not(.slide-link .slide-image) {
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
     }
   }
 

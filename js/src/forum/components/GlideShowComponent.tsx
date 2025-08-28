@@ -78,31 +78,31 @@ export default class GlideShowComponent extends Component {
   }
 
   private renderSlide(slide: SlideData): Mithril.Children {
-    // Prepare background styles for GPU-accelerated rendering
-    const slideStyle: Record<string, string> = {};
-    
-    if (slide.image) {
-      slideStyle.backgroundImage = `url(${slide.image})`;
+    if (!slide.image) {
+      return null;
     }
 
-    const slideContent = slide.image ? (
-      <div 
-        className="slide-background"
-        style={slideStyle}
-        role="img"
-        aria-label={`Slide ${slide.order}`}
+    const slideContent = slide.link ? (
+      <a 
+        href={slide.link} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="slide-link"
+        aria-label={`Navigate to slide ${slide.order} link`}
       >
-        {slide.link && (
-          <a 
-            href={slide.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="slide-overlay-link"
-            aria-label={`Navigate to slide ${slide.order} link`}
-          />
-        )}
-      </div>
-    ) : null;
+        <img 
+          src={slide.image} 
+          alt={`Slide ${slide.order}`}
+          className="slide-image"
+        />
+      </a>
+    ) : (
+      <img 
+        src={slide.image} 
+        alt={`Slide ${slide.order}`}
+        className="slide-image"
+      />
+    );
 
     return (
       <li 
@@ -110,9 +110,7 @@ export default class GlideShowComponent extends Component {
         className="glide__slide" 
         data-slide-id={slide.id}
       >
-        <div className="slide-content">
-          {slideContent}
-        </div>
+        {slideContent}
       </li>
     );
   }
