@@ -227,6 +227,7 @@ export default class TagGlide extends Component {
     }
 
     const config = getTagGlideConfig();
+    console.log('🏷️ TagGlide Final Configuration:', JSON.stringify(config, null, 2));
     
     try {
       this.glideInstance = await initializeGlide(container, config, 'TagGlide');

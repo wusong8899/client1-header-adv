@@ -142,6 +142,7 @@ export default class GlideShowComponent extends Component {
 
     const transitionTime = getTransitionTime();
     const config = getSlideShowGlideConfig(this.slides.length, transitionTime);
+    console.log('🎢 SlideShow Final Configuration:', JSON.stringify(config, null, 2));
 
     try {
       this.glideInstance = await initializeGlide(container, config, 'GlideShowComponent');
