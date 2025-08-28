@@ -38,18 +38,18 @@
       height: 100%;
       border-radius: 12px;
       position: relative;
-      
+
       // Modern aspect-ratio with fallback for slides
-      aspect-ratio: 16 / 9;
-      
+      aspect-ratio: 2 / 1;
+
       // GPU-accelerated transitions
       will-change: transform, opacity;
       transition: all 0.3s ease;
-      
+
       // Smooth loading animation
       opacity: 1;
       transform: scale(1);
-      
+
       // Overlay link for clickable slides
       .slide-overlay-link {
         position: absolute;
@@ -60,19 +60,19 @@
         z-index: 2;
         display: block;
         text-decoration: none;
-        
+
         // Accessibility focus styling
         &:focus-visible {
           outline: 2px solid rgba(43, 50, 72, 0.8);
           outline-offset: 2px;
           border-radius: 12px;
         }
-        
+
         &:focus:not(:focus-visible) {
           outline: none;
         }
       }
-      
+
       // Hover effects for interactive slides
       &:hover {
         transform: scale(1.02);
