@@ -31,9 +31,6 @@
     flex-shrink: 0;
     position: relative;
 
-    // Modern aspect-ratio for slides
-    aspect-ratio: 16 / 9;
-
     // Subtle background for letterboxing
     background-color: rgba(0, 0, 0, 0.05);
 
@@ -43,6 +40,7 @@
       object-fit: contain; // Shows full image without cropping
       object-position: center;
       border-radius: 12px;
+      aspect-ratio: 16 / 9;
 
       // GPU-accelerated transitions
       will-change: transform;
