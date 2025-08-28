@@ -83,9 +83,6 @@ export default class GlideShowComponent extends Component {
     
     if (slide.image) {
       slideStyle.backgroundImage = `url(${slide.image})`;
-      slideStyle.backgroundSize = 'contain';
-      slideStyle.backgroundPosition = 'center';
-      slideStyle.backgroundRepeat = 'no-repeat';
     }
 
     const slideContent = slide.image ? (
