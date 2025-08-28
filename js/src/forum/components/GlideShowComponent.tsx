@@ -78,30 +78,33 @@ export default class GlideShowComponent extends Component {
   }
 
   private renderSlide(slide: SlideData): Mithril.Children {
+    // Prepare background styles for GPU-accelerated rendering
+    const slideStyle: Record<string, string> = {};
+    
+    if (slide.image) {
+      slideStyle.backgroundImage = `url(${slide.image})`;
+      slideStyle.backgroundSize = 'cover';
+      slideStyle.backgroundPosition = 'center';
+      slideStyle.backgroundRepeat = 'no-repeat';
+    }
+
     const slideContent = slide.image ? (
-      slide.link ? (
-        <a href={slide.link} target="_blank" rel="noopener noreferrer">
-          <img 
-            src={slide.image} 
-            alt={`Slide ${slide.order}`} 
-            loading="lazy"
-            onload={(e: Event) => {
-              const target = e.target as HTMLElement;
-              target.classList.add('loaded');
-            }}
+      <div 
+        className="slide-background"
+        style={slideStyle}
+        role="img"
+        aria-label={`Slide ${slide.order}`}
+      >
+        {slide.link && (
+          <a 
+            href={slide.link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="slide-overlay-link"
+            aria-label={`Navigate to slide ${slide.order} link`}
           />
-        </a>
-      ) : (
-        <img 
-          src={slide.image} 
-          alt={`Slide ${slide.order}`} 
-          loading="lazy"
-          onload={(e: Event) => {
-            const target = e.target as HTMLElement;
-            target.classList.add('loaded');
-          }}
-        />
-      )
+        )}
+      </div>
     ) : null;
 
     return (

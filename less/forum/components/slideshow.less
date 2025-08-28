@@ -31,22 +31,52 @@
     flex-shrink: 0;
     position: relative;
 
-    img {
+    // Background image slide container
+    .slide-background {
       display: block;
       width: 100%;
-      border-radius: 12px; // Direct numeric value instead of @border-radius-large
-      object-fit: cover;
-      object-position: center;
-
-      // Lazy loading optimization
-      &[loading="lazy"] {
-        opacity: 0;
-        transition: opacity 0.3s ease;
-
-        &.loaded,
-        &.glide-lazy-loaded {
-          opacity: 1;
+      height: 100%;
+      border-radius: 12px;
+      position: relative;
+      
+      // Modern aspect-ratio with fallback for slides
+      aspect-ratio: 16 / 9;
+      
+      // GPU-accelerated transitions
+      will-change: transform, opacity;
+      transition: all 0.3s ease;
+      
+      // Smooth loading animation
+      opacity: 1;
+      transform: scale(1);
+      
+      // Overlay link for clickable slides
+      .slide-overlay-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        display: block;
+        text-decoration: none;
+        
+        // Accessibility focus styling
+        &:focus-visible {
+          outline: 2px solid rgba(43, 50, 72, 0.8);
+          outline-offset: 2px;
+          border-radius: 12px;
         }
+        
+        &:focus:not(:focus-visible) {
+          outline: none;
+        }
+      }
+      
+      // Hover effects for interactive slides
+      &:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease;
       }
     }
   }
