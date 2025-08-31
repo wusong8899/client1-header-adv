@@ -70,7 +70,15 @@
 
   // Modern aspect-ratio with fallback
   aspect-ratio: 9 / 10;
-
+  @supports (aspect-ratio: 1) {
+    min-height: auto;
+  }
+  
+  // Safari 特定修复
+  @supports (-webkit-appearance: none) {
+    height: 224px;
+    display: block;
+  }
   // Color theming
   &.colored {
     color: var(--contrast-color, #f3f3f3);
