@@ -27,7 +27,7 @@ export default class GlideShowComponent extends Component<GlideShowComponentAttr
   }
 
   view(vnode: Vnode<GlideShowComponentAttrs>): Mithril.Children {
-    const slides = vnode.attrs.slides;
+    const slides = this.slides;
     
     if (!slides || slides.length === 0) {
       return null;
@@ -61,7 +61,7 @@ export default class GlideShowComponent extends Component<GlideShowComponentAttr
     super.onupdate(vnode);
     
     const newSlides = getActiveSlides();
-    if (this.shouldUpdateGlide(vnode.attrs.slides, newSlides)) {
+    if (this.shouldUpdateGlide(this.slides, newSlides)) {
       this.slides = newSlides;
       if (this.glideInstance) {
         this.glideInstance.update();

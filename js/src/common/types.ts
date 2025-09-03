@@ -21,11 +21,7 @@ export interface SlideData {
 /**
  * Social media link structure
  */
-export interface SocialLink {
-  platform: string;
-  url: string;
-  icon: string;
-}
+// Social media links removed
 
 /**
  * Header icon configuration
@@ -41,7 +37,6 @@ export interface HeaderIcon {
 export interface ExtensionSettings {
   slides: SlideData[];
   transitionTime: number;
-  socialLinks: SocialLink[];
   headerIcon?: HeaderIcon;
   tagGlideTitle?: string; // Tag轮播区域的标题文字
   tagGlideTitleIcon?: string; // Tag轮播标题的图标URL
@@ -54,11 +49,7 @@ export interface ExtensionSettings {
 /**
  * Social media platform configuration
  */
-export interface SocialPlatform {
-  name: string;
-  urlKey: string;
-  iconKey: string;
-}
+// SocialPlatform removed
 
 // =============================================================================
 // GLIDE TYPES

@@ -8,7 +8,7 @@ wusong8899-client1:
     # 新的简化翻译
     GlobalSettings: 全局设置
     SlidesManagement: 幻灯片管理
-    SocialMediaTitle: 社交媒体设置
+
     SlideImageLabel: 图片地址
     SlideLinkLabel: 链接地址
     DeleteButton: 删除
@@ -16,7 +16,7 @@ wusong8899-client1:
 
     # 核心设置
     TransitionTime: 广告轮换时间
-    
+
     # Tag轮播标题设置
     TagGlideTitle: Tag轮播标题设置
     TagGlideTitleLabel: 标题文字
@@ -25,7 +25,7 @@ wusong8899-client1:
     TagGlideTitleIconLabel: 标题图标
     TagGlideTitleIconPlaceholder: https://example.com/icon.png
     TagGlideTitleIconHelp: 显示在标题文字前面的图标图片URL（留空则不显示图标）
-    
+
     # Logo设置
     HeaderIconTitle: Logo设置
     HeaderIconUrl: Logo图片地址
@@ -36,21 +36,3 @@ wusong8899-client1:
     # 幻灯片管理
     AddSlide: 添加幻灯片
     SlideNumber: "幻灯片 {number}"
-
-    # 社交媒体设置
-    SocialKickUrl: Kick 链接
-    SocialKickUrlHelp: 输入您的 Kick 频道链接（留空则隐藏此按钮）
-    SocialKickIcon: Kick 图标链接
-    SocialFacebookUrl: Facebook 链接
-    SocialFacebookUrlHelp: 输入您的 Facebook 页面链接（留空则隐藏此按钮）
-    SocialFacebookIcon: Facebook 图标链接
-    SocialTwitterUrl: Twitter 链接
-    SocialTwitterUrlHelp: 输入您的 Twitter 个人资料链接（留空则隐藏此按钮）
-    SocialTwitterIcon: Twitter 图标链接
-    SocialYouTubeUrl: YouTube 链接
-    SocialYouTubeUrlHelp: 输入您的 YouTube 频道链接（留空则隐藏此按钮）
-    SocialYouTubeIcon: YouTube 图标链接
-    SocialInstagramUrl: Instagram 链接
-    SocialInstagramUrlHelp: 输入您的 Instagram 个人资料链接（留空则隐藏此按钮）
-    SocialInstagramIcon: Instagram 图标链接
-    SocialIconHelp: 输入图标图片的链接（留空则使用默认图标）

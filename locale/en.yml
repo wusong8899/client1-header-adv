@@ -8,7 +8,7 @@ wusong8899-client1:
     # New simplified translations
     GlobalSettings: Global Settings
     SlidesManagement: Slides Management
-    SocialMediaTitle: Social Media Settings
+
     SlideImageLabel: Image URL
     SlideLinkLabel: Link URL
     DeleteButton: Delete
@@ -16,7 +16,7 @@ wusong8899-client1:
 
     # Core settings
     TransitionTime: Speed of transitions between slides
-    
+
     # Tag Glide Title Settings
     TagGlideTitle: Tag Glide Title Settings
     TagGlideTitleLabel: Title Text
@@ -25,7 +25,7 @@ wusong8899-client1:
     TagGlideTitleIconLabel: Title Icon
     TagGlideTitleIconPlaceholder: https://example.com/icon.png
     TagGlideTitleIconHelp: Icon image URL to display before the title text (leave empty to hide icon)
-    
+
     # Logo settings
     HeaderIconTitle: Logo Settings
     HeaderIconUrl: Logo Image URL
@@ -36,21 +36,3 @@ wusong8899-client1:
     # Slide management
     AddSlide: Add Slide
     SlideNumber: "Slide {number}"
-
-    # Social Media Settings
-    SocialKickUrl: Kick URL
-    SocialKickUrlHelp: Enter the URL for your Kick channel (leave empty to hide this button)
-    SocialKickIcon: Kick Icon URL
-    SocialFacebookUrl: Facebook URL
-    SocialFacebookUrlHelp: Enter the URL for your Facebook page (leave empty to hide this button)
-    SocialFacebookIcon: Facebook Icon URL
-    SocialTwitterUrl: Twitter URL
-    SocialTwitterUrlHelp: Enter the URL for your Twitter profile (leave empty to hide this button)
-    SocialTwitterIcon: Twitter Icon URL
-    SocialYouTubeUrl: YouTube URL
-    SocialYouTubeUrlHelp: Enter the URL for your YouTube channel (leave empty to hide this button)
-    SocialYouTubeIcon: YouTube Icon URL
-    SocialInstagramUrl: Instagram URL
-    SocialInstagramUrlHelp: Enter the URL for your Instagram profile (leave empty to hide this button)
-    SocialInstagramIcon: Instagram Icon URL
-    SocialIconHelp: Enter the URL for the icon image (leave empty to use default icon)

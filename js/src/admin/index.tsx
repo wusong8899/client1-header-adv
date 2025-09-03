@@ -8,7 +8,6 @@ import type { Vnode } from 'mithril';
  * Extension configuration constants
  */
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
-const SOCIAL_PLATFORMS = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'] as const;
 const _DEFAULT_MAX_SLIDES = 30;
 
 /**
@@ -52,7 +51,6 @@ class UnifiedAdminComponent extends ExtensionPage {
       return {
         slides: parsed.slides || [],
         transitionTime: parsed.transitionTime || 5000,
-        socialLinks: parsed.socialLinks || [],
         headerIcon: parsed.headerIcon || { url: '', link: '' },
         tagGlideTitle: parsed.tagGlideTitle || '',
         tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
@@ -62,7 +60,6 @@ class UnifiedAdminComponent extends ExtensionPage {
       return {
         slides: [],
         transitionTime: 5000,
-        socialLinks: [],
         headerIcon: { url: '', link: '' },
         tagGlideTitle: '',
         tagGlideTitleIcon: ''
@@ -195,20 +192,6 @@ class UnifiedAdminComponent extends ExtensionPage {
   }
 
   /**
-   * Update social media link
-   */
-  updateSocialLink(platform: string, field: 'url' | 'icon', value: string): void {
-    const settings = this.getSettings();
-    let socialLink = settings.socialLinks.find(s => s.platform === platform);
-    if (!socialLink) {
-      socialLink = { platform, url: '', icon: '' };
-      settings.socialLinks.push(socialLink);
-    }
-    socialLink[field] = value;
-    this.updateSettings(settings);
-  }
-
-  /**
    * Update header icon configuration
    */
   updateHeaderIcon(field: 'url' | 'link', value: string): void {
@@ -316,11 +299,7 @@ class UnifiedAdminComponent extends ExtensionPage {
           </button>
         </div>
 
-        <div className="Form-group">
-          <h3>{app.translator.trans('wusong8899-client1.admin.SocialMediaTitle')}</h3>
-          
-          {SOCIAL_PLATFORMS.map((platform) => this.renderSocialPlatform(platform))}
-        </div>
+        
         
         {/* Submit button handled by ExtensionPage */}
         <div className="Form-group">
@@ -382,52 +361,7 @@ class UnifiedAdminComponent extends ExtensionPage {
     );
   }
 
-  /**
-   * Render social platform configuration
-   */
-  renderSocialPlatform(platform: string) {
-    const settings = this.getSettings();
-    const socialLink = settings.socialLinks.find(s => s.platform === platform) || 
-                      { platform, url: '', icon: '' };
-
-    return (
-      <div className="SocialPlatformConfig" key={platform}>
-        <h4>{platform}</h4>
-        
-        <div className="Form-group">
-          <label className="FormLabel">URL</label>
-          <input
-            className="FormControl"
-            type="url"
-            placeholder={`https://${platform.toLowerCase()}.com/yourprofile`}
-            value={socialLink.url}
-            oninput={(e: Event) => {
-              this.updateSocialLink(platform, 'url', (e.target as HTMLInputElement).value);
-            }}
-          />
-        </div>
-        
-        <div className="Form-group">
-          <label className="FormLabel">Icon URL</label>
-          <input
-            className="FormControl"
-            type="url"
-            placeholder="https://example.com/icon.png"
-            value={socialLink.icon}
-            oninput={(e: Event) => {
-              this.updateSocialLink(platform, 'icon', (e.target as HTMLInputElement).value);
-            }}
-          />
-          
-          {socialLink.icon && (
-            <div className="IconPreview">
-              <img src={socialLink.icon} alt={`${platform} icon`} style="max-width: 32px; max-height: 32px;" />
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
+  
 }
 
 /**

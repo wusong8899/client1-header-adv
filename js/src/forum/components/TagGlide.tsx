@@ -3,9 +3,8 @@ import Component, { ComponentAttrs } from 'flarum/common/Component';
 import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
-import { getActiveSocialLinks, getSettings } from '../utils/SettingsManager';
+import { getSettings } from '../utils/SettingsManager';
 import { getTagGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from '../utils/GlideConfig';
-import SocialMediaButtons from './SocialMediaButtons';
 import type { Vnode, VnodeDOM, Children } from 'mithril';
 import type { GlideInstance } from '../../common/types';
 import Tag from 'flarum/tags/common/models/Tag';
@@ -51,7 +50,6 @@ export default class TagGlide extends Component {
       return null;
     }
 
-    const socialLinks = getActiveSocialLinks();
     const settings = getSettings();
     const tagGlideTitle = settings.tagGlideTitle;
     const tagGlideTitleIcon = settings.tagGlideTitleIcon;
@@ -80,9 +78,6 @@ export default class TagGlide extends Component {
           </div>
         </div>
         
-        {socialLinks.length > 0 && (
-          <SocialMediaButtons socialLinks={socialLinks} />
-        )}
       </div>
     );
   }
