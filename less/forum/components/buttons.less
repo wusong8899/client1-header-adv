@@ -49,55 +49,6 @@
   }
 }
 
-// Legacy webkit keyframes for older browsers
-@-webkit-keyframes shockwaveJump {
-  0% {
-    -webkit-transform: scale(0.4);
-    transform: scale(0.4);
-  }
-  
-  40% {
-    -webkit-transform: scale(1.08);
-    transform: scale(1.08);
-  }
-  
-  50% {
-    -webkit-transform: scale(0.98);
-    transform: scale(0.98);
-  }
-  
-  55% {
-    -webkit-transform: scale(1.02);
-    transform: scale(1.02);
-  }
-  
-  60% {
-    -webkit-transform: scale(0.98);
-    transform: scale(0.98);
-  }
-  
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-}
-
-@-webkit-keyframes shockwave {
-  0% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    box-shadow: 0 0 2px rgba(255, 255, 255, 0.15), inset 0 0 2px rgba(255, 255, 255, 0.15);
-  }
-  
-  95% {
-    box-shadow: 0 0 4px #ffffff, inset 0 0 4px #ffffff;
-  }
-  
-  100% {
-    -webkit-transform: scale(1.25);
-    transform: scale(1.25);
-  }
-}
 
 // =============================================================================
 // ANIMATION MIXINS
@@ -105,7 +56,6 @@
 
 .shockwave-animation(@duration: 1s, @delay: 0s) {
   animation: shockwaveJump @duration @delay ease-out infinite;
-  -webkit-animation: shockwaveJump @duration @delay ease-out infinite;
 }
 
 .shockwave-pseudo-element(@delay: 0.5s) {
@@ -117,7 +67,6 @@
   right: 0;
   border-radius: 12px;
   animation: shockwave 1s @delay ease-out infinite;
-  -webkit-animation: shockwave 1s @delay ease-out infinite;
 }
 
 // =============================================================================

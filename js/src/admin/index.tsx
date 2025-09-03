@@ -27,8 +27,8 @@ class UnifiedAdminComponent extends ExtensionPage {
     
     // Initialize settings using ExtensionPage's setting method
     if (!this.setting(`${EXTENSION_ID}.settings`)()) {
-      // Check for legacy data migration first
-      this.migrateFromLegacy();
+      // Set empty JSON if no settings exist
+      this.setting(`${EXTENSION_ID}.settings`)('{}');
     }
     
     // Add default data if no slides exist (for testing)
@@ -52,10 +52,7 @@ class UnifiedAdminComponent extends ExtensionPage {
         slides: parsed.slides || [],
         transitionTime: parsed.transitionTime || 5000,
         socialLinks: parsed.socialLinks || [],
-        headerIcon: parsed.headerIcon || {
-          url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
-          link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
-        },
+        headerIcon: parsed.headerIcon || { url: '', link: '' },
         tagGlideTitle: parsed.tagGlideTitle || '',
         tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
       };
@@ -65,10 +62,7 @@ class UnifiedAdminComponent extends ExtensionPage {
         slides: [],
         transitionTime: 5000,
         socialLinks: [],
-        headerIcon: {
-          url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
-          link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
-        },
+        headerIcon: { url: '', link: '' },
         tagGlideTitle: '',
         tagGlideTitleIcon: ''
       };
@@ -123,65 +117,11 @@ class UnifiedAdminComponent extends ExtensionPage {
     try {
       const json = JSON.stringify(settings);
       this.setting(`${EXTENSION_ID}.settings`)(json);
-      // Also update transition time in separate setting for legacy compatibility
-      this.setting(`${EXTENSION_ID}.TransitionTime`)(settings.transitionTime.toString());
-      
-      // Update headerIcon settings individually for forum access
-      if (settings.headerIcon) {
-        this.setting(`${EXTENSION_ID}.headerIconUrl`)(settings.headerIcon.url || '');
-        this.setting(`${EXTENSION_ID}.headerIconLink`)(settings.headerIcon.link || '');
-      }
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
   }
 
-  /**
-   * Migrate from legacy individual settings to JSON format
-   */
-  migrateFromLegacy(): void {
-    
-    const settings: ExtensionSettings = {
-      slides: [],
-      transitionTime: parseInt(app.data.settings[`${EXTENSION_ID}.TransitionTime`]) || 5000,
-      socialLinks: [],
-      headerIcon: {
-        url: app.data.settings[`${EXTENSION_ID}.headerIconUrl`] || '',
-        link: app.data.settings[`${EXTENSION_ID}.headerIconLink`] || ''
-      }
-    };
-    
-    // Migrate old slideshow data (up to 30 slides)
-    for (let i = 1; i <= 30; i++) {
-      const image = app.data.settings[`${EXTENSION_ID}.Image${i}`];
-      const link = app.data.settings[`${EXTENSION_ID}.Link${i}`];
-      if (image || link) {
-        settings.slides.push({
-          id: `legacy-${i}`,
-          image: image || '',
-          link: link || '',
-          active: true,
-          order: i
-        });
-      }
-    }
-    
-    // Migrate social media links
-    SOCIAL_PLATFORMS.forEach(platform => {
-      const url = app.data.settings[`${EXTENSION_ID}.Social${platform}Url`];
-      const icon = app.data.settings[`${EXTENSION_ID}.Social${platform}Icon`];
-      if (url || icon) {
-        settings.socialLinks.push({
-          platform,
-          url: url || '',
-          icon: icon || ''
-        });
-      }
-    });
-    
-    // Save migrated data
-    this.updateSettings(settings);
-  }
 
   /**
    * Add some default slides for testing purposes
@@ -503,13 +443,6 @@ app.initializers.add(EXTENSION_ID, (): void => {
     hidden: true, // This will be handled by our custom component
   });
 
-  // Register legacy transition time setting for backward compatibility
-  extensionData.registerSetting({
-    setting: `${EXTENSION_ID}.TransitionTime`,
-    type: 'number',
-    label: '',
-    hidden: true, // This will be handled by our custom component
-  });
 
   // Register the custom page instead of just a setting component
   extensionData.registerPage(UnifiedAdminComponent);

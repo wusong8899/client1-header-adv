@@ -21,7 +21,7 @@ return [
     // Locales
     new Extend\Locales(__DIR__ . '/locale'),
     
-    // Core JSON settings with serializer callback
+    // Single JSON setting for all extension data
     (new Extend\Settings)->serializeToForum(
         'Client1HeaderAdvSettings',
         'wusong8899-client1-header-adv.settings',
@@ -29,21 +29,5 @@ return [
             // Return raw JSON string, ensuring it's properly serialized
             return $value ?: '{}';
         }
-    ),
-    
-    // Legacy compatibility settings (for backward compatibility)
-    (new Extend\Settings)->serializeToForum(
-        'Client1HeaderAdvTransitionTime',
-        'wusong8899-client1-header-adv.TransitionTime'
-    ),
-    
-    // Header icon settings
-    (new Extend\Settings)->serializeToForum(
-        'Client1HeaderAdvHeaderIconUrl',
-        'wusong8899-client1-header-adv.headerIconUrl'
-    ),
-    (new Extend\Settings)->serializeToForum(
-        'Client1HeaderAdvHeaderIconLink',
-        'wusong8899-client1-header-adv.headerIconLink'
     ),
 ];

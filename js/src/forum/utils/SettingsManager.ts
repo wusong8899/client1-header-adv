@@ -5,7 +5,7 @@ import type { ExtensionSettings } from '../../common/types';
  * Centralized Settings Manager
  * 
  * Provides a single source of truth for extension settings loading.
- * Handles both JSON format and legacy format migration automatically.
+ * Uses modern JSON format for all extension data.
  * Used by SlideShow, TagSwiper, and SocialMediaButtons components.
  */
 let settingsInstance: ExtensionSettings | null = null;
@@ -31,7 +31,7 @@ export function reloadSettings(): ExtensionSettings {
 }
 
 /**
- * Load settings from Flarum with fallback to legacy format
+ * Load settings from Flarum JSON format
  */
 function loadSettings(): ExtensionSettings {
   try {
@@ -41,7 +41,7 @@ function loadSettings(): ExtensionSettings {
       return getEmptySettings();
     }
 
-    // Try JSON format first
+    // Load JSON format settings
     const settingsJson = app.forum.attribute('Client1HeaderAdvSettings');
     
     if (settingsJson) {
@@ -49,84 +49,26 @@ function loadSettings(): ExtensionSettings {
         ? JSON.parse(settingsJson) 
         : settingsJson;
       
-      if (parsed && Array.isArray(parsed.slides)) {
+      if (parsed && typeof parsed === 'object') {
         return {
           slides: parsed.slides || [],
           transitionTime: parsed.transitionTime || 5000,
           socialLinks: parsed.socialLinks || [],
-          headerIcon: parsed.headerIcon || {
-            url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
-            link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
-          },
+          headerIcon: parsed.headerIcon || { url: '', link: '' },
           tagGlideTitle: parsed.tagGlideTitle || '',
           tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
         };
       }
     }
 
-    // Fallback to legacy format
-    return loadLegacySettings();
+    // Return empty settings if no valid JSON found
+    return getEmptySettings();
   } catch (error) {
     console.error('SettingsManager: Failed to load settings:', error);
-    return loadLegacySettings();
-  }
-}
-
-/**
- * Load settings from legacy individual keys
- */
-function loadLegacySettings(): ExtensionSettings {
-  // Check if app.forum is initialized
-  if (!app.forum) {
-    console.warn('SettingsManager: Forum not initialized, cannot load legacy settings');
     return getEmptySettings();
   }
-
-  const settings: ExtensionSettings = {
-    slides: [],
-    transitionTime: parseInt(app.forum.attribute('Client1HeaderAdvTransitionTime')) || 5000,
-    socialLinks: [],
-    headerIcon: {
-      url: app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || '',
-      link: app.forum.attribute('Client1HeaderAdvHeaderIconLink') || ''
-    },
-    tagGlideTitle: '',
-    tagGlideTitleIcon: ''
-  };
-
-  // Load up to 30 slides from legacy format
-  for (let i = 1; i <= 30; i++) {
-    const link = app.forum.attribute(`Client1HeaderAdvLink${i}`) || '';
-    const image = app.forum.attribute(`Client1HeaderAdvImage${i}`) || '';
-
-    if (image || link) {
-      settings.slides.push({
-        id: `legacy-${i}`,
-        image,
-        link,
-        active: true,
-        order: i
-      });
-    }
-  }
-
-  // Load social media links from legacy format
-  const socialPlatforms = ['Kick', 'Facebook', 'Twitter', 'YouTube', 'Instagram'];
-  socialPlatforms.forEach(platform => {
-    const url = app.forum.attribute(`Client1HeaderAdvSocial${platform}Url`) || '';
-    const icon = app.forum.attribute(`Client1HeaderAdvSocial${platform}Icon`) || '';
-
-    if (url || icon) {
-      settings.socialLinks.push({
-        platform,
-        url,
-        icon
-      });
-    }
-  });
-
-  return settings;
 }
+
 
 /**
  * Return empty settings as fallback when forum isn't initialized

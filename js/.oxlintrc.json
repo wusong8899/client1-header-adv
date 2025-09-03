@@ -7,7 +7,7 @@
     "dist-typings/**"
   ],
   "categories": {
-    // Be strict about correctness; warn for suspicious patterns in legacy code
+    // Be strict about correctness; warn for suspicious patterns
     "correctness": "error",
     "suspicious": "warn"
   },

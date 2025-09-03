@@ -50,7 +50,7 @@ export default defineConfig({
         if (id === '@flarum/core/admin' || id === '@flarum/core/forum') return true;
         if (id === 'jquery') return true;
         if (id === 'mithril') return true; // mithril is provided by Flarum core
-        if (id.startsWith('flarum/')) return true; // legacy compat modules
+        if (id.startsWith('flarum/')) return true; // Flarum compat modules
         return false;
       },
       output: {
