@@ -6,7 +6,7 @@ import tagIcon from 'flarum/tags/common/helpers/tagIcon';
 import { getActiveSocialLinks, getSettings } from '../utils/SettingsManager';
 import { getTagGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from '../utils/GlideConfig';
 import SocialMediaButtons from './SocialMediaButtons';
-import type Mithril from 'mithril';
+import type { Vnode, VnodeDOM, Children } from 'mithril';
 import type { GlideInstance } from '../../common/types';
 import Tag from 'flarum/tags/common/models/Tag';
 
@@ -38,13 +38,13 @@ export default class TagGlide extends Component {
   private instanceId: string = '';
   private isDestroying: boolean = false;
 
-  oninit(vnode: Mithril.Vnode<TagGlideAttrs>) {
+  oninit(vnode: Vnode<TagGlideAttrs>) {
     super.oninit(vnode);
     this.tags = vnode.attrs.tags || [];
     this.instanceId = `tag-glide-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
-  view(vnode: Mithril.Vnode<TagGlideAttrs>): Mithril.Children {
+  view(vnode: Vnode<TagGlideAttrs>): Children {
     const tags = vnode.attrs.tags || [];
     
     if (!tags.length) {
@@ -87,7 +87,7 @@ export default class TagGlide extends Component {
     );
   }
 
-  oncreate(vnode: Mithril.VnodeDOM) {
+  oncreate(vnode: VnodeDOM<TagGlideAttrs>) {
     super.oncreate(vnode);
     
     requestAnimationFrame(() => {
@@ -95,7 +95,7 @@ export default class TagGlide extends Component {
     });
   }
 
-  onupdate(vnode: Mithril.VnodeDOM<TagGlideAttrs>) {
+  onupdate(vnode: VnodeDOM<TagGlideAttrs>) {
     super.onupdate(vnode);
     
     const newTags = vnode.attrs.tags || [];
@@ -107,14 +107,14 @@ export default class TagGlide extends Component {
     }
   }
 
-  onbeforeremove(vnode: Mithril.VnodeDOM) {
+  onbeforeremove(vnode: VnodeDOM<TagGlideAttrs>) {
     super.onbeforeremove(vnode);
     // Set flag to prevent double cleanup
     this.isDestroying = true;
     this.destroyGlide();
   }
   
-  onremove(vnode: Mithril.VnodeDOM) {
+  onremove(vnode: VnodeDOM<TagGlideAttrs>) {
     super.onremove(vnode);
     // Only destroy if not already destroyed
     if (!this.isDestroying) {
@@ -142,7 +142,7 @@ export default class TagGlide extends Component {
     };
   }
 
-  private renderSlide(tag: Tag): Mithril.Children {
+  private renderSlide(tag: Tag): Children {
     const tagData = this.extractTagData(tag);
     
     // Determine background style

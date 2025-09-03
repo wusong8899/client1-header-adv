@@ -1,21 +1,25 @@
-import Component from 'flarum/common/Component';
-import type Mithril from 'mithril';
+import Component, { ComponentAttrs } from 'flarum/common/Component';
+import type { Children, Vnode, VnodeDOM } from 'mithril';
 import type { SocialLink } from '../../common/types';
 
-export default class SocialMediaButtons extends Component {
+interface SocialMediaButtonsAttrs extends ComponentAttrs {
+  socialLinks: SocialLink[];
+}
+
+export default class SocialMediaButtons extends Component<SocialMediaButtonsAttrs> {
   private socialLinks: SocialLink[] = [];
 
-  oninit(vnode: Mithril.Vnode) {
+  oninit(vnode: Vnode<SocialMediaButtonsAttrs>) {
     super.oninit(vnode);
     this.socialLinks = vnode.attrs.socialLinks || [];
   }
 
-  onupdate(vnode: Mithril.VnodeDOM) {
+  onupdate(vnode: VnodeDOM<SocialMediaButtonsAttrs>) {
     super.onupdate(vnode);
     this.socialLinks = vnode.attrs.socialLinks || [];
   }
 
-  view(vnode: Mithril.Vnode): Mithril.Children {
+  view(vnode: Vnode<SocialMediaButtonsAttrs>): Children {
     const socialLinks = vnode.attrs.socialLinks || this.socialLinks;
     
     if (!socialLinks || socialLinks.length === 0) {
@@ -43,7 +47,7 @@ export default class SocialMediaButtons extends Component {
     );
   }
 
-  private renderSocialIcon(link: SocialLink): Mithril.Children {
+  private renderSocialIcon(link: SocialLink): Children {
     return (
       <a
         key={link.platform}
@@ -51,7 +55,6 @@ export default class SocialMediaButtons extends Component {
         target="_blank"
         rel="noopener noreferrer"
         title={`Visit our ${link.platform} page`}
-        onclick={() => this.trackSocialClick(link.platform)}
       >
         <img
           src={link.icon}
@@ -60,9 +63,5 @@ export default class SocialMediaButtons extends Component {
         />
       </a>
     );
-  }
-
-  private trackSocialClick(_platform: string): void {
-    
   }
 }

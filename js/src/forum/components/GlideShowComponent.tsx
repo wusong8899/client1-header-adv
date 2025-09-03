@@ -1,28 +1,33 @@
-import Component from 'flarum/common/Component';
+import Component, { ComponentAttrs } from 'flarum/common/Component';
 import { getActiveSlides, getTransitionTime } from '../utils/SettingsManager';
 import { getSlideShowGlideConfig, findContainer, initializeGlide, destroyGlide, carouselManager } from '../utils/GlideConfig';
 import type Mithril from 'mithril';
+import type { Vnode, VnodeDOM } from 'mithril';
 import type { SlideData, GlideInstance } from '../../common/types';
+
+interface GlideShowComponentAttrs extends ComponentAttrs {
+  slides: SlideData[];
+}
 
 /**
  * GlideShowComponent - Mithril component for header slideshow
  * Replaces the imperative DOM manipulation in GlideShow.ts
  */
-export default class GlideShowComponent extends Component {
+export default class GlideShowComponent extends Component<GlideShowComponentAttrs> {
   private glideInstance: GlideInstance | null = null;
   private isInitialized: boolean = false;
   private instanceId: string = '';
   private isDestroying: boolean = false;
   private slides: SlideData[] = [];
 
-  oninit(vnode: Mithril.Vnode) {
+  oninit(vnode: Vnode<GlideShowComponentAttrs>) {
     super.oninit(vnode);
-    this.instanceId = `slideshow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    this.instanceId = `slideshow-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     this.slides = getActiveSlides();
   }
 
-  view(): Mithril.Children {
-    const slides = this.slides;
+  view(vnode: Vnode<GlideShowComponentAttrs>): Mithril.Children {
+    const slides = vnode.attrs.slides;
     
     if (!slides || slides.length === 0) {
       return null;
@@ -43,7 +48,7 @@ export default class GlideShowComponent extends Component {
     );
   }
 
-  oncreate(vnode: Mithril.VnodeDOM) {
+  oncreate(vnode: VnodeDOM<GlideShowComponentAttrs>) {
     super.oncreate(vnode);
     
     // Initialize Glide after DOM is created
@@ -52,11 +57,11 @@ export default class GlideShowComponent extends Component {
     });
   }
 
-  onupdate(vnode: Mithril.VnodeDOM) {
+  onupdate(vnode: VnodeDOM<GlideShowComponentAttrs>) {
     super.onupdate(vnode);
     
     const newSlides = getActiveSlides();
-    if (this.shouldUpdateGlide(this.slides, newSlides)) {
+    if (this.shouldUpdateGlide(vnode.attrs.slides, newSlides)) {
       this.slides = newSlides;
       if (this.glideInstance) {
         this.glideInstance.update();
@@ -64,13 +69,13 @@ export default class GlideShowComponent extends Component {
     }
   }
 
-  onbeforeremove(vnode: Mithril.VnodeDOM) {
+  onbeforeremove(vnode: VnodeDOM<GlideShowComponentAttrs>) {
     super.onbeforeremove(vnode);
     this.isDestroying = true;
     this.destroyGlide();
   }
   
-  onremove(vnode: Mithril.VnodeDOM) {
+  onremove(vnode: VnodeDOM<GlideShowComponentAttrs>) {
     super.onremove(vnode);
     if (!this.isDestroying) {
       this.destroyGlide();

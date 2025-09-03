@@ -48,7 +48,7 @@ app.initializers.add(EXTENSION_ID, () => {
     try {
       // Use TagGlide if we have pinned tags and conditions are met
       if (shouldUseTagGlide(pinned)) {
-        return m(TagGlide.component({ tags: pinned }));
+        return m(TagGlide, { tags: pinned });
       }
 
       // Fall back to original rendering

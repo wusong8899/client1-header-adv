@@ -8,7 +8,7 @@
 // =============================================================================
 
 /**
- * Simplified slide data structure
+ * Slide data structure
  */
 export interface SlideData {
   id: string;
@@ -31,8 +31,8 @@ export interface SocialLink {
  * Header icon configuration
  */
 export interface HeaderIcon {
-  url: string;    // Logo图片URL
-  link: string;   // Logo点击链接
+  url: string; // Logo图片URL
+  link: string; // Logo点击链接
 }
 
 /**
@@ -43,8 +43,8 @@ export interface ExtensionSettings {
   transitionTime: number;
   socialLinks: SocialLink[];
   headerIcon?: HeaderIcon;
-  tagGlideTitle?: string;  // Tag轮播区域的标题文字
-  tagGlideTitleIcon?: string;  // Tag轮播标题的图标URL
+  tagGlideTitle?: string; // Tag轮播区域的标题文字
+  tagGlideTitleIcon?: string; // Tag轮播标题的图标URL
 }
 
 // =============================================================================
