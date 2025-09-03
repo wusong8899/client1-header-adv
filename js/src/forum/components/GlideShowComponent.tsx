@@ -11,7 +11,7 @@ import type { SlideData, GlideInstance } from '../../common/types';
 export default class GlideShowComponent extends Component {
   private glideInstance: GlideInstance | null = null;
   private isInitialized: boolean = false;
-  private instanceId: string;
+  private instanceId: string = '';
   private isDestroying: boolean = false;
   private slides: SlideData[] = [];
 

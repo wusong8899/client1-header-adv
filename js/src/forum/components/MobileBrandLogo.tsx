@@ -1,7 +1,6 @@
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
-import { defaultConfig } from '../../common/config';
 import { getHeaderIcon } from '../utils/SettingsManager';
 
 export default class MobileBrandLogo extends Component<ComponentAttrs> {
@@ -9,10 +8,10 @@ export default class MobileBrandLogo extends Component<ComponentAttrs> {
     const headerIcon = getHeaderIcon();
     const logoUrl = headerIcon.url || 
                     app.forum.attribute('Client1HeaderAdvHeaderIconUrl') || 
-                    defaultConfig.ui.headerIcon.url;
+                    null;
     const logoLink = headerIcon.link || 
-                     app.forum.attribute('Client1HeaderAdvHeaderIconLink') || 
-                     '';
+                    app.forum.attribute('Client1HeaderAdvHeaderIconLink') || 
+                    null;
 
     const logoElement = (
       <img 

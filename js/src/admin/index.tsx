@@ -2,6 +2,7 @@ import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Stream from 'flarum/common/utils/Stream';
 import type { SlideData, ExtensionSettings } from '../common/types';
+import type { Vnode } from 'mithril';
 
 /**
  * Extension configuration constants
@@ -22,7 +23,7 @@ class UnifiedAdminComponent extends ExtensionPage {
   headerIconUrlStream: Stream<string>;
   headerIconLinkStream: Stream<string>;
   
-  oninit(vnode) {
+  oninit(vnode: Vnode) {
     super.oninit(vnode);
     
     // Initialize settings using ExtensionPage's setting method

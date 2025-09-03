@@ -1,7 +1,7 @@
 import { extend, override } from 'flarum/common/extend';
 import app from 'flarum/forum/app';
 import TagsPage from 'flarum/tags/forum/components/TagsPage';
-import Navigation from 'flarum/forum/components/Navigation';
+import Navigation from 'flarum/common/components/Navigation';
 import { reloadSettings } from './utils/SettingsManager';
 import GlideShowComponent from './components/GlideShowComponent';
 import TagGlide from './components/TagGlide';
@@ -9,6 +9,7 @@ import MobileRegisterButton from './components/MobileRegisterButton';
 import MobileBrandLogo from './components/MobileBrandLogo';
 import { errorHandler } from './utils/ErrorHandler';
 import m from 'mithril';
+import Tag from 'flarum/tags/common/models/Tag';
 
 // Extension constants
 const EXTENSION_ID = 'wusong8899-client1-header-adv';
@@ -17,155 +18,156 @@ const EXTENSION_ID = 'wusong8899-client1-header-adv';
  * Main extension initializer
  */
 app.initializers.add(EXTENSION_ID, () => {
-    // Override TagsPage view to add slideshow component at the beginning
-    override(TagsPage.prototype, 'view', function (original) {
-        try {
-            const result = original();
-            
-            // Only add slideshow on tags page and if content exists
-            if (isTagsPage() && GlideShowComponent.shouldDisplay()) {
-                const slideshow = m(GlideShowComponent);
-                
-                // Insert slideshow before the main content
-                if (Array.isArray(result)) {
-                    return [slideshow, ...result];
-                } else {
-                    return [slideshow, result];
-                }
-            }
-            
-            return result;
-        } catch (error) {
-            console.error('GlideShowComponent integration error:', error);
-            // Always fall back to original on error
-            return original();
+  // Override TagsPage view to add slideshow component at the beginning
+  override(TagsPage.prototype, 'view', function (original: any) {
+    try {
+      const result = original();
+
+      // Only add slideshow on tags page and if content exists
+      if (isTagsPage() && GlideShowComponent.shouldDisplay()) {
+        const slideshow = m(GlideShowComponent);
+
+        // Insert slideshow before the main content
+        if (Array.isArray(result)) {
+          return [slideshow, ...result];
+        } else {
+          return [slideshow, result];
         }
-    });
+      }
 
-    // Override TagsPage tagTileListView to use our TagGlide component
-    override(TagsPage.prototype, 'tagTileListView', function (original, pinned) {
-        try {
-            // Use TagGlide if we have pinned tags and conditions are met
-            if (shouldUseTagGlide(pinned)) {
-                return m(TagGlide, { tags: pinned });
-            }
+      return result;
+    } catch (error) {
+      console.error('GlideShowComponent integration error:', error);
+      // Always fall back to original on error
+      return original();
+    }
+  });
 
-            // Fall back to original rendering
-            return original(pinned);
-        } catch (error) {
-            console.error('TagGlide override error:', error);
-            // Always fall back to original on error
-            return original(pinned);
+  // Override TagsPage tagTileListView to use our TagGlide component
+  override(TagsPage.prototype, 'tagTileListView', function (original: any, pinned: Tag[]) {
+    try {
+      // Use TagGlide if we have pinned tags and conditions are met
+      if (shouldUseTagGlide(pinned)) {
+        return m(TagGlide.component({ tags: pinned }));
+      }
+
+      // Fall back to original rendering
+      return original(pinned);
+    } catch (error) {
+      console.error('TagGlide override error:', error);
+      // Always fall back to original on error
+      return original(pinned);
+    }
+  });
+
+  // Note: Social media buttons are now handled directly within TagGlide component
+  // No need for separate TagsPage view override since TagGlide includes social buttons
+
+  // Add mobile navigation components (register button for logged out users + brand logo)
+  extend(Navigation.prototype, 'view', function (vnode) {
+    return errorHandler.handleSync(() => {
+      // Only work on mobile devices (viewport width < 768px)
+      if (!isMobileDevice()) {
+        return;
+      }
+
+      // Only work on homepage (tags page)
+      const routeName = app.current.get('routeName');
+      if (routeName !== 'tags') {
+        return;
+      }
+
+      if (!vnode || !vnode.children || !Array.isArray(vnode.children)) {
+        return;
+      }
+
+      // Add register button and brand logo for logged out users
+      if (!app.session.user) {
+        const hasBrandLogo = vnode.children.some(
+          (child: any) => child && child.attrs && child.attrs.className && child.attrs.className.includes('Navigation-mobileBrandLogo')
+        );
+
+        if (!hasBrandLogo) {
+          vnode.children.push(
+            MobileBrandLogo.component({
+              className: 'item-brand Navigation-mobileBrandLogo',
+            })
+          );
         }
-    });
 
-    // Note: Social media buttons are now handled directly within TagGlide component
-    // No need for separate TagsPage view override since TagGlide includes social buttons
+        const hasRegisterButton = vnode.children.some(
+          (child: any) => child && child.attrs && child.attrs.className && child.attrs.className.includes('Navigation-mobileRegister')
+        );
 
+        if (!hasRegisterButton) {
+          vnode.children.push(
+            MobileRegisterButton.component({
+              className: 'item-register Navigation-mobileRegister',
+            })
+          );
+        }
+      }
+    }, 'Navigation mobile components extension');
+  });
 
-    // Add mobile navigation components (register button for logged out users + brand logo)
-    extend(Navigation.prototype, 'view', function (vnode) {
-        return errorHandler.handleSync(() => {
-            // Only work on mobile devices (viewport width < 768px)
-            if (!isMobileDevice()) {
-                return;
-            }
-
-            // Only work on homepage (tags page)
-            const routeName = app.current.get('routeName');
-            if (routeName !== 'tags') {
-                return;
-            }
-
-            if (!vnode || !vnode.children || !Array.isArray(vnode.children)) {
-                return;
-            }
-
-            // Add register button and brand logo for logged out users
-            if (!app.session.user) {
-                const hasBrandLogo = vnode.children.some((child: any) =>
-                    child && child.attrs && child.attrs.className &&
-                    child.attrs.className.includes('Navigation-mobileBrandLogo')
-                );
-
-                if (!hasBrandLogo) {
-                    vnode.children.push(MobileBrandLogo.component({
-                        className: "item-brand Navigation-mobileBrandLogo"
-                    }));
-                }
-
-                const hasRegisterButton = vnode.children.some((child: any) =>
-                    child && child.attrs && child.attrs.className &&
-                    child.attrs.className.includes('Navigation-mobileRegister')
-                );
-
-                if (!hasRegisterButton) {
-                    vnode.children.push(MobileRegisterButton.component({
-                        className: "item-register Navigation-mobileRegister"
-                    }));
-                }
-            }
-        }, 'Navigation mobile components extension');
-    });
-
-    // Clean up on page navigation
-    const originalPush = app.history.push;
-    app.history.push = function (...args) {
-        cleanupExtension();
-        return originalPush.apply(this, args);
-    };
+  // Clean up on page navigation
+  const originalPush = app.history.push;
+  app.history.push = function (...args) {
+    cleanupExtension();
+    return originalPush.apply(this, args);
+  };
 });
 
 /**
  * Determine whether to use TagGlide for the given tags
  */
-function shouldUseTagGlide(tags: any[]): boolean {
-    // Only use TagGlide if:
-    // 1. We have tags to display
-    // 2. Not too many tags (performance consideration)
-    // 3. Not on mobile (optional - can be adjusted)
+function shouldUseTagGlide(tags: Tag[]): boolean {
+  // Only use TagGlide if:
+  // 1. We have tags to display
+  // 2. Not too many tags (performance consideration)
+  // 3. Not on mobile (optional - can be adjusted)
 
-    if (!tags || tags.length === 0) {
-        return false;
-    }
+  if (!tags || tags.length === 0) {
+    return false;
+  }
 
-    // Don't use carousel for too many tags (fallback to grid)
-    if (tags.length > 12) {
-        return false;
-    }
+  // Don't use carousel for too many tags (fallback to grid)
+  if (tags.length > 12) {
+    return false;
+  }
 
-    // Always use TagGlide for now (can add more conditions later)
-    return true;
+  // Always use TagGlide for now (can add more conditions later)
+  return true;
 }
 
 /**
  * Check if current page is tags page
  */
 function isTagsPage(): boolean {
-    try {
-        const routeName = app.current.get('routeName');
-        return routeName === 'tags';
-    } catch {
-        return false;
-    }
+  try {
+    const routeName = app.current.get('routeName');
+    return routeName === 'tags';
+  } catch {
+    return false;
+  }
 }
 
 /**
  * Check if current device is mobile (viewport width < 768px)
  */
 function isMobileDevice(): boolean {
-    return window.innerWidth < 768;
+  return window.innerWidth < 768;
 }
 
 /**
  * Clean up extension components
  */
 function cleanupExtension(): void {
-    try {
-        // Clear settings cache for fresh data on next page
-        reloadSettings();
-        // All Mithril components (GlideShowComponent, TagGlide, etc.) are automatically cleaned up by Mithril lifecycle
-    } catch (error) {
-        console.error('Extension cleanup error:', error);
-    }
+  try {
+    // Clear settings cache for fresh data on next page
+    reloadSettings();
+    // All Mithril components (GlideShowComponent, TagGlide, etc.) are automatically cleaned up by Mithril lifecycle
+  } catch (error) {
+    console.error('Extension cleanup error:', error);
+  }
 }

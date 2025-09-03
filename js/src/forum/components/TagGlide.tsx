@@ -1,5 +1,5 @@
 import app from 'flarum/forum/app';
-import Component from 'flarum/common/Component';
+import Component, { ComponentAttrs } from 'flarum/common/Component';
 import classList from 'flarum/common/utils/classList';
 import humanTime from 'flarum/common/helpers/humanTime';
 import tagIcon from 'flarum/tags/common/helpers/tagIcon';
@@ -8,6 +8,12 @@ import { getTagGlideConfig, findContainer, initializeGlide, destroyGlide, carous
 import SocialMediaButtons from './SocialMediaButtons';
 import type Mithril from 'mithril';
 import type { GlideInstance } from '../../common/types';
+import Tag from 'flarum/tags/common/models/Tag';
+
+interface TagGlideAttrs extends ComponentAttrs {
+  tags: Tag[];
+}
+
 
 interface TagSlideData {
   id: string;
@@ -27,18 +33,18 @@ interface TagSlideData {
 
 export default class TagGlide extends Component {
   private glideInstance: GlideInstance | null = null;
-  private tags: any[] = [];
+  private tags: Tag[] = [];
   private isInitialized: boolean = false;
-  private instanceId: string;
+  private instanceId: string = '';
   private isDestroying: boolean = false;
 
-  oninit(vnode: Mithril.Vnode) {
+  oninit(vnode: Mithril.Vnode<TagGlideAttrs>) {
     super.oninit(vnode);
     this.tags = vnode.attrs.tags || [];
-    this.instanceId = `tag-glide-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    this.instanceId = `tag-glide-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
-  view(vnode: Mithril.Vnode): Mithril.Children {
+  view(vnode: Mithril.Vnode<TagGlideAttrs>): Mithril.Children {
     const tags = vnode.attrs.tags || [];
     
     if (!tags.length) {
@@ -68,7 +74,7 @@ export default class TagGlide extends Component {
           <div className="glide tag-glide">
             <div className="glide__track" data-glide-el="track">
               <ul className="glide__slides">
-                {tags.map((tag: any) => this.renderSlide(tag))}
+                {tags.map((tag: Tag) => this.renderSlide(tag))}
               </ul>
             </div>
           </div>
@@ -89,7 +95,7 @@ export default class TagGlide extends Component {
     });
   }
 
-  onupdate(vnode: Mithril.VnodeDOM) {
+  onupdate(vnode: Mithril.VnodeDOM<TagGlideAttrs>) {
     super.onupdate(vnode);
     
     const newTags = vnode.attrs.tags || [];
@@ -116,30 +122,27 @@ export default class TagGlide extends Component {
     }
   }
 
-  private extractTagData(tag: any): TagSlideData {
-    const lastPostedDiscussion = tag.lastPostedDiscussion?.();
+  private extractTagData(tag: Tag): TagSlideData {
+    const lastPostedDiscussion = tag.lastPostedDiscussion();
     
     return {
-      id: tag.id?.() || '',
-      name: tag.name?.() || '',
-      description: tag.description?.() || undefined,
-      icon: tag.icon?.() || undefined,
-      color: tag.color?.() || undefined,
-      url: app.route.tag(tag),
-      backgroundUrl: tag.attribute?.('wusong8899BackgroundURL') || undefined,
-      hideName: tag.attribute?.('wusong8899BackgroundHideName') || false,
+      id: tag.id() || '',
+      name: tag.name() || '',
+      description: tag.description() || undefined,
+      icon: tag.icon() || undefined,
+      color: tag.color() || undefined,
+      url: app.route('tag', { tags: tag.slug() }),
+      backgroundUrl: tag.attribute('wusong8899BackgroundURL') || undefined,
+      hideName: tag.attribute('wusong8899BackgroundHideName') || false,
       lastPostedDiscussion: lastPostedDiscussion ? {
-        title: lastPostedDiscussion.title?.() || '',
-        url: app.route.discussion(
-          lastPostedDiscussion, 
-          lastPostedDiscussion.lastPostNumber?.() || 1
-        ),
-        postedAt: lastPostedDiscussion.lastPostedAt?.() || new Date()
+        title: lastPostedDiscussion.title() || '',
+        url: app.route('discussion', { id: lastPostedDiscussion.id() }),
+        postedAt: lastPostedDiscussion.lastPostedAt() || new Date()
       } : undefined
     };
   }
 
-  private renderSlide(tag: any): Mithril.Children {
+  private renderSlide(tag: Tag): Mithril.Children {
     const tagData = this.extractTagData(tag);
     
     // Determine background style
@@ -281,14 +284,14 @@ export default class TagGlide extends Component {
     }
   }
 
-  private shouldUpdateGlide(oldTags: any[], newTags: any[]): boolean {
+  private shouldUpdateGlide(oldTags: Tag[], newTags: Tag[]): boolean {
     if (!oldTags || !newTags) return true;
     if (oldTags.length !== newTags.length) return true;
     
-    return oldTags.some((oldTag: any, index: number) => {
+    return oldTags.some((oldTag: Tag, index: number) => {
       const newTag = newTags[index];
-      return oldTag?.id?.() !== newTag?.id?.() || 
-            oldTag?.freshness !== newTag?.freshness;
+      return oldTag.id() !== newTag.id() ||
+            oldTag.freshness !== newTag.freshness;
     });
   }
 }
