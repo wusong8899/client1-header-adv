@@ -36,3 +36,10 @@ wusong8899-client1:
     # Slide management
     AddSlide: Add Slide
     SlideNumber: "Slide {number}"
+
+    # Title actions
+    TitleActions: Title Actions (next to Tag Glide Title)
+    TitleActionEnabled: Enabled
+    TitleActionLabel: Display Label
+    TitleActionImageUrl: Image URL
+    TitleActionLinkUrl: Link URL (opens in new tab)

@@ -1,7 +1,7 @@
 import app from 'flarum/admin/app';
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
 import Stream from 'flarum/common/utils/Stream';
-import type { SlideData, ExtensionSettings } from '../common/types';
+import type { SlideData, ExtensionSettings, TitleAction } from '../common/types';
 import type { Vnode } from 'mithril';
 
 /**
@@ -21,6 +21,7 @@ class UnifiedAdminComponent extends ExtensionPage {
   tagGlideTitleIconStream: Stream<string>;
   headerIconUrlStream: Stream<string>;
   headerIconLinkStream: Stream<string>;
+  titleActionsStream: Stream<TitleAction[]>;
   
   oninit(vnode: Vnode) {
     super.oninit(vnode);
@@ -53,7 +54,8 @@ class UnifiedAdminComponent extends ExtensionPage {
         transitionTime: parsed.transitionTime || 5000,
         headerIcon: parsed.headerIcon || { url: '', link: '' },
         tagGlideTitle: parsed.tagGlideTitle || '',
-        tagGlideTitleIcon: parsed.tagGlideTitleIcon || ''
+        tagGlideTitleIcon: parsed.tagGlideTitleIcon || '',
+        titleActions: parsed.titleActions || [],
       };
     } catch (error) {
       console.error('Failed to parse settings JSON:', error);
@@ -62,7 +64,8 @@ class UnifiedAdminComponent extends ExtensionPage {
         transitionTime: 5000,
         headerIcon: { url: '', link: '' },
         tagGlideTitle: '',
-        tagGlideTitleIcon: ''
+        tagGlideTitleIcon: '',
+        titleActions: [],
       };
     }
   }
@@ -79,6 +82,9 @@ class UnifiedAdminComponent extends ExtensionPage {
     this.tagGlideTitleIconStream = Stream(settings.tagGlideTitleIcon || '');
     this.headerIconUrlStream = Stream(settings.headerIcon?.url || '');
     this.headerIconLinkStream = Stream(settings.headerIcon?.link || '');
+    this.titleActionsStream = Stream(settings.titleActions && settings.titleActions.length
+      ? settings.titleActions
+      : this.getDefaultTitleActions());
     
     // Set up auto-save listeners
     this.transitionTimeStream.map((value: number) => {
@@ -105,6 +111,12 @@ class UnifiedAdminComponent extends ExtensionPage {
     
     this.headerIconLinkStream.map((value: string) => {
       this.updateHeaderIcon('link', value);
+    });
+
+    this.titleActionsStream.map((value: TitleAction[]) => {
+      const currentSettings = this.getSettings();
+      currentSettings.titleActions = value;
+      this.updateSettings(currentSettings);
     });
   }
   
@@ -203,6 +215,27 @@ class UnifiedAdminComponent extends ExtensionPage {
     this.updateSettings(settings);
   }
 
+  /**
+   * Get default title actions (live, lottery, loan)
+   */
+  getDefaultTitleActions(): TitleAction[] {
+    return [
+      { id: 'live', label: '直播', imageUrl: '', linkUrl: '', enabled: false },
+      { id: 'lottery', label: '彩票', imageUrl: '', linkUrl: '', enabled: false },
+      { id: 'loan', label: '老哥贷', imageUrl: '', linkUrl: '', enabled: false },
+    ];
+  }
+
+  /**
+   * Update a title action property and commit to settings
+   */
+  updateTitleAction(index: number, field: keyof TitleAction, value: any): void {
+    const actions = [...(this.titleActionsStream() || [])];
+    if (!actions[index]) return;
+    (actions[index] as any)[field] = value;
+    this.titleActionsStream(actions);
+  }
+
   content() {
     const settings = this.getSettings(); // Get current settings on each render
     
@@ -210,6 +243,52 @@ class UnifiedAdminComponent extends ExtensionPage {
       <div className="ExtensionPage-settings">
         <div className="container">
           <div className="UnifiedAdminComponent">
+        <div className="Form-group">
+          <h3>{app.translator.trans('wusong8899-client1.admin.TitleActions')}</h3>
+
+          {(this.titleActionsStream() || []).map((action: TitleAction, index: number) => (
+            <div className="TitleActionConfig" key={action.id || index}>
+              <div className="Form-group">
+                <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.TitleActionEnabled')}</label>
+                <input
+                  type="checkbox"
+                  checked={action.enabled}
+                  onchange={(e: Event) => this.updateTitleAction(index, 'enabled', (e.target as HTMLInputElement).checked)}
+                />
+              </div>
+
+              <div className="Form-group">
+                <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.TitleActionLabel')}</label>
+                <input
+                  className="FormControl"
+                  type="text"
+                  value={action.label}
+                  oninput={(e: Event) => this.updateTitleAction(index, 'label', (e.target as HTMLInputElement).value)}
+                />
+              </div>
+
+              <div className="Form-group">
+                <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.TitleActionImageUrl')}</label>
+                <input
+                  className="FormControl"
+                  type="url"
+                  value={action.imageUrl}
+                  oninput={(e: Event) => this.updateTitleAction(index, 'imageUrl', (e.target as HTMLInputElement).value)}
+                />
+              </div>
+
+              <div className="Form-group">
+                <label className="FormLabel">{app.translator.trans('wusong8899-client1.admin.TitleActionLinkUrl')}</label>
+                <input
+                  className="FormControl"
+                  type="url"
+                  value={action.linkUrl}
+                  oninput={(e: Event) => this.updateTitleAction(index, 'linkUrl', (e.target as HTMLInputElement).value)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="Form-group">
           <h3>{app.translator.trans('wusong8899-client1.admin.GlobalSettings')}</h3>
           

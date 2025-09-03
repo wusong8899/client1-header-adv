@@ -32,6 +32,17 @@ export interface HeaderIcon {
 }
 
 /**
+ * Action button next to tag-glide title
+ */
+export interface TitleAction {
+  id: string;
+  label: string;
+  imageUrl: string;
+  linkUrl: string;
+  enabled: boolean;
+}
+
+/**
  * Extension settings structure
  */
 export interface ExtensionSettings {
@@ -40,6 +51,7 @@ export interface ExtensionSettings {
   headerIcon?: HeaderIcon;
   tagGlideTitle?: string; // Tag轮播区域的标题文字
   tagGlideTitleIcon?: string; // Tag轮播标题的图标URL
+  titleActions?: TitleAction[]; // 标题右侧可点击图片动作列表
 }
 
 // =============================================================================

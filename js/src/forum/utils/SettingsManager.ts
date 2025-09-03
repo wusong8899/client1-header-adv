@@ -54,6 +54,7 @@ function loadSettings(): ExtensionSettings {
           headerIcon: parsed.headerIcon || { url: '', link: '' },
           tagGlideTitle: parsed.tagGlideTitle || '',
           tagGlideTitleIcon: parsed.tagGlideTitleIcon || '',
+          titleActions: parsed.titleActions || [],
         };
       }
     }
@@ -79,6 +80,7 @@ function getEmptySettings(): ExtensionSettings {
     },
     tagGlideTitle: '',
     tagGlideTitleIcon: '',
+    titleActions: [],
   };
 }
 

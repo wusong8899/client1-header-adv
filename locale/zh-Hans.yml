@@ -36,3 +36,10 @@ wusong8899-client1:
     # 幻灯片管理
     AddSlide: 添加幻灯片
     SlideNumber: "幻灯片 {number}"
+
+    # 标题右侧操作
+    TitleActions: 标题右侧入口（紧邻Tag轮播标题）
+    TitleActionEnabled: 启用
+    TitleActionLabel: 显示文本
+    TitleActionImageUrl: 图片地址
+    TitleActionLinkUrl: 链接地址（新窗口打开）

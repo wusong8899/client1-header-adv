@@ -53,6 +53,9 @@ export default class TagGlide extends Component {
     const settings = getSettings();
     const tagGlideTitle = settings.tagGlideTitle;
     const tagGlideTitleIcon = settings.tagGlideTitleIcon;
+    const titleActions = (settings.titleActions || [])
+      .filter((a: any) => a && (a.enabled !== false) && a.imageUrl && a.linkUrl)
+      .slice(0, 3);
 
     return (
       <div className="TagGlide-wrapper">
@@ -66,6 +69,22 @@ export default class TagGlide extends Component {
               />
             )}
             <span className="tag-glide-title-text">{tagGlideTitle}</span>
+            {titleActions.length > 0 && (
+              <div className="tag-glide-title-actions">
+                {titleActions.map((action: any) => (
+                  <a
+                    key={action.id || action.label}
+                    href={action.linkUrl}
+                    className="tag-glide-title-action"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={action.label || ''}
+                  >
+                    <img src={action.imageUrl} alt={action.label || ''} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
         <div id="tag-glide-container" className="tag-glide-container TagGlide-container">
