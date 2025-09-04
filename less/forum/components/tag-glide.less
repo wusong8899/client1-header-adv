@@ -19,25 +19,33 @@
     color: var(--body-color);
     padding: 6px 12px;
     
-    .tag-glide-title-icon {
-      width: 18px;
-      height: 18px;
-      margin-right: 8px;
-      flex-shrink: 0;
-      object-fit: contain;
-    }
-    
-    .tag-glide-title-text {
-      display: inline-block;
+    .tag-glide-title-main {
+      display: inline-flex;
+      align-items: center;
       position: relative;
+      padding-bottom: 6px;
 
       &::after {
         content: '';
-        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
         height: 4px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.35);
-        margin-top: 6px;
+      }
+
+      .tag-glide-title-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        flex-shrink: 0;
+        object-fit: contain;
+      }
+      
+      .tag-glide-title-text {
+        display: inline-block;
       }
     }
 

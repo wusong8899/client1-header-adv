@@ -61,14 +61,16 @@ export default class TagGlide extends Component {
       <div className="TagGlide-wrapper">
         {tagGlideTitle && (
           <div className="tag-glide-title">
-            {tagGlideTitleIcon && (
-              <img 
-                src={tagGlideTitleIcon} 
-                alt="" 
-                className="tag-glide-title-icon"
-              />
-            )}
-            <span className="tag-glide-title-text">{tagGlideTitle}</span>
+            <div className="tag-glide-title-main">
+              {tagGlideTitleIcon && (
+                <img 
+                  src={tagGlideTitleIcon} 
+                  alt="" 
+                  className="tag-glide-title-icon"
+                />
+              )}
+              <span className="tag-glide-title-text">{tagGlideTitle}</span>
+            </div>
             {titleActions.length > 0 && (
               <div className="tag-glide-title-actions">
                 {titleActions.map((action: any) => (
