@@ -34,24 +34,31 @@
     .tag-glide-title-actions {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       margin-left: 12px;
 
       .tag-glide-title-action {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
+        justify-content: flex-start;
+        min-height: 28px;
+        padding: 2px 6px;
         border-radius: 4px;
-        overflow: hidden;
         background: transparent;
 
-        img {
-          width: 100%;
-          height: 100%;
+        .tag-glide-title-action-icon {
+          width: 20px;
+          height: 20px;
           object-fit: contain;
           display: block;
+        }
+
+        .tag-glide-title-action-label {
+          margin-left: 6px;
+          font-size: 13px;
+          font-weight: 500;
+          color: var(--body-color);
+          white-space: nowrap;
         }
       }
     }

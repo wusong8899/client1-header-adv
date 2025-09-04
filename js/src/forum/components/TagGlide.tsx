@@ -80,7 +80,10 @@ export default class TagGlide extends Component {
                     rel="noopener noreferrer"
                     title={action.label || ''}
                   >
-                    <img src={action.imageUrl} alt={action.label || ''} />
+                    <img className="tag-glide-title-action-icon" src={action.imageUrl} alt={action.label || ''} />
+                    {action.label && (
+                      <span className="tag-glide-title-action-label">{action.label}</span>
+                    )}
                   </a>
                 ))}
               </div>
