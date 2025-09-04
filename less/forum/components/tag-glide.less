@@ -29,6 +29,16 @@
     
     .tag-glide-title-text {
       flex: 1;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.35);
+        margin-top: 6px;
+      }
     }
 
     .tag-glide-title-actions {
@@ -59,6 +69,16 @@
           font-weight: 500;
           color: var(--body-color);
           white-space: nowrap;
+          position: relative;
+
+          &::after {
+            content: '';
+            display: block;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.35);
+            margin-top: 4px;
+          }
         }
       }
     }
